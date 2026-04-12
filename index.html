@@ -4,6 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#08080f">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="data:application/json,{
+  %22name%22:%22Split Banana Pro%22,
+  %22short_name%22:%22Split Banana%22,
+  %22start_url%22:%22.%22,
+  %22display%22:%22standalone%22,
+  %22background_color%22:%22%2308080f%22,
+  %22theme_color%22:%22%2308080f%22,
+  %22icons%22:[{%22src%22:%22https://via.placeholder.com/192x192/29b6f6/ffffff?text=%F0%9F%8D%8C%22,%22sizes%22:%22192x192%22,%22type%22:%22image/png%22}]
+}">
+
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="format-detection" content="telephone=no">
 <title>Split Banana Pro</title>
@@ -16,6 +28,10 @@
   --border: rgba(255,255,255,0.07);
   --accent: #007aff;
   --teal: #00e5cc;
+  --a1: var(--a1);
+  --a2: var(--a2);
+  --a3: var(--a3);
+  --a4: var(--a4);
   --text: #e8e8f0;
   --muted: #6b6b88;
   --r: 12px;
@@ -37,6 +53,7 @@ body {
   gap: 10px;
   padding: 10px 14px;
   border-bottom: 1px solid var(--border);
+  position: -webkit-sticky;
   position: sticky;
   top: 0;
   z-index: 100;
@@ -44,12 +61,7 @@ body {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
-.header-logo {
-  width: 34px;
-  height: 34px;
-  border-radius: 9px;
-  flex-shrink: 0;
-}
+
 .header-title {
   font-size: 14px;
   font-weight: 700;
@@ -95,7 +107,7 @@ body {
   -webkit-appearance: none;
 }
 #search::placeholder { color: var(--muted); }
-#search:focus { border-color: rgba(0,122,255,0.4); }
+#search:focus { border-color: var(--a4); }
 .lang-toggle {
   display: flex;
   background: var(--surface2);
@@ -143,7 +155,8 @@ body {
   .right-col {
     order: 1;
     border-left: 1px solid var(--border);
-    position: sticky;
+    position: -webkit-sticky;
+  position: sticky;
     top: 55px;
     max-height: calc(100vh - 55px);
     overflow-y: auto;
@@ -162,7 +175,8 @@ body {
 @media (min-width: 768px) {
   .left-col {
     order: 2;
-    position: sticky;
+    position: -webkit-sticky;
+  position: sticky;
     top: 55px;
     max-height: calc(100vh - 55px);
     overflow-y: auto;
@@ -181,18 +195,18 @@ body {
 }
 .cat-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(76px, 1fr));
-  gap: 7px;
+  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+  gap: 6px;
 }
 @media (min-width: 480px) {
-  .cat-grid { grid-template-columns: repeat(auto-fill, minmax(86px, 1fr)); }
+  .cat-grid { grid-template-columns: repeat(auto-fill, minmax(82px, 1fr)); }
 }
 .cat-pill {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  padding: 10px 6px 8px;
+  gap: 3px;
+  padding: 8px 4px 7px;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--r);
@@ -206,15 +220,17 @@ body {
 }
 .cat-pill:active { opacity: 0.8; }
 .cat-pill.active {
-  background: rgba(0,122,255,0.1);
-  border-color: rgba(0,122,255,0.45);
+  background: var(--a2);
+  border-color: var(--a4);
 }
 .cat-emoji { font-size: 20px; line-height: 1; }
 .cat-name {
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 500;
   color: var(--muted);
   line-height: 1.2;
+  word-break: break-word;
+  hyphens: auto;
 }
 .cat-pill.active .cat-name { color: #a8c8ff; }
 .cat-badge {
@@ -236,7 +252,7 @@ body {
 /* ── Tag panel ── */
 .tag-panel {
   background: var(--surface);
-  border: 1px solid rgba(0,122,255,0.2);
+  border: 1px solid var(--a2);
   border-radius: var(--r);
   overflow: hidden;
   display: none;
@@ -254,7 +270,7 @@ body {
   justify-content: space-between;
   padding: 10px 14px;
   border-bottom: 1px solid var(--border);
-  background: rgba(0,122,255,0.05);
+  background: var(--a1);
 }
 .tag-panel-title {
   font-size: 13px;
@@ -301,9 +317,11 @@ body {
 .tag-btn:active { opacity: 0.8; }
 .tag-btn-sub { font-size: 10px; color: var(--muted); font-weight: 400; }
 .tag-btn.active {
-  background: rgba(0,122,255,0.15);
-  border-color: rgba(0,122,255,0.55);
+  background: var(--a3);
+  border-color: #007aff;
+  border-width: 1.5px;
   color: #fff;
+  box-shadow: 0 0 8px var(--a2);
 }
 .tag-btn.active .tag-btn-sub { color: rgba(255,255,255,0.5); }
 [dir="ltr"] .tag-btn { text-align: left; }
@@ -326,7 +344,7 @@ body {
   -webkit-appearance: none;
 }
 #userInput::placeholder { color: var(--muted); }
-#userInput:focus { border-color: rgba(0,122,255,0.4); }
+#userInput:focus { border-color: var(--a4); }
 
 /* ── Chips ── */
 .chips-wrap {
@@ -336,8 +354,8 @@ body {
   min-height: 4px;
 }
 .sel-chip {
-  background: rgba(0,122,255,0.12);
-  border: 1px solid rgba(0,122,255,0.3);
+  background: var(--a2);
+  border: 1px solid var(--a3);
   color: #a8c8ff;
   font-size: 11px;
   font-weight: 500;
@@ -359,7 +377,7 @@ body {
 /* ── Result ── */
 .result-box {
   background: var(--surface);
-  border: 1px solid rgba(0,122,255,0.15);
+  border: 1px solid var(--a2);
   border-radius: var(--r);
   overflow: hidden;
 }
@@ -369,7 +387,7 @@ body {
   justify-content: space-between;
   padding: 9px 13px;
   border-bottom: 1px solid var(--border);
-  background: rgba(0,122,255,0.04);
+  background: var(--a1);
 }
 .result-label-wrap {
   display: flex;
@@ -441,20 +459,130 @@ body {
 .btn-clear:active { background: rgba(255,255,255,0.05); }
 
 
+
+#finalPrompt.prompt-empty {
+  color: var(--muted);
+  font-family: 'Rubik', sans-serif;
+  font-size: 13px;
+}
+#finalPrompt.prompt-ready {
+  color: var(--teal);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+}
+/* ── Install banner ── */
+.install-banner {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 14px;
+  background: linear-gradient(135deg, rgba(0,122,255,0.15), rgba(0,229,204,0.08));
+  border-bottom: 1px solid var(--border);
+  animation: slideDown 0.3s ease;
+}
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.install-banner.show { display: flex; }
+.install-text {
+  font-size: 12px;
+  color: var(--text);
+  line-height: 1.4;
+  flex: 1;
+}
+.install-text strong { color: #fff; font-weight: 600; }
+.install-actions { display: flex; gap: 6px; flex-shrink: 0; }
+.install-btn {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-family: 'Rubik', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  touch-action: manipulation;
+  white-space: nowrap;
+}
+.install-dismiss {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-family: 'Rubik', sans-serif;
+  font-size: 12px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+/* iOS hint */
+.ios-hint {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-size: 12px;
+  color: var(--text);
+  text-align: center;
+  line-height: 1.5;
+  z-index: 999;
+  max-width: 280px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  animation: slideUp 0.3s ease;
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateX(-50%) translateY(8px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+.ios-hint.show { display: block; }
+.ios-hint-close {
+  display: block;
+  margin-top: 8px;
+  color: var(--accent);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+
+.tag-hidden { display: none !important; }
+
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .app { padding-bottom: env(safe-area-inset-bottom); }
+}
 </style>
 </head>
 <body>
 
+
+<!-- Install banner -->
+<div class="install-banner" id="installBanner">
+  <div class="install-text">
+    <strong>🍌 Split Banana Pro</strong><br>
+    <span id="installMsg">הוסף למסך הבית לגישה מהירה</span>
+  </div>
+  <div class="install-actions">
+    <button class="install-btn" id="installBtn" onclick="doInstall()"></button>
+    <button class="install-dismiss" onclick="dismissInstall()">✕</button>
+  </div>
+</div>
+<!-- iOS hint -->
+<div class="ios-hint" id="iosHint">
+  <span id="iosHintText">לחץ על <strong>□↑</strong> ואז "הוסף למסך הבית"</span>
+  <span class="ios-hint-close" onclick="$('iosHint').classList.remove('show')">סגור</span>
+</div>
+
 <header class="header">
-  <svg class="header-logo" viewBox="0 0 34 34" xmlns="http://www.w3.org/2000/svg">
-    <rect width="34" height="34" rx="9" fill="url(#g)"/>
-    <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#29b6f6"/><stop offset="100%" stop-color="#00897b"/>
-    </linearGradient></defs>
-    <text y="24" x="4" font-size="20">🍌</text>
-  </svg>
+
   <span class="header-title">Split Banana Pro</span>
-  <span class="header-subtitle" id="headerSubtitle">מחולל פרומפטים לתמונות AI</span>
+  <span class="header-subtitle" id="headerSubtitle"></span>
   <div class="search-wrap">
     <input type="search" id="search" autocomplete="off" oninput="filterTags()" />
     <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -476,18 +604,18 @@ body {
       <div class="result-top">
         <div class="result-label-wrap">
           <div class="result-dot"></div>
-          <span id="resultLabel">פרומפט מוכן</span>
+          <span id="resultLabel"></span>
         </div>
-        <span id="charCount">0 תווים</span>
+        <span id="charCount"></span>
       </div>
       <div id="finalPrompt"></div>
     </div>
     <div class="action-row">
       <button class="btn-copy" id="copyBtn" onclick="copyPrompt()">
         <span id="copyIcon">📋</span>
-        <span id="copyText">העתק פרומפט</span>
+        <span id="copyText"></span>
       </button>
-      <button class="btn-clear" id="clearBtn" onclick="clearAll()">נקה</button>
+      <button class="btn-clear" id="clearBtn" onclick="clearAll()"></button>
     </div>
   </div>
 
@@ -538,8 +666,7 @@ const DATA = [
       { he: { label: 'קונספט ארט', sub: 'Concept Art' }, en: { label: 'Concept Art', sub: 'ArtStation Style' }, val: 'concept art, artstation, professional illustration' },
       { he: { label: 'אמפרסיוניסטי', sub: 'Impressionism' }, en: { label: 'Impressionism', sub: 'Monet Inspired' }, val: 'impressionist style, monet inspired, loose brushwork' },
       { he: { label: 'דיסני', sub: 'Disney Animation' }, en: { label: 'Disney Style', sub: 'Disney Animation' }, val: 'Disney animation style, Disney character art, expressive eyes, smooth clean lines, magical Disney aesthetic' },
-      { he: { label: 'מארוול ⚠️', sub: 'עלול להיחסם ע״י זכויות יוצרים' }, en: { label: 'Marvel Style ⚠️', sub: 'May be blocked - copyright' }, val: 'Marvel Comics art style, superhero illustration, dynamic action poses, bold colors, Marvel cinematic universe' },
-      { he: { label: 'DC קומיקס ⚠️', sub: 'עלול להיחסם ע״י זכויות יוצרים' }, en: { label: 'DC Comics ⚠️', sub: 'May be blocked - copyright' }, val: 'DC Comics art style, iconic superhero design, dramatic dark tones, graphic novel illustration, DC universe' },
+      { he: { label: 'קומיקס סופרהירו', sub: 'Superhero Comics' }, en: { label: 'Superhero Comics', sub: 'Action Style' }, val: 'superhero comics art style, dynamic action illustration, bold linework, vibrant colors, heroic pose' },
     ]
   },
   {
@@ -572,7 +699,6 @@ const DATA = [
       { he: { label: 'כיאורוסקורו', sub: 'High Contrast' }, en: { label: 'Chiaroscuro', sub: 'High Contrast' }, val: 'chiaroscuro lighting, extreme contrast, dramatic shadow play, Rembrandt lighting' },
       { he: { label: 'אש מזחלת', sub: 'Forge Light' }, en: { label: 'Forge Fire Light', sub: 'Warm Ember Glow' }, val: 'warm forge fire lighting, intense orange ember glow, volumetric light through smoke' },
       { he: { label: 'אור כוכבים', sub: 'Starlight' }, en: { label: 'Starlight', sub: 'Celestial Light' }, val: 'starlight illumination, celestial night lighting, soft star glow, Milky Way light' },
-      { he: { label: 'אור קצה', sub: 'Rim Light' }, en: { label: 'Rim Light', sub: 'Edge Highlight' }, val: 'rim lighting, edge highlight, silhouette outline, backlit glow around subject' },
     ]
   },
   {
@@ -584,9 +710,7 @@ const DATA = [
       { he: { label: 'פרטים דקים', sub: 'Fine Details' }, en: { label: 'Fine Details', sub: 'Complex Textures' }, val: 'intricate details, highly detailed, complex textures' },
       { he: { label: 'אמנות דיגיטלית', sub: 'Digital Art' }, en: { label: 'Digital Art', sub: 'Digital Painting' }, val: 'digital art, digital painting, professional artwork' },
       { he: { label: '8K HDR', sub: 'Ultra Resolution' }, en: { label: '8K HDR', sub: 'Ultra Resolution' }, val: '8K resolution, HDR, ultra-detailed textures, sharp focus' },
-      { he: { label: 'Unreal Engine 5', sub: 'Ray-Tracing' }, en: { label: 'Unreal Engine 5', sub: 'Ray-Tracing' }, val: 'Unreal Engine 5, Octane Render, ray-tracing, global illumination' },
       { he: { label: 'גרעין פילם', sub: 'Film Grain' }, en: { label: 'Film Grain', sub: 'Analog Texture' }, val: 'film grain, analog texture, subtle noise, cinematic grain' },
-      { he: { label: 'עומק שדה', sub: 'Cinematic DOF' }, en: { label: 'Depth of Field', sub: 'Cinematic DOF' }, val: 'shallow depth of field, bokeh background, cinematic focus, creamy bokeh' },
     ]
   },
   {
@@ -702,12 +826,19 @@ const DATA = [
       { he: { label: 'קרח שבור', sub: 'Broken Ice' }, en: { label: 'Broken Ice', sub: 'Ice Plate' }, val: 'broken ice plate, hand pressed against ice, wet surface reflection, crystalline texture, ice shards' },
       { he: { label: 'אפרודיטה-קור', sub: 'Divine Feminine' }, en: { label: 'Aphrodite Core', sub: 'Divine Feminine' }, val: 'Aphrodite-core aesthetic, holographic mesh, fractured gem appliqués, divine feminine energy, neon luxury' },
       { he: { label: 'מסקרה ספורט', sub: 'Sports Mascot' }, en: { label: 'Sports Mascot', sub: 'Chibi Style' }, val: 'sports mascot caricature, chibi style, large head small body, FIFA tournament artwork, stadium atmosphere' },
-      { he: { label: 'פורסת לוקסוס', sub: 'Luxury Dark' }, en: { label: 'Dark Luxury Editorial', sub: 'Prestige Magazine' }, val: 'dark luxury editorial photography, prestige magazine cover, premium cinematic realism, high-end fashion' },
+      { he: { label: 'לוקסוס עלום', sub: 'Dark Prestige' }, en: { label: 'Dark Prestige', sub: 'Noir Luxury' }, val: 'dark prestige editorial, noir luxury aesthetic, black velvet atmosphere, cinematic high-fashion, shadow and light' },
       { he: { label: 'ריזאריקשן / רוחניות', sub: 'Spiritual Rising' }, en: { label: 'Spiritual Rising', sub: 'Resurrection' }, val: 'spiritual awakening symbolism, light breaking through darkness, hope and redemption, ethereal atmosphere' },
       { he: { label: 'ציוד מימי-ביניים', sub: 'Medieval Forge' }, en: { label: 'Medieval Forge', sub: 'Blacksmith' }, val: 'medieval blacksmith forge, incandescent metal, flying sparks, chiaroscuro forge lighting, leather apron' },
     ]
   }
 ];
+
+
+// ── DOM helpers ──────────────────────────────────────
+const $ = id => document.getElementById(id);
+const setText = (id, val) => { const el = $(id); if (el) el.textContent = val; };
+const setPlaceholder = (id, val) => { const el = $(id); if (el) el.placeholder = val; };
+
 
 let currentLang = 'he';
 let selected = new Set();
@@ -718,9 +849,9 @@ const NEG = '--no bad anatomy, deformed hands, extra fingers, text, watermark, b
 const T = {
   he: {
     dir: 'rtl', lang: 'he',
-    placeholder: "תאר את התמונה שאתה רוצה ליצור... לדוגמה: 'אישה יפה עומדת ביער בשקיעה'",
+    placeholder: "תאר את התמונה שאתה רוצה ליצור...",
     searchPlaceholder: "חפש תגיות, סגנונות...",
-    emptyPrompt: 'תאר מה שאתה רוצה ליצור, ובחר תגיות...',
+    emptyPrompt: '✨ הפרומפט שלך יופיע כאן — העתק אותו למנוע ה-AI האהוב עליך (Midjourney, Stable Diffusion, DALL·E ועוד) וצור את התמונה שיצרנו יחד!',
     charCount: function(n) { return n + ' תווים'; },
     clearBtn: 'נקה', copyBtn: 'העתק פרומפט', copiedBtn: '✅ הועתק!',
     resultLabel: 'פרומפט מוכן', subtitle: 'מחולל פרומפטים לתמונות AI',
@@ -728,9 +859,9 @@ const T = {
   },
   en: {
     dir: 'ltr', lang: 'en',
-    placeholder: "Describe the image you want... e.g. 'A beautiful woman standing in a forest at sunset'",
+    placeholder: "Describe the image you want to create...",
     searchPlaceholder: 'Search tags, styles...',
-    emptyPrompt: 'Describe what you want to create and select tags...',
+    emptyPrompt: '✨ Your prompt will appear here — copy it to your favorite AI image generator (Midjourney, Stable Diffusion, DALL·E and more) and create the image we built together!',
     charCount: function(n) { return n + ' chars'; },
     clearBtn: 'Clear', copyBtn: 'Copy Prompt', copiedBtn: '✅ Copied!',
     resultLabel: 'Prompt ready', subtitle: 'AI Image Prompt Builder',
@@ -740,30 +871,30 @@ const T = {
 
 // ─── Build category grid ──────────────────────────────────────
 function buildCatGrid() {
-  var grid = document.getElementById('catGrid');
+  const grid = $('catGrid');
   if (!grid) { setTimeout(buildCatGrid, 50); return; }
   grid.innerHTML = '';
   DATA.forEach(function(cat, ci) {
-    var catData = cat[currentLang];
-    var pill = document.createElement('button');
+    const catData = cat[currentLang];
+    const pill = document.createElement('button');
     pill.className = 'cat-pill';
     pill.dataset.ci = String(ci);
 
-    var badge = document.createElement('span');
+    const badge = document.createElement('span');
     badge.className = 'cat-badge';
     badge.id = 'badge-' + ci;
 
-    var titleStr = catData.title;
-    var emojiMatch = titleStr.match(/^(\S+)/);
-    var emoji = emojiMatch ? emojiMatch[1] : '📌';
-    var txt = titleStr.replace(/^\S+\s*/, '').trim();
-    if (txt.length > 11) txt = txt.slice(0, 10) + '…';
+    const titleStr = catData.title;
+    const emojiMatch = titleStr.match(/^(\S+)/);
+    const emoji = emojiMatch ? emojiMatch[1] : '📌';
+    const txt = titleStr.replace(/^\S+\s*/, '').trim();
+    if (txt.length > 14) txt = txt.slice(0, 13) + '…';
 
-    var emojiEl = document.createElement('span');
+    const emojiEl = document.createElement('span');
     emojiEl.className = 'cat-emoji';
     emojiEl.textContent = emoji;
 
-    var nameEl = document.createElement('span');
+    const nameEl = document.createElement('span');
     nameEl.className = 'cat-name';
     nameEl.textContent = txt;
 
@@ -780,25 +911,25 @@ function buildCatGrid() {
 function openPanel(ci) {
   if (activeCatIdx === ci) { closePanel(); return; }
   activeCatIdx = ci;
-  var cat = DATA[ci];
-  var catData = cat[currentLang];
+  const cat = DATA[ci];
+  const catData = cat[currentLang];
 
   document.querySelectorAll('.cat-pill').forEach(function(p, i) {
     p.classList.toggle('active', i === ci);
   });
 
-  document.getElementById('tagPanelTitle').textContent = catData.title;
+  $('tagPanelTitle').textContent = catData.title;
 
-  var list = document.getElementById('tagList');
+  const list = $('tagList');
   list.innerHTML = '';
   cat.tags.forEach(function(t) {
-    var tagData = t[currentLang];
-    var btn = document.createElement('button');
+    const tagData = t[currentLang];
+    const btn = document.createElement('button');
     btn.className = 'tag-btn' + (selected.has(t.val) ? ' active' : '');
     btn.dataset.val = t.val;
 
-    var text = document.createTextNode(tagData.label);
-    var sub = document.createElement('span');
+    const text = document.createTextNode(tagData.label);
+    const sub = document.createElement('span');
     sub.className = 'tag-btn-sub';
     sub.textContent = tagData.sub;
 
@@ -808,7 +939,7 @@ function openPanel(ci) {
     list.appendChild(btn);
   });
 
-  var panel = document.getElementById('tagPanel');
+  const panel = $('tagPanel');
   panel.classList.add('open');
 
   if (window.innerWidth < 768) {
@@ -819,7 +950,7 @@ function openPanel(ci) {
 }
 
 function closePanel() {
-  document.getElementById('tagPanel').classList.remove('open');
+  $('tagPanel').classList.remove('open');
   document.querySelectorAll('.cat-pill').forEach(function(p) { p.classList.remove('active'); });
   activeCatIdx = -1;
 }
@@ -840,21 +971,21 @@ function toggleTag(btn, val) {
 
 function updateBadges() {
   DATA.forEach(function(cat, ci) {
-    var count = 0;
+    const count = 0;
     cat.tags.forEach(function(t) { if (selected.has(t.val)) count++; });
-    var b = document.getElementById('badge-' + ci);
+    const b = $('badge-' + ci);
     if (b) { b.textContent = count; b.classList.toggle('on', count > 0); }
   });
 }
 
 // ─── Chips ────────────────────────────────────────────────────
 function updateChips() {
-  var bar = document.getElementById('selectedBar');
+  const bar = $('selectedBar');
   bar.innerHTML = '';
   selected.forEach(function(val) {
-    var chip = document.createElement('div');
+    const chip = document.createElement('div');
     chip.className = 'sel-chip';
-    var x = document.createElement('span');
+    const x = document.createElement('span');
     x.className = 'sel-chip-x';
     x.textContent = '✕';
     chip.appendChild(x);
@@ -871,49 +1002,45 @@ function updateChips() {
 }
 
 function findLabel(val) {
-  for (var i = 0; i < DATA.length; i++)
-    for (var j = 0; j < DATA[i].tags.length; j++)
+  for (let i = 0; i < DATA.length; i++)
+    for (let j = 0; j < DATA[i].tags.length; j++)
       if (DATA[i].tags[j].val === val) return DATA[i].tags[j][currentLang].label;
   return val.split(',')[0];
 }
 
 // ─── Generate ─────────────────────────────────────────────────
 function generate() {
-  var t = T[currentLang];
-  var txt = document.getElementById('userInput').value.trim();
-  var el = document.getElementById('finalPrompt');
+  const t = T[currentLang];
+  const txt = $('userInput').value.trim();
+  const el = $('finalPrompt');
   if (!txt && selected.size === 0) {
     lastPrompt = '';
-    el.style.color = 'var(--muted)';
-    el.style.fontFamily = "'Rubik', sans-serif";
-    el.style.fontSize = '13px';
+    el.className = 'prompt-empty';
     el.textContent = t.emptyPrompt;
-    document.getElementById('charCount').textContent = t.charCount(0);
+    $('charCount').textContent = t.charCount(0);
     return;
   }
-  var parts = [];
+  const parts = [];
   if (txt) parts.push(txt);
   Array.from(selected).forEach(function(v) { parts.push(v); });
-  var prompt = parts.join(', ') + ' ' + NEG;
+  const prompt = parts.join(', ') + ' ' + NEG;
   lastPrompt = prompt;
-  el.style.color = 'var(--teal)';
-  el.style.fontFamily = "'JetBrains Mono', monospace";
-  el.style.fontSize = '12px';
+  el.className = 'prompt-ready';
   el.textContent = prompt;
-  document.getElementById('charCount').textContent = t.charCount(prompt.length);
+  $('charCount').textContent = t.charCount(prompt.length);
 }
 
 // ─── Search ───────────────────────────────────────────────────
 function filterTags() {
-  var q = document.getElementById('search').value.toLowerCase().trim();
+  let q = $('search').value.toLowerCase().trim();
   if (!q) { return; }
 
   // Find first category with matching tags, open it
-  var foundCi = -1;
+  let foundCi = -1;
   DATA.forEach(function(cat, ci) {
     if (foundCi >= 0) return;
     cat.tags.forEach(function(t) {
-      var text = (t[currentLang].label + ' ' + t[currentLang].sub + ' ' + t.val).toLowerCase();
+      const text = (t[currentLang].label + ' ' + t[currentLang].sub + ' ' + t.val).toLowerCase();
       if (text.includes(q)) { if (foundCi < 0) foundCi = ci; }
     });
   });
@@ -922,24 +1049,24 @@ function filterTags() {
     openPanel(foundCi);
     // Filter visible tags in panel
     document.querySelectorAll('.tag-btn').forEach(function(btn) {
-      var text = btn.textContent.toLowerCase();
-      var val = (btn.dataset.val || '').toLowerCase();
+      const text = btn.textContent.toLowerCase();
+      const val = (btn.dataset.val || '').toLowerCase();
       btn.style.display = (!q || text.includes(q) || val.includes(q)) ? '' : 'none';
     });
   }
 
   if (!q) {
-    document.querySelectorAll('.tag-btn').forEach(function(b) { b.style.display = ''; });
+    document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('tag-hidden'));
   }
 }
 
 // ─── Copy ─────────────────────────────────────────────────────
 function copyPrompt() {
-  var t = T[currentLang];
+  const t = T[currentLang];
   if (!lastPrompt) return;
-  var btn = document.getElementById('copyBtn');
-  var icon = document.getElementById('copyIcon');
-  var label = document.getElementById('copyText');
+  const btn = $('copyBtn');
+  const icon = $('copyIcon');
+  const label = $('copyText');
 
   function onOk() {
     btn.classList.add('copied');
@@ -957,7 +1084,7 @@ function copyPrompt() {
   } else { fallback(); }
 
   function fallback() {
-    var ta = document.createElement('textarea');
+    const ta = document.createElement('textarea');
     ta.value = lastPrompt;
     ta.style.cssText = 'position:fixed;top:-9999px;opacity:0;';
     document.body.appendChild(ta);
@@ -969,47 +1096,116 @@ function copyPrompt() {
 
 // ─── Clear ────────────────────────────────────────────────────
 function clearAll() {
-  document.getElementById('userInput').value = '';
+  $('userInput').value = '';
   selected.clear();
   document.querySelectorAll('.tag-btn').forEach(function(b) { b.classList.remove('active'); });
-  document.getElementById('search').value = '';
-  document.querySelectorAll('.tag-btn').forEach(function(b) { b.style.display = ''; });
+  $('search').value = '';
+  document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('tag-hidden'));
   updateBadges(); updateChips(); generate();
 }
 
 // ─── setLang ──────────────────────────────────────────────────
-function safeSet(id, prop, val) { var el = document.getElementById(id); if (el) el[prop] = val; }
+
 
 function setLang(lang) {
   currentLang = lang;
-  var t = T[lang];
+  const t = T[lang];
   document.documentElement.lang = t.lang;
   document.documentElement.dir = t.dir;
-  document.getElementById('btnHE').classList.toggle('active', lang === 'he');
-  document.getElementById('btnEN').classList.toggle('active', lang === 'en');
-  safeSet('userInput', 'placeholder', t.placeholder);
-  safeSet('search', 'placeholder', t.searchPlaceholder);
-  safeSet('headerSubtitle', 'textContent', t.subtitle);
-  safeSet('resultLabel', 'textContent', t.resultLabel);
-  safeSet('copyText', 'textContent', t.copyBtn);
-  safeSet('clearBtn', 'textContent', t.clearBtn);
+  $('btnHE').classList.toggle('active', lang === 'he');
+  $('btnEN').classList.toggle('active', lang === 'en');
+  setPlaceholder('userInput', t.placeholder);
+  setPlaceholder('search', t.searchPlaceholder);
+  setText('headerSubtitle', t.subtitle);
+  setText('resultLabel', t.resultLabel);
+  setText('copyText', t.copyBtn);
+  setText('clearBtn', t.clearBtn);
   // Rebuild categories in new language, keep panel open if was open
-  var prevActive = activeCatIdx;
+  let prevActive = activeCatIdx;
   buildCatGrid();
   if (prevActive >= 0) openPanel(prevActive);
   updateChips();
   generate();
+  // עדכן install banner text
+  if (typeof T_install !== 'undefined' && T_install[lang]) {
+    const ti = T_install[lang];
+    setText('installMsg', ti.msg);
+    const ib = $('installBtn');
+    if (ib) ib.textContent = ti.btn;
+  }
 }
 
 // ─── Start ────────────────────────────────────────────────────
+
+// ── PWA Install ───────────────────────────────────────────────
+let deferredPrompt = null;
+const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+const isInStandalone = window.matchMedia('(display-mode: standalone)').matches
+  || navigator.standalone;
+
+function initInstall() {
+  if (isInStandalone) return; // כבר מותקן
+
+  const T_install = {
+    he: { msg: 'הוסף למסך הבית לגישה מהירה', btn: 'הוסף', ios: 'לחץ על ⬆ ואז "הוסף למסך הבית"' },
+    en: { msg: 'Add to home screen for quick access', btn: 'Add', ios: 'Tap ⬆ then "Add to Home Screen"' },
+  };
+
+  function showBanner() {
+    const t = T_install[currentLang] || T_install.he;
+    setText('installMsg', t.msg);
+    const btn = $('installBtn');
+    if (btn) btn.textContent = t.btn;
+    $('installBanner').classList.add('show');
+  }
+
+  if (isIOS) {
+    // iOS: הצג אחרי 3 שניות
+    setTimeout(() => {
+      const t = T_install[currentLang] || T_install.he;
+      setText('iosHintText', t.ios);
+      $('iosHint').classList.add('show');
+      setTimeout(() => $('iosHint').classList.remove('show'), 8000);
+    }, 3000);
+    return;
+  }
+
+  // Android/Desktop: beforeinstallprompt
+  window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault();
+    deferredPrompt = e;
+    showBanner();
+  });
+}
+
+function doInstall() {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(choice => {
+    deferredPrompt = null;
+    $('installBanner').classList.remove('show');
+  });
+}
+
+function dismissInstall() {
+  $('installBanner').classList.remove('show');
+  deferredPrompt = null;
+}
+
+
 function startApp() {
-  try { buildCatGrid(); } catch(e) { setTimeout(buildCatGrid, 100); }
-  try { generate(); } catch(e) {}
-  // Set initial placeholders
-  var t = T[currentLang];
-  safeSet('userInput', 'placeholder', t.placeholder);
-  safeSet('search', 'placeholder', t.searchPlaceholder);
-  safeSet('charCount', 'textContent', t.charCount(0));
+  initInstall();
+  try { buildCatGrid(); } catch(e) { console.error('[SBP] buildCatGrid:', e); setTimeout(buildCatGrid, 100); }
+  try { generate(); } catch(e) { console.warn('[SBP]', e); }
+  // Set initial UI text
+  const t = T[currentLang];
+  setPlaceholder('userInput', t.placeholder);
+  setPlaceholder('search', t.searchPlaceholder);
+  setText('charCount', t.charCount(0));
+  setText('headerSubtitle', t.subtitle);
+  setText('resultLabel', t.resultLabel);
+  setText('copyText', t.copyBtn);
+  setText('clearBtn', t.clearBtn);
 }
 
 if (document.readyState === 'loading') {
