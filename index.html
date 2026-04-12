@@ -973,7 +973,7 @@ function updateBadges() {
   DATA.forEach(function(cat, ci) {
     const count = 0;
     cat.tags.forEach(function(t) { if (selected.has(t.val)) count++; });
-    const b = $('badge-' + ci);
+    let b = $('badge-' + ci);
     if (b) { b.textContent = count; b.classList.toggle('on', count > 0); }
   });
 }
@@ -1011,7 +1011,7 @@ function findLabel(val) {
 // ─── Generate ─────────────────────────────────────────────────
 function generate() {
   const t = T[currentLang];
-  const txt = $('userInput').value.trim();
+  let txt = $('userInput').value.trim();
   const el = $('finalPrompt');
   if (!txt && selected.size === 0) {
     lastPrompt = '';
@@ -1050,7 +1050,7 @@ function filterTags() {
     // Filter visible tags in panel
     document.querySelectorAll('.tag-btn').forEach(function(btn) {
       const text = btn.textContent.toLowerCase();
-      const val = (btn.dataset.val || '').toLowerCase();
+      let val = (btn.dataset.val || '').toLowerCase();
       btn.style.display = (!q || text.includes(q) || val.includes(q)) ? '' : 'none';
     });
   }
