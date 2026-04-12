@@ -6,15 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#08080f">
 <meta name="mobile-web-app-capable" content="yes">
-<link rel="manifest" href="data:application/json,{
-  %22name%22:%22Split Banana Pro%22,
-  %22short_name%22:%22Split Banana%22,
-  %22start_url%22:%22.%22,
-  %22display%22:%22standalone%22,
-  %22background_color%22:%22%2308080f%22,
-  %22theme_color%22:%22%2308080f%22,
-  %22icons%22:[{%22src%22:%22https://via.placeholder.com/192x192/29b6f6/ffffff?text=%F0%9F%8D%8C%22,%22sizes%22:%22192x192%22,%22type%22:%22image/png%22}]
-}">
+<link rel="manifest" href="manifest.json">
 
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="format-detection" content="telephone=no">
@@ -1137,6 +1129,12 @@ function setLang(lang) {
 
 // ─── Start ────────────────────────────────────────────────────
 
+// ── PWA Install Translations ──────────────────────────────────
+const T_install = {
+  he: { msg: 'הוסף למסך הבית לגישה מהירה', btn: 'הוסף', ios: 'לחץ על ⬆ ואז "הוסף למסך הבית"' },
+  en: { msg: 'Add to home screen for quick access', btn: 'Add', ios: 'Tap ⬆ then "Add to Home Screen"' },
+};
+
 // ── PWA Install ───────────────────────────────────────────────
 let deferredPrompt = null;
 const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
@@ -1145,11 +1143,6 @@ const isInStandalone = window.matchMedia('(display-mode: standalone)').matches
 
 function initInstall() {
   if (isInStandalone) return; // כבר מותקן
-
-  const T_install = {
-    he: { msg: 'הוסף למסך הבית לגישה מהירה', btn: 'הוסף', ios: 'לחץ על ⬆ ואז "הוסף למסך הבית"' },
-    en: { msg: 'Add to home screen for quick access', btn: 'Add', ios: 'Tap ⬆ then "Add to Home Screen"' },
-  };
 
   function showBanner() {
     const t = T_install[currentLang] || T_install.he;
@@ -1213,6 +1206,7 @@ if (document.readyState === 'loading') {
 } else {
   startApp();
 }
+
 </script>
 </body>
 </html>
