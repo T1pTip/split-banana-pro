@@ -28,10 +28,10 @@
   --border: rgba(255,255,255,0.07);
   --accent: #007aff;
   --teal: #00e5cc;
-  --a1: var(--a1);
-  --a2: var(--a2);
-  --a3: var(--a3);
-  --a4: var(--a4);
+  --a1: rgba(0,122,255,0.05);
+  --a2: rgba(0,122,255,0.15);
+  --a3: rgba(0,122,255,0.28);
+  --a4: rgba(0,122,255,0.45);
   --text: #e8e8f0;
   --muted: #6b6b88;
   --r: 12px;
@@ -971,7 +971,7 @@ function toggleTag(btn, val) {
 
 function updateBadges() {
   DATA.forEach(function(cat, ci) {
-    const count = 0;
+    let count = 0;
     cat.tags.forEach(function(t) { if (selected.has(t.val)) count++; });
     let b = $('badge-' + ci);
     if (b) { b.textContent = count; b.classList.toggle('on', count > 0); }
