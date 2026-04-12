@@ -887,7 +887,7 @@ function buildCatGrid() {
     const titleStr = catData.title;
     const emojiMatch = titleStr.match(/^(\S+)/);
     const emoji = emojiMatch ? emojiMatch[1] : '📌';
-    const txt = titleStr.replace(/^\S+\s*/, '').trim();
+    let txt = titleStr.replace(/^\S+\s*/, '').trim();
     if (txt.length > 14) txt = txt.slice(0, 13) + '…';
 
     const emojiEl = document.createElement('span');
