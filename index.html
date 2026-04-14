@@ -1558,6 +1558,30 @@ function initInstall() {
   });
 }
 
+
+function showInstallSuccess() {
+  const isHe = currentLang === 'he';
+  const ex = document.getElementById('installSuccessModal');
+  if (ex) ex.remove();
+  const modal = document.createElement('div');
+  modal.id = 'installSuccessModal';
+  modal.className = 'cm-overlay';
+  modal.innerHTML =
+    '<div class="cm-box" style="text-align:center" dir="' + (isHe ? 'rtl' : 'ltr') + '">' +
+    '<div style="font-size:40px;margin-bottom:12px">🎨</div>' +
+    '<div class="cm-title">' + (isHe ? '📲 Palette AI הותקנה!' : '📲 Palette AI Installed!') + '</div>' +
+    '<div class="cm-msg" style="margin-top:8px">' +
+      (isHe
+        ? 'תמצא/י את 🎨 ברשימת האפליקציות וגרור/י למסך הבית'
+        : 'Find 🎨 in your app drawer and drag it to your home screen') +
+    '</div>' +
+    '<button class="clr-btn" style="margin-top:16px" onclick="document.getElementById(\'installSuccessModal\').remove()">' +
+      (isHe ? 'בינתי!' : 'Got it!') +
+    '</button>' +
+    '</div>';
+  document.body.appendChild(modal);
+  modal.addEventListener('click', function(e) { if (e.target === modal) modal.remove(); });
+}
 function doInstall() {
   if (!deferredPrompt) return;
   deferredPrompt.prompt();
@@ -1565,13 +1589,7 @@ function doInstall() {
     deferredPrompt = null;
     $('installBanner').classList.remove('show');
     if (choice.outcome === 'accepted') {
-      const isHe = currentLang === 'he';
-      showToast(
-        isHe
-          ? '📲 Palette AI 🎨 הותקנה! תמצא/י אותה ברשימת האפליקציות — גרור/י למסך הבית 🎨'
-          : '📲 Palette AI 🎨 installed! Find it in your apps — drag to home screen 🎨',
-        false, false
-      );
+      showInstallSuccess();
     }
   });
 }
