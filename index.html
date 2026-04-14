@@ -10,7 +10,7 @@
 
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="format-detection" content="telephone=no">
-<title>Split Banana Pro</title>
+<title>Split Banana 🍌</title>
 <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -41,8 +41,8 @@ body {
 /* ── Header ── */
 .header {
   display: flex;
-  align-items: center;
-  gap: 10px;
+  flex-direction: column;
+  gap: 6px;
   padding: 10px 14px;
   border-bottom: 1px solid var(--border);
   position: -webkit-sticky;
@@ -55,19 +55,31 @@ body {
 }
 
 .header-title {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 700;
   color: #fff;
   white-space: nowrap;
   flex-shrink: 0;
 }
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+.header-bottom {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
 .header-subtitle {
   font-size: 11px;
   color: var(--muted);
-  flex: 1;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  flex-shrink: 0;
 }
 .search-wrap {
   position: relative;
@@ -113,9 +125,10 @@ body {
   border: none;
   color: var(--muted);
   font-family: 'Rubik', sans-serif;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
-  padding: 5px 10px;
+  padding: 5px 8px;
+  min-height: 36px;
   cursor: pointer;
   transition: all 0.15s;
   touch-action: manipulation;
@@ -141,11 +154,11 @@ body {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  order: 2;
+  order: 3;
 }
 @media (min-width: 768px) {
   .right-col {
-    order: 1;
+    order: 2;
     border-left: 1px solid var(--border);
     position: -webkit-sticky;
   position: sticky;
@@ -166,7 +179,7 @@ body {
 }
 @media (min-width: 768px) {
   .left-col {
-    order: 2;
+    order: 1;
     position: -webkit-sticky;
   position: sticky;
     top: 55px;
@@ -351,7 +364,7 @@ body {
   color: #a8c8ff;
   font-size: 11px;
   font-weight: 500;
-  padding: 3px 8px 3px 5px;
+  padding: 5px 10px 5px 7px;
   border-radius: 99px;
   display: flex;
   align-items: center;
@@ -359,6 +372,7 @@ body {
   cursor: pointer;
   animation: chipIn 0.12s ease;
   touch-action: manipulation;
+  min-height: 30px;
 }
 @keyframes chipIn {
   from { opacity: 0; transform: scale(0.85); }
@@ -549,6 +563,67 @@ body {
 @supports (padding-bottom: env(safe-area-inset-bottom)) {
   .app { padding-bottom: env(safe-area-inset-bottom); }
 }
+
+/* ── History Panel ────────────────────────────────────── */
+.hist-btn{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);color:var(--muted);font-size:17px;padding:5px 9px;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;min-height: 44px;min-width: 44px;line-height:1}
+.hist-btn:active{opacity:.7}
+.hist-panel{display:none;background:var(--surface);border:1px solid var(--a2);border-radius:var(--r);overflow:hidden;margin-top:6px;animation:panelIn .15s ease}
+.hist-panel.open{display:block}
+.hist-header{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-bottom:1px solid var(--border);background:var(--a1);font-size:12px;font-weight:600;color:var(--muted)}
+.hist-clear{font-size:11px;color:var(--muted);background:none;border:none;cursor:pointer;touch-action:manipulation;min-height: 30px;padding:4px 6px}
+.hist-item{padding:8px 12px;border-bottom:1px solid var(--border);cursor:pointer;min-height: 44px;touch-action:manipulation}
+.hist-item:last-child{border-bottom:none}
+.hist-item:active{background:var(--a1)}
+.hist-text{font-size:11px;color:var(--text);font-family:"JetBrains Mono",monospace;line-height:1.4}
+.hist-time{font-size:10px;color:var(--muted);margin-top:2px}
+.hist-empty{padding:16px 12px;font-size:12px;color:var(--muted);text-align:center}
+
+/* ── Onboarding ────────────────────────────────────────── */
+.onboarding{display:none;background:rgba(0,122,255,.08);border:1px solid var(--a2);border-radius:var(--r);padding:11px 13px;margin:6px 0}
+.onboarding.show{display:flex;align-items:flex-start;gap:10px;animation:slideDown .3s ease}
+@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+.ob-steps{display:flex;flex-wrap:wrap;gap:8px;flex:1}
+.ob-step{display:flex;align-items:center;gap:5px;font-size:11.5px;color:var(--text)}
+.ob-num{width:18px;height:18px;border-radius:50%;background:var(--accent);color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ob-close{background:none;border:none;color:var(--muted);cursor:pointer;font-size:15px;padding:0 3px;touch-action:manipulation;min-height: 30px;flex-shrink:0}
+
+/* ── Random Button ─────────────────────────────────────── */
+.btn-rnd{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);font-size:18px;padding:5px 9px;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;min-height: 44px;min-width: 44px;line-height:1;transition:transform .15s}
+.btn-rnd:active{transform:scale(.88)}
+
+/* ── Aspect Ratio ──────────────────────────────────────── */
+.ar-row{display:flex;align-items:center;gap:5px}
+.ar-lbl{font-size:11px;color:var(--muted);font-weight:500;flex-shrink:0}
+.ar-btn{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);color:var(--muted);font-size:11px;font-weight:600;padding:5px 9px;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;min-height: 36px;white-space:nowrap;transition:all .15s}
+.ar-btn.active{background:var(--a3);border-color:var(--accent);color:#fff}
+.ar-btn:active{opacity:.8}
+
+/* ── Copy & Open ───────────────────────────────────────── */
+.open-row{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.open-btn{display:flex;align-items:center;gap:5px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);color:var(--text);font-size:12px;font-weight:500;padding:7px 11px;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;min-height: 40px;transition:all .15s;flex:1;justify-content:center}
+.open-btn:active{opacity:.8;transform:scale(.97)}
+.open-btn .ob-icon{font-size:15px}
+
+/* ── Token count ───────────────────────────────────────── */
+.tok-warn{color:#ffaa00}
+
+/* ── Toast ─────────────────────────────────────────────── */
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(20,20,40,.97);color:#fff;font-size:13px;font-weight:500;padding:11px 20px;border-radius:14px;opacity:0;pointer-events:none;transition:all .25s;z-index:9999;white-space:nowrap;border:1px solid var(--a2);box-shadow:0 4px 20px rgba(0,0,0,.4);max-width:90vw;text-align:center}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+#toast.toast-err{background:rgba(180,40,40,.97)}
+#toast.toast-deep{background:rgba(0,100,60,.97);border-color:rgba(0,200,120,.3)}
+
+/* ── Random Divider ────────────────────────────────────── */
+.random-divider{order:2;display:flex;align-items:center;justify-content:center;padding:6px 14px 4px;gap:10px}
+.random-divider::before,.random-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.btn-rnd-main{display:flex;align-items:center;gap:7px;background:var(--surface2);border:1px solid var(--a2);border-radius:99px;color:var(--text);font-size:13px;font-weight:500;padding:8px 18px;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;min-height: 40px;white-space:nowrap;transition:all .15s}
+.btn-rnd-main:active{transform:scale(.95);background:var(--a2)}
+
+/* ── Format Row ────────────────────────────────────────── */
+.format-row{display:flex;justify-content:flex-start;gap:5px;padding:4px 14px 0;order:2}
+.fmt-btn{display:flex;align-items:center;gap:5px;background:var(--surface2);border:1px solid var(--border);border-radius:99px;color:var(--text);font-size:12px;font-weight:500;padding:7px 14px;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;min-height: 38px;transition:all .15s;white-space:nowrap}
+.fmt-btn.active{background:var(--a2);border-color:var(--accent);color:#a8c8ff}
+.fmt-btn:active{opacity:.8}
 </style>
 </head>
 <body>
@@ -557,7 +632,7 @@ body {
 <!-- Install banner -->
 <div class="install-banner" id="installBanner">
   <div class="install-text">
-    <strong>🍌 Split Banana Pro</strong><br>
+    <strong>Split Banana 🍌</strong><br>
     <span id="installMsg">הוסף למסך הבית לגישה מהירה</span>
   </div>
   <div class="install-actions">
@@ -572,18 +647,21 @@ body {
 </div>
 
 <header class="header">
-
-  <span class="header-title">Split Banana Pro</span>
-  <span class="header-subtitle" id="headerSubtitle"></span>
-  <div class="search-wrap">
-    <input type="search" id="search" autocomplete="off" oninput="filterTags()" />
-    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-      <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-    </svg>
+  <div class="header-top">
+    <span class="header-title">Split Banana 🍌</span>
+    <div class="lang-toggle">
+      <button class="lang-btn active" id="btnHE" onclick="setLang('he')">עברית</button>
+      <button class="lang-btn" id="btnEN" onclick="setLang('en')">English</button>
+    </div>
   </div>
-  <div class="lang-toggle">
-    <button class="lang-btn active" id="btnHE" onclick="setLang('he')">HE</button>
-    <button class="lang-btn" id="btnEN" onclick="setLang('en')">EN</button>
+  <div class="header-bottom">
+    <span class="header-subtitle" id="headerSubtitle"></span>
+    <div class="search-wrap">
+      <input type="search" id="search" autocomplete="off" oninput="filterTags()" />
+      <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+    </div>
   </div>
 </header>
 
@@ -596,13 +674,29 @@ body {
       <div class="result-top">
         <div class="result-label-wrap">
           <div class="result-dot"></div>
-          <span id="resultLabel"></span>
+          <button class="hist-btn" onclick="toggleHistPanel()" title="היסטוריה">🕐</button>
+          <div class="hist-panel" id="histPanel">
+            <div class="hist-header">
+              <span id="histTitle">היסטוריה</span>
+              <button class="hist-clear" onclick="clearHistory()" id="histClear">נקה</button>
+            </div>
+            <div id="historyList"></div>
+          </div>
+            <span id="resultLabel"></span>
         </div>
         <span id="charCount"></span>
       </div>
       <div id="finalPrompt"></div>
     </div>
-    <div class="action-row">
+
+      <!-- Open In -->
+      <div class="open-row">
+        <button class="open-btn" onclick="openIn('chatgpt')"><span class="ob-icon">🤖</span>ChatGPT</button>
+        <button class="open-btn" onclick="openIn('midjourney')"><span class="ob-icon">🎨</span>Midjourney</button>
+        <button class="open-btn" onclick="openIn('gemini')"><span class="ob-icon">✨</span>Gemini</button>
+        <button class="open-btn" onclick="openIn('dalle')"><span class="ob-icon">🖼️</span>DALL·E</button>
+      </div>
+          <div class="action-row">
       <button class="btn-copy" id="copyBtn" onclick="copyPrompt()">
         <span id="copyIcon">📋</span>
         <span id="copyText"></span>
@@ -610,9 +704,30 @@ body {
       <button class="btn-clear" id="clearBtn" onclick="clearAll()"></button>
     </div>
   </div>
+  <!-- Format row — above random button -->
+  <div class="format-row">
+    <button class="fmt-btn" data-ar="--ar 9:16" onclick="setAR('--ar 9:16')">📱 <span id="fmtStory">סטורי</span></button>
+    <button class="fmt-btn" data-ar="--ar 1:1" onclick="setAR('--ar 1:1')">⬜ <span id="fmtSquare">ריבוע</span></button>
+    <button class="fmt-btn" data-ar="--ar 16:9" onclick="setAR('--ar 16:9')">🖼️ <span id="fmtWide">רחב</span></button>
+  </div>
+  <!-- Random button — between categories and input -->
+  <div class="random-divider">
+    <button class="btn-rnd-main" id="randomBtn" onclick="randomize()">
+      🎲 <span id="randomBtnLabel">הפתע/י אותי</span>
+    </button>
+  </div>
 
   <!-- Categories -->
   <div class="left-col">
+    <!-- Onboarding hint -->
+    <div class="onboarding" id="onboarding">
+      <div class="ob-steps">
+        <div class="ob-step"><div class="ob-num">1</div><span id="ob1">בחר/י קטגוריה</span></div>
+        <div class="ob-step"><div class="ob-num">2</div><span id="ob2">בחר/י תגיות</span></div>
+        <div class="ob-step"><div class="ob-num">3</div><span id="ob3">תאר/י וצור/י</span></div>
+      </div>
+      <button class="ob-close" onclick="dismissOnboarding()">✕</button>
+    </div>
     <div class="cat-grid" id="catGrid"></div>
     <div class="tag-panel" id="tagPanel">
       <div class="tag-panel-header">
@@ -623,6 +738,7 @@ body {
     </div>
   </div>
 </div>
+
 
 
 
@@ -856,19 +972,38 @@ const T = {
     dir: 'rtl', lang: 'he',
     placeholder: "תאר/י את התמונה שאת/ה רוצה/ה ליצור...",
     searchPlaceholder: "חפש/י תגיות, סגנונות...",
-    emptyPrompt: '✨ הפרומפט שלך יופיע כאן — העתק/י אותו למנוע ה-AI האהוב/ה עליך (Midjourney, Stable Diffusion, DALL·E ועוד) וצור/י את התמונה שיצרנו יחד!',
+    emptyPrompt: '✨ הפרומפט יופיע כאן — לחץ/י על ChatGPT או Gemini והוא יופיע שם ישירות. לMidjourney ו-DALL·E הפרומפט מועתק, רק הדבק/י.',
     charCount: function(n) { return n + ' תווים'; },
     clearBtn: 'נקה/י', copyBtn: 'העתק/י פרומפט', copiedBtn: '✅ הועתק/ה!',
     resultLabel: 'פרומפט מוכן', subtitle: 'מחולל פרומפטים לתמונות AI',
     categories: 'קטגוריות',
+    arLabel: 'יחס:',
+    fmtStory: 'סטורי',
+    fmtSquare: 'ריבוע',
+    fmtWide: 'רחב',
+    randomBtn: 'הפתע/י אותי',
+    histTitle: 'היסטוריה',
+    histClear: 'נקה',
+    ob1: 'בחר/י קטגוריה',
+    ob2: 'בחר/י תגיות',
+    ob3: 'תאר/י וצור/י',
   },
   en: {
     dir: 'ltr', lang: 'en',
     placeholder: "Describe the image you want to create...",
     searchPlaceholder: 'Search tags, styles...',
-    emptyPrompt: '✨ Your prompt will appear here — copy it to your favorite AI image generator (Midjourney, Stable Diffusion, DALL·E and more) and create the image we built together!',
+    emptyPrompt: '✨ Your prompt will appear here — tap ChatGPT or Gemini and it opens pre-filled. For Midjourney & DALL·E it\'s copied to clipboard, just paste.',
     charCount: function(n) { return n + ' chars'; },
-    clearBtn: 'Clear', copyBtn: 'Copy Prompt', copiedBtn: '✅ Copied!',
+    clearBtn: 'Clear',
+    arLabel: 'Ratio:',
+    fmtStory: 'Story',
+    fmtSquare: 'Square',
+    fmtWide: 'Wide',
+    histTitle: 'History',
+    histClear: 'Clear',
+    ob1: 'Choose category',
+    ob2: 'Select tags',
+    ob3: 'Describe & build', copyBtn: 'Copy Prompt', copiedBtn: '✅ Copied!',
     resultLabel: 'Prompt ready', subtitle: 'AI Image Prompt Builder',
     categories: 'Categories',
   }
@@ -1027,18 +1162,26 @@ function generate() {
   }
   const parts = [];
   if (txt) parts.push(txt);
-  Array.from(selected).forEach(function(v) { parts.push(v); });
-  const prompt = parts.join(', ') + ' ' + NEG;
+  const sortedVals = Array.from(selected).sort((a, b) => getValPriority(a) - getValPriority(b));
+  sortedVals.forEach(v => parts.push(v));
+  const arSuffix = currentAR ? ' ' + currentAR : '';
+  const prompt = parts.join(', ') + arSuffix + ' ' + NEG;
   lastPrompt = prompt;
   el.className = 'prompt-ready';
   el.textContent = prompt;
-  $('charCount').textContent = t.charCount(prompt.length);
+  const tokens = prompt.replace(/ --no .+$/,'').split(/[,\s]+/).filter(Boolean).length;
+  const tokWarn = tokens > 70 ? ' ⚠️' : '';
+  $('charCount').textContent = t.charCount(prompt.length) + ' · ~' + tokens + ' tokens' + tokWarn;
+  saveHistory(prompt);
 }
 
 // ─── Search ───────────────────────────────────────────────────
 function filterTags() {
   let q = $('search').value.toLowerCase().trim();
-  if (!q) { return; }
+  if (!q) {
+    document.querySelectorAll('.tag-btn').forEach(b => b.style.display = '');
+    return;
+  }
 
   // Find first category with matching tags, open it
   let foundCi = -1;
@@ -1094,7 +1237,7 @@ function copyPrompt() {
     ta.style.cssText = 'position:fixed;top:-9999px;opacity:0;';
     document.body.appendChild(ta);
     ta.focus(); ta.select();
-    try { document.execCommand('copy'); onOk(); } catch(e) { alert(lastPrompt); }
+    try { document.execCommand('copy'); onOk(); } catch(e) { showToast(currentLang==='he'?'העתקה נכשלה':'Copy failed', true); }
     document.body.removeChild(ta);
   }
 }
@@ -1138,6 +1281,16 @@ function setLang(lang) {
     const ib = $('installBtn');
     if (ib) ib.textContent = ti.btn;
   }
+  if (t.arLabel) setText('arLabel', t.arLabel);
+  if (t.histTitle) setText('histTitle', t.histTitle);
+  if (t.histClear) setText('histClear', t.histClear);
+  if (t.ob1) setText('ob1', t.ob1);
+  if (t.ob2) setText('ob2', t.ob2);
+  if (t.ob3) setText('ob3', t.ob3);
+  if (t.randomBtn) setText('randomBtnLabel', t.randomBtn);
+  if (t.fmtStory) setText('fmtStory', t.fmtStory);
+  if (t.fmtSquare) setText('fmtSquare', t.fmtSquare);
+  if (t.fmtWide) setText('fmtWide', t.fmtWide);
 }
 
 // ─── Start ────────────────────────────────────────────────────
@@ -1199,8 +1352,225 @@ function dismissInstall() {
 }
 
 
+// ── Prompt Order Priority ─────────────────────────────────
+const ORDER_PRIORITY = {
+  '😊': 1, 'Expressions': 1,
+  '🧍': 2, 'Body Poses': 2,
+  '🎭': 3, 'Characters': 3,
+  '🌍': 4, 'Geographic': 4,
+  '💇': 5, 'Body &': 5,
+  '🎬': 6, 'Genres': 6,
+  '🎨': 7, 'Art Styles': 7,
+  '📸': 8, 'Photography': 8,
+  '💡': 9, 'Lighting': 9,
+  '📐': 10, 'Composition': 10,
+  '🌆': 11, 'Environments': 11,
+  '🖌': 12, 'Color Palette': 12,
+  '⚙': 13, 'Quality': 13,
+  '🔮': 14, 'Aesthetics': 14,
+  '👗': 15, 'Fashion': 15,
+};
+
+function getValPriority(val) {
+  for (let ci = 0; ci < DATA.length; ci++) {
+    for (let ti = 0; ti < DATA[ci].tags.length; ti++) {
+      if (DATA[ci].tags[ti].val === val) {
+        const title = DATA[ci][currentLang].title;
+        for (const key in ORDER_PRIORITY) {
+          if (title.includes(key)) return ORDER_PRIORITY[key];
+        }
+      }
+    }
+  }
+  return 99;
+}
+
+// ── Prompt History ────────────────────────────────────────
+const MAX_HIST = 8;
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function saveHistory(prompt) {
+  try {
+    const h = JSON.parse(localStorage.getItem('sbp_hist') || '[]');
+    if (h[0] && h[0].p === prompt) return;
+    const entry = {
+      p: prompt,
+      text: $('userInput').value.trim(),
+      tags: Array.from(selected),
+      ar: currentAR,
+      ts: Date.now()
+    };
+    h.unshift(entry);
+    if (h.length > MAX_HIST) h.pop();
+    localStorage.setItem('sbp_hist', JSON.stringify(h));
+  } catch(e) { console.warn('[SBP]', e); }
+}
+function loadHistory() {
+  try { return JSON.parse(localStorage.getItem('sbp_hist') || '[]'); } catch(e) { return []; }
+}
+function renderHistory() {
+  const el = $('historyList');
+  if (!el) return;
+  const h = loadHistory();
+  const t = T[currentLang];
+  if (!h.length) {
+    el.innerHTML = '<div class="hist-empty">' + (currentLang==='he' ? 'אין פרומפטים שמורים עדיין' : 'No saved prompts yet') + '</div>';
+    return;
+  }
+  el.innerHTML = h.map((e,i) => {
+    const short = escHtml(e.p.length > 70 ? e.p.slice(0,70)+'…' : e.p);
+    const time = new Date(e.ts).toLocaleTimeString(currentLang==='he'?'he-IL':'en-US',{hour:'2-digit',minute:'2-digit'});
+    return '<div class="hist-item" onclick="loadHist('+i+')">' +
+      '<div class="hist-text">' + escHtml(short) + '</div>' +
+      '<div class="hist-time">' + time + '</div></div>';
+  }).join('');
+}
+function loadHist(idx) {
+  const h = loadHistory();
+  if (!h[idx]) return;
+  const entry = h[idx];
+  // שחזר טקסט חופשי
+  $('userInput').value = entry.text || '';
+  // שחזר תגיות
+  selected.clear();
+  if (entry.tags && Array.isArray(entry.tags)) {
+    entry.tags.forEach(v => selected.add(v));
+  }
+  // שחזר AR
+  currentAR = entry.ar || '';
+  document.querySelectorAll('.fmt-btn').forEach(b =>
+    b.classList.toggle('active', b.dataset.ar === currentAR)
+  );
+  // עדכן UI
+  updateBadges();
+  updateChips();
+  if (activeCatIdx >= 0) openPanel(activeCatIdx);
+  toggleHistPanel();
+  generate();
+}
+function toggleHistPanel() {
+  const p = $('histPanel');
+  if (!p) return;
+  const opening = !p.classList.contains('open');
+  p.classList.toggle('open');
+  if (opening) renderHistory();
+}
+function clearHistory() {
+  try { localStorage.removeItem('sbp_hist'); } catch(e) { console.warn('[SBP]', e); }
+  renderHistory();
+}
+
+// ── Randomize ─────────────────────────────────────────────
+function randomize() {
+  selected.clear();
+  const shuffled = [...DATA].sort(() => Math.random() - 0.5).slice(0, 5);
+  shuffled.forEach(cat => {
+    const tag = cat.tags[Math.floor(Math.random() * cat.tags.length)];
+    selected.add(tag.val);
+  });
+  if (activeCatIdx >= 0) openPanel(activeCatIdx);
+  updateBadges();
+  updateChips();
+  generate();
+  const btn = $('randomBtn');
+  const lbl = $('randomBtnLabel');
+  const t = T[currentLang];
+  if (btn) {
+    btn.innerHTML = '✨';
+    setTimeout(() => {
+      btn.innerHTML = '🎲 <span id="randomBtnLabel">' + (t.randomBtn || 'הפתע/י אותי') + '</span>';
+    }, 700);
+  }
+}
+
+// ── Onboarding ────────────────────────────────────────────
+function initOnboarding() {
+  try { if (localStorage.getItem('sbp_ob')) return; } catch(e) { console.warn('[SBP]', e); }
+  const el = $('onboarding');
+  if (el) setTimeout(() => el.classList.add('show'), 400);
+}
+function dismissOnboarding() {
+  const el = $('onboarding');
+  if (el) el.classList.remove('show');
+  try { localStorage.setItem('sbp_ob', '1'); } catch(e) { console.warn('[SBP]', e); }
+}
+
+// ── Aspect Ratio ──────────────────────────────────────────
+let currentAR = '';
+function setAR(ar) {
+  currentAR = currentAR === ar ? '' : ar;
+  document.querySelectorAll('.fmt-btn').forEach(b =>
+    b.classList.toggle('active', b.dataset.ar === currentAR)
+  );
+  if (lastPrompt) generate();
+}
+
+// ── Copy & Open ───────────────────────────────────────────
+function openIn(service) {
+  if (!lastPrompt) {
+    showToast(currentLang === 'he' ? 'צור/י פרומפט תחילה' : 'Create a prompt first', true);
+    return;
+  }
+  // הסר NEG ו-AR מהפרומפט הנשלח
+  const clean = lastPrompt.replace(/ --no .+$/, '').replace(/--ar [\d:]+/g, '').trim();
+  const encoded = encodeURIComponent(clean);
+  const isHe = currentLang === 'he';
+
+  let url = '';
+  let msg = '';
+  let deepLink = false;
+
+  if (service === 'chatgpt') {
+    // ChatGPT תומך ב-?q= — מזין את הפרומפט ישירות לשדה
+    url = 'https://chatgpt.com/?q=' + encoded + '&hints=search';
+    msg = isHe ? '🤖 פותח ChatGPT עם הפרומפט מוכן!' : '🤖 Opening ChatGPT with prompt ready!';
+    deepLink = true;
+  } else if (service === 'gemini') {
+    // Gemini תומך ב-?prompt=
+    url = 'https://gemini.google.com/app?prompt=' + encoded;
+    msg = isHe ? '✨ פותח Gemini עם הפרומפט מוכן!' : '✨ Opening Gemini with prompt ready!';
+    deepLink = true;
+  } else if (service === 'midjourney') {
+    // Midjourney — אין deep link, צריך הדבקה ידנית
+    url = 'https://www.midjourney.com/imagine';
+    msg = isHe ? '🎨 הועתק! פתח Discord ↗ /imagine → הדבק/י' : '🎨 Copied! Open Discord ↗ /imagine → paste';
+  } else if (service === 'dalle') {
+    // DALL·E — אין deep link
+    url = 'https://labs.openai.com';
+    msg = isHe ? '🖼️ הועתק! הדבק/י את הפרומפט ב-DALL·E' : '🖼️ Copied! Paste prompt in DALL·E';
+  }
+
+  // העתק ל-clipboard תמיד (גם ב-deep link — למקרה שצריך)
+  try {
+    navigator.clipboard.writeText(clean).catch(() => {
+      const ta = document.createElement('textarea');
+      ta.value = clean; document.body.appendChild(ta); ta.select();
+      document.execCommand('copy'); document.body.removeChild(ta);
+    });
+  } catch(e) {
+    const ta = document.createElement('textarea');
+    ta.value = clean; document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta);
+  }
+
+  window.open(url, '_blank');
+  showToast(msg, false, deepLink);
+}
+function showToast(msg, isErr, isDeep) {
+  let t = $('toast');
+  if (!t) { t = document.createElement('div'); t.id = 'toast'; document.body.appendChild(t); }
+  t.textContent = msg;
+  t.className = 'toast show' + (isErr ? ' toast-err' : '') + (isDeep ? ' toast-deep' : '');
+  clearTimeout(t._timer);
+  // deep link messages stay longer
+  t._timer = setTimeout(() => t.classList.remove('show'), isDeep ? 3500 : 2200);
+}
+
 function startApp() {
   initInstall();
+  initOnboarding();
   try { buildCatGrid(); } catch(e) { console.error('[SBP] buildCatGrid:', e); setTimeout(buildCatGrid, 100); }
   try { generate(); } catch(e) { console.warn('[SBP]', e); }
   // Set initial UI text
@@ -1212,6 +1582,15 @@ function startApp() {
   setText('resultLabel', t.resultLabel);
   setText('copyText', t.copyBtn);
   setText('clearBtn', t.clearBtn);
+  setText('arLabel', t.arLabel);
+  setText('histTitle', t.histTitle);
+  setText('histClear', t.histClear);
+  setText('ob1', t.ob1);
+  setText('ob2', t.ob2);
+  setText('ob3', t.ob3);
+  if (t.fmtStory) setText('fmtStory', t.fmtStory);
+  if (t.fmtSquare) setText('fmtSquare', t.fmtSquare);
+  if (t.fmtWide) setText('fmtWide', t.fmtWide);
 }
 
 if (document.readyState === 'loading') {
