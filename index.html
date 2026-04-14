@@ -426,7 +426,7 @@ body {
 /* ── Actions ── */
 .action-row { display: flex; gap: 7px; }
 .btn-copy {
-  flex: 1;
+  flex: 3;
   background: var(--accent);
   color: #fff;
   border: none;
@@ -599,10 +599,10 @@ body {
 .ar-btn:active{opacity:.8}
 
 /* ── Copy & Open ───────────────────────────────────────── */
-.open-row{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
-.open-btn{display:flex;align-items:center;gap:5px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);color:var(--text);font-size:12px;font-weight:500;padding:7px 11px;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;min-height: 40px;transition:all .15s;flex:1;justify-content:center}
-.open-btn:active{opacity:.8;transform:scale(.97)}
-.open-btn .ob-icon{font-size:15px}
+
+
+
+
 
 /* ── Token count ───────────────────────────────────────── */
 .tok-warn{color:#ffaa00}
@@ -624,6 +624,31 @@ body {
 .fmt-btn{display:flex;align-items:center;gap:5px;background:var(--surface2);border:1px solid var(--border);border-radius:99px;color:var(--text);font-size:12px;font-weight:500;padding:7px 14px;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;min-height: 38px;transition:all .15s;white-space:nowrap}
 .fmt-btn.active{background:var(--a2);border-color:var(--accent);color:#a8c8ff}
 .fmt-btn:active{opacity:.8}
+
+.cm-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+.cm-box{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:20px;max-width:340px;width:100%;box-shadow:0 8px 32px rgba(0,0,0,.4)}
+.cm-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:8px}
+.cm-msg{font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.5}
+.cm-tags{display:flex;flex-direction:column;gap:6px;margin-bottom:16px;max-height:180px;overflow-y:auto}
+.cm-tag-row{background:var(--surface2);border-radius:8px;padding:7px 10px;display:flex;flex-direction:column;gap:2px}
+.cm-tag-name{font-size:12px;font-weight:500;color:var(--text)}
+.cm-tag-kw{font-size:11px;color:var(--muted)}
+.cm-btns{display:flex;gap:8px}
+.cm-btn{flex:1;padding:10px;border-radius:8px;border:none;font-size:13px;font-weight:500;cursor:pointer;min-height:40px;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.cm-yes{background:#1a4a2e;color:#4ade80;border:1px solid #2d6b42}
+.cm-yes:active{opacity:.8}
+.cm-no{background:var(--surface2);color:var(--muted);border:1px solid var(--border)}
+.cm-no:active{opacity:.8}
+.clr-box{max-width:300px}
+.clr-btns{display:flex;flex-direction:column;gap:8px}
+.clr-btn{width:100%;padding:11px 14px;border-radius:10px;border:0.5px solid var(--border);font-size:13px;font-weight:500;cursor:pointer;text-align:right;min-height:44px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;background:var(--surface2);color:var(--text);transition:opacity .15s}
+.clr-btn:active{opacity:.7}
+[dir="ltr"] .clr-btn{text-align:left}
+.clr-all{border-color:#7f1d1d;color:#f87171;background:#1c0a0a}
+.clr-cancel{color:var(--muted);font-weight:400}
+
+.btn-browse{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);color:var(--text);font-size:18px;cursor:pointer;min-height:44px;min-width:0;display:flex;align-items:center;justify-content:center;touch-action:manipulation;-webkit-tap-highlight-color:transparent;transition:opacity .15s;padding:0}
+.btn-browse:active{opacity:.7;transform:scale(.97)}
 </style>
 </head>
 <body>
@@ -689,18 +714,13 @@ body {
       <div id="finalPrompt"></div>
     </div>
 
-      <!-- Open In -->
-      <div class="open-row">
-        <button class="open-btn" onclick="openIn('chatgpt')"><span class="ob-icon">🤖</span>ChatGPT</button>
-        <button class="open-btn" onclick="openIn('midjourney')"><span class="ob-icon">🎨</span>Midjourney</button>
-        <button class="open-btn" onclick="openIn('gemini')"><span class="ob-icon">✨</span>Gemini</button>
-        <button class="open-btn" onclick="openIn('dalle')"><span class="ob-icon">🖼️</span>DALL·E</button>
-      </div>
+
           <div class="action-row">
       <button class="btn-copy" id="copyBtn" onclick="copyPrompt()">
         <span id="copyIcon">📋</span>
         <span id="copyText"></span>
       </button>
+      <button class="btn-browse" id="browseBtn" onclick="openBrowser()">🌐</button>
       <button class="btn-clear" id="clearBtn" onclick="clearAll()"></button>
     </div>
   </div>
@@ -972,7 +992,7 @@ const T = {
     dir: 'rtl', lang: 'he',
     placeholder: "תאר/י את התמונה שאת/ה רוצה/ה ליצור...",
     searchPlaceholder: "חפש/י תגיות, סגנונות...",
-    emptyPrompt: '✨ הפרומפט יופיע כאן — לחץ/י על ChatGPT או Gemini והוא יופיע שם ישירות. לMidjourney ו-DALL·E הפרומפט מועתק, רק הדבק/י.',
+    emptyPrompt: '✨ הפרומפט יופיע כאן — לחץ/י על 📋 העתק/י פרומפט ופתח/י את מנוע ה-AI שלך.',
     charCount: function(n) { return n + ' תווים'; },
     clearBtn: 'נקה/י', copyBtn: 'העתק/י פרומפט', copiedBtn: '✅ הועתק/ה!',
     resultLabel: 'פרומפט מוכן', subtitle: 'מחולל פרומפטים לתמונות AI',
@@ -987,23 +1007,52 @@ const T = {
     ob1: 'בחר/י קטגוריה',
     ob2: 'בחר/י תגיות',
     ob3: 'תאר/י וצור/י',
+    conflictTitle: '⚠️ זיהינו סתירה אפשרית',
+    conflictMsg: 'הטקסט שלך מכיל ביטויים שעשויים לבלבל את ה-AI יחד עם התגיות הבאות:',
+    conflictYes: 'כן, הסר/י תגיות',
+    conflictNo: 'לא, שמור פרומפט',
+    conflictWith: 'מתנגש עם:',
+    clearTitle: 'מה לנקות?',
+    clearAll: 'הכל',
+    clearText: 'טקסט בלבד',
+    clearTags: 'תגיות בלבד',
+    clearCancel: 'ביטול',
+    browseToast: 'הפרומפט הועתק — נווט/י למנוע AI והדבק/י',
+    browseNoPrompt: 'צור/י פרומפט תחילה',
+    browseToast: 'הפרומפט הועתק — נווט/י למנוע AI והדבק/י',
+    browseNoPrompt: 'צור/י פרומפט תחילה',
   },
   en: {
     dir: 'ltr', lang: 'en',
     placeholder: "Describe the image you want to create...",
     searchPlaceholder: 'Search tags, styles...',
-    emptyPrompt: '✨ Your prompt will appear here — tap ChatGPT or Gemini and it opens pre-filled. For Midjourney & DALL·E it\'s copied to clipboard, just paste.',
+    emptyPrompt: '✨ Your prompt will appear here — tap 📋 Copy Prompt and open your AI tool.',
     charCount: function(n) { return n + ' chars'; },
     clearBtn: 'Clear',
     arLabel: 'Ratio:',
     fmtStory: 'Story',
     fmtSquare: 'Square',
     fmtWide: 'Wide',
+    randomBtn: 'Surprise me',
     histTitle: 'History',
     histClear: 'Clear',
     ob1: 'Choose category',
     ob2: 'Select tags',
-    ob3: 'Describe & build', copyBtn: 'Copy Prompt', copiedBtn: '✅ Copied!',
+    ob3: 'Describe & build',
+    conflictTitle: '⚠️ Possible Conflict Detected',
+    conflictMsg: 'Your text may confuse the AI together with these tags:',
+    conflictYes: 'Yes, remove tags',
+    conflictNo: 'No, keep prompt',
+    conflictWith: 'conflicts with:', copyBtn: 'Copy Prompt', copiedBtn: '✅ Copied!',
+    clearTitle: 'What to clear?',
+    clearAll: 'Everything',
+    clearText: 'Text only',
+    clearTags: 'Tags only',
+    clearCancel: 'Cancel',
+    browseToast: 'Copied — navigate to your AI tool and paste',
+    browseNoPrompt: 'Create a prompt first',
+    browseToast: 'Copied — navigate to your AI tool and paste',
+    browseNoPrompt: 'Create a prompt first',
     resultLabel: 'Prompt ready', subtitle: 'AI Image Prompt Builder',
     categories: 'Categories',
   }
@@ -1149,6 +1198,129 @@ function findLabel(val) {
 }
 
 // ─── Generate ─────────────────────────────────────────────────
+
+// ── Conflict Detection ─────────────────────────────────
+const CONFLICT_MAP = [
+  { kw_he: ['\u05e9\u05d7\u05d5\u05e8 \u05dc\u05d1\u05df','\u05e9\u05d7\u05d5\u05e8-\u05dc\u05d1\u05df','\u05de\u05d5\u05e0\u05d5\u05db\u05e8\u05d5\u05dd','\u05d0\u05e4\u05d5\u05e8'], kw_en: ['black and white','b&w','monochrome','grayscale','greyscale'],
+    tags: ['vibrant colors','neon lighting','warm color','cool color','earth tones','pastel palette','high contrast colors','HDR photography'] },
+  { kw_he: ['\u05e6\u05d1\u05e2\u05d5\u05e0\u05d9','\u05e6\u05d1\u05e2\u05d9\u05dd \u05e2\u05d6\u05d9\u05dd','\u05e1\u05e1\u05d2\u05d5\u05e0\u05d9'], kw_en: ['colorful','vibrant colors','saturated','vivid'],
+    tags: ['black and white','monochrome','film noir'] },
+  { kw_he: ['\u05e4\u05e1\u05d8\u05dc','\u05e6\u05d1\u05e2\u05d9\u05dd \u05e8\u05db\u05d9\u05dd','\u05e2\u05d3\u05d9\u05df'], kw_en: ['pastel','soft colors','delicate','muted'],
+    tags: ['vibrant colors','HDR photography','high contrast colors','neon lighting'] },
+  { kw_he: ['\u05e0\u05d9\u05d0\u05d5\u05df','\u05d6\u05d5\u05d4\u05e8','\u05e4\u05d5\u05e6\u05e5'], kw_en: ['neon','glowing','fluorescent'],
+    tags: ['black and white','monochrome','pastel palette','earth tones'] },
+  { kw_he: ['\u05e8\u05d9\u05d0\u05dc\u05d9\u05e1\u05d8\u05d9','\u05e4\u05d5\u05d8\u05d5\u05e8\u05d9\u05d0\u05dc\u05d9\u05e1\u05d8\u05d9','\u05e6\u05d9\u05dc\u05d5\u05dd \u05d0\u05de\u05d9\u05ea\u05d9','\u05ea\u05de\u05d5\u05e0\u05d4 \u05d0\u05de\u05d9\u05ea\u05d9\u05ea'], kw_en: ['realistic','photorealistic','real photo','photograph','lifelike'],
+    tags: ['anime style','comic book art','line art','pixel art','watercolor painting','oil painting','impressionist style','disney animation','superhero comics'] },
+  { kw_he: ['\u05d0\u05e0\u05d9\u05de\u05d4','\u05de\u05e0\u05d2\u05d4','\u05e7\u05e8\u05d8\u05d5\u05df','\u05de\u05e6\u05d5\u05d9\u05e8'], kw_en: ['anime','manga','cartoon','illustrated','drawn'],
+    tags: ['photorealistic','hyperrealistic','documentary-style','8K resolution'] },
+  { kw_he: ['\u05d5\u05d9\u05e0\u05d8\u05d2','\u05d9\u05e9\u05df','\u05e8\u05d8\u05e8\u05d5','\u05e2\u05ea\u05d9\u05e7'], kw_en: ['vintage','retro','old style','antique','aged','classic film'],
+    tags: ['science fiction','cyberpunk','space opera','8K resolution'] },
+  { kw_he: ['\u05de\u05d9\u05e0\u05d9\u05de\u05dc\u05d9\u05e1\u05d8\u05d9','\u05e0\u05e7\u05d9','\u05e4\u05e9\u05d5\u05d8'], kw_en: ['minimalist','clean background','simple','minimal'],
+    tags: ['intricate details','superhero comics','cyberpunk','hyperrealistic'] },
+  { kw_he: ['\u05d0\u05d5\u05e8 \u05d9\u05d5\u05dd','\u05e9\u05de\u05e9','\u05d1\u05d4\u05d9\u05e8','\u05d0\u05d5\u05e8 \u05d8\u05d1\u05e2\u05d9'], kw_en: ['daylight','sunny','bright light','natural light','sunlight'],
+    tags: ['night scene','dark fantasy','horror atmosphere','film noir','chiaroscuro lighting','dark prestige','blue hour','moody atmosphere'] },
+  { kw_he: ['\u05dc\u05d9\u05dc\u05d4','\u05d7\u05e9\u05d5\u05da','\u05d0\u05e4\u05dc','\u05d7\u05e6\u05d5\u05ea'], kw_en: ['night','dark scene','nighttime','midnight','darkness'],
+    tags: ['natural daylight','golden hour','studio lighting','spotlight'] },
+  { kw_he: ['\u05e9\u05e7\u05d9\u05e2\u05d4','\u05e9\u05e2\u05ea \u05d6\u05d4\u05d1','\u05d6\u05e8\u05d9\u05d7\u05d4'], kw_en: ['sunset','golden hour','sunrise','dusk','dawn'],
+    tags: ['night scene','blue hour','studio lighting'] },
+  { kw_he: ['\u05e1\u05d8\u05d5\u05d3\u05d9\u05d5','\u05e8\u05e7\u05e2 \u05dc\u05d1\u05df'], kw_en: ['studio background','white background','clean background'],
+    tags: ['alien planet landscape','post-apocalyptic','misty rainforest','fantasy tavern','cyberpunk'] },
+  { kw_he: ['\u05e4\u05d5\u05e8\u05d8\u05e8\u05d8','\u05e4\u05e0\u05d9\u05dd','\u05ea\u05e7\u05e8\u05d9\u05d1','\u05e7\u05dc\u05d5\u05d6-\u05d0\u05e4'], kw_en: ['portrait','headshot','close-up','closeup','facial'],
+    tags: ['wide shot','full body shot','hero shot'] },
+  { kw_he: ['\u05e9\u05d5\u05d8 \u05e8\u05d7\u05d1','\u05e0\u05d5\u05e3','\u05e4\u05e0\u05d5\u05e8\u05de\u05d4','\u05e1\u05e6\u05e0\u05d4'], kw_en: ['wide shot','landscape','panorama','establishing shot','full scene'],
+    tags: ['close-up shot','macro photography','upper body shot','cowboy shot'] },
+  { kw_he: ['\u05d2\u05d5\u05e3 \u05de\u05dc\u05d0','\u05de\u05dc\u05de\u05d8\u05d4 \u05e2\u05d3 \u05dc\u05de\u05e2\u05dc\u05d4','\u05e2\u05d5\u05de\u05d3'], kw_en: ['full body','full length','standing pose','head to toe'],
+    tags: ['close-up shot','upper body shot','cowboy shot','macro photography'] },
+  { kw_he: ['\u05e9\u05de\u05d7','\u05e9\u05de\u05d7\u05d4','\u05de\u05d0\u05d5\u05e9\u05e8','\u05e2\u05dc\u05d9\u05d6'], kw_en: ['happy','joyful','cheerful','positive mood','fun'],
+    tags: ['horror atmosphere','dark fantasy','sad expression','film noir'] },
+  { kw_he: ['\u05e2\u05e6\u05d5\u05d1','\u05e2\u05e6\u05d1\u05d5\u05ea','\u05d3\u05de\u05e2\u05d5\u05ea','\u05de\u05dc\u05e0\u05db\u05d5\u05dc\u05d9'], kw_en: ['sad','melancholic','crying','tearful','gloomy'],
+    tags: ['smiling','confident expression','dynamic action pose','vibrant colors'] },
+  { kw_he: ['\u05d0\u05d2\u05e8\u05e1\u05d9\u05d1\u05d9','\u05db\u05d5\u05e2\u05e1','\u05dc\u05d5\u05d7\u05de\u05e0\u05d9'], kw_en: ['aggressive','angry','fierce warrior','combat','battle'],
+    tags: ['smiling','dreamy expression','pastel palette'] },
+  { kw_he: ['\u05e8\u05d5\u05de\u05e0\u05d8\u05d9','\u05d0\u05d4\u05d1\u05d4','\u05e2\u05d3\u05d9\u05df','\u05d7\u05dc\u05d5\u05de\u05d9'], kw_en: ['romantic','love scene','gentle mood','dreamy atmosphere'],
+    tags: ['horror atmosphere','dark fantasy','dynamic action pose','cyberpunk'] },
+  { kw_he: ['\u05d7\u05d5\u05e5','\u05d8\u05d1\u05e2','\u05d9\u05e2\u05e8','\u05e9\u05d3\u05d4','\u05d7\u05d5\u05e3'], kw_en: ['outdoor','outside','nature scene','forest','beach exterior'],
+    tags: ['studio lighting'] },
+  { kw_he: ['\u05e4\u05e0\u05d9\u05dd','\u05d7\u05d3\u05e8','\u05d1\u05d9\u05ea','\u05de\u05e7\u05d5\u05e8\u05d4'], kw_en: ['indoor','inside room','room interior','indoors'],
+    tags: ['alien planet landscape','misty rainforest','post-apocalyptic'] },
+  { kw_he: ['\u05e2\u05ea\u05d9\u05d3\u05e0\u05d9','\u05e2\u05ea\u05d9\u05d3','\u05d8\u05db\u05e0\u05d5\u05dc\u05d5\u05d2\u05d9'], kw_en: ['futuristic','future tech','sci-fi world','technological'],
+    tags: ['steampunk','retro-futuristic','medieval blacksmith'] },
+  { kw_he: ['\u05d9\u05d5\u05e9\u05d1','\u05d9\u05d5\u05e9\u05d1\u05ea','\u05e2\u05dc \u05db\u05d9\u05e1\u05d0'], kw_en: ['sitting down','seated person','on a chair'],
+    tags: ['full body shot','dynamic action pose','hero shot'] },
+  { kw_he: ['\u05e9\u05d5\u05db\u05d1','\u05e9\u05d5\u05db\u05d1\u05ea','\u05e2\u05dc \u05d4\u05e8\u05e6\u05e4\u05d4'], kw_en: ['lying down','on the floor','reclining pose','horizontal position'],
+    tags: ['full body shot','dynamic action pose','hero shot','low angle shot'] },
+  { kw_he: ['\u05e8\u05d9\u05e6\u05d4','\u05e7\u05e4\u05d9\u05e6\u05d4','\u05ea\u05e0\u05d5\u05e2\u05d4'], kw_en: ['running','jumping','in motion','flying through'],
+    tags: ['sitting pose','lying down','serious expression','dreamy expression'] },
+  { kw_he: ['\u05d1\u05dc\u05d5\u05e0\u05d3','\u05e9\u05d9\u05e2\u05e8 \u05d1\u05dc\u05d5\u05e0\u05d3'], kw_en: ['blonde hair','light blonde'],
+    tags: ['straight black hair','dark wavy hair','deep ebony','coiled black hair'] },
+  { kw_he: ['\u05e9\u05d9\u05e2\u05e8 \u05e9\u05d7\u05d5\u05e8','\u05e9\u05d9\u05e2\u05e8 \u05db\u05d4\u05d4'], kw_en: ['black hair','dark hair'],
+    tags: ['golden blonde hair','light blonde','honey highlights'] },
+];
+
+function detectConflicts(userText) {
+  const txt = userText.toLowerCase();
+  const conflicts = [];
+  for (const rule of CONFLICT_MAP) {
+    const allKw = [...rule.kw_he, ...rule.kw_en];
+    const matchedKw = allKw.find(k => txt.includes(k.toLowerCase()));
+    if (!matchedKw) continue;
+    for (const val of Array.from(selected)) {
+      const valLow = val.toLowerCase();
+      const matchedTag = rule.tags.find(tg => valLow.includes(tg.toLowerCase()));
+      if (matchedTag && !conflicts.find(cf => cf.val === val)) {
+        conflicts.push({ keyword: matchedKw, val, label: findLabel(val) });
+      }
+    }
+  }
+  return conflicts;
+}
+
+function showConflictModal(conflicts, onYes, onNo) {
+  const isHe = currentLang === 'he';
+  const t = T[currentLang];
+  const ex = document.getElementById('conflictModal');
+  if (ex) ex.remove();
+  const tagList = conflicts.map(cf =>
+    '<div class="cm-tag-row"><span class="cm-tag-name">' + escHtml(cf.label) + '</span>' +
+    '<span class="cm-tag-kw">' + escHtml(t.conflictWith) + ' "' + escHtml(cf.keyword) + '"</span></div>'
+  ).join('');
+  const modal = document.createElement('div');
+  modal.id = 'conflictModal';
+  modal.className = 'cm-overlay';
+  modal.innerHTML =
+    '<div class="cm-box" dir="' + (isHe ? 'rtl' : 'ltr') + '">' +
+    '<div class="cm-title">' + escHtml(t.conflictTitle) + '</div>' +
+    '<div class="cm-msg">' + escHtml(t.conflictMsg) + '</div>' +
+    '<div class="cm-tags">' + tagList + '</div>' +
+    '<div class="cm-btns">' +
+    '<button class="cm-btn cm-yes" id="cmYes">' + escHtml(t.conflictYes) + '</button>' +
+    '<button class="cm-btn cm-no" id="cmNo">' + escHtml(t.conflictNo) + '</button>' +
+    '</div></div>';
+  document.body.appendChild(modal);
+  document.getElementById('cmYes').onclick = function() { modal.remove(); onYes(); };
+  document.getElementById('cmNo').onclick  = function() { modal.remove(); onNo();  };
+  modal.addEventListener('click', function(e) { if (e.target === modal) { modal.remove(); onNo(); } });
+}
+
+function _doGenerate() {
+  const t = T[currentLang];
+  let txt = $('userInput').value.trim();
+  const el = $('finalPrompt');
+  const parts = [];
+  if (txt) parts.push(txt);
+  const sortedVals = Array.from(selected).sort(function(a,b) { return getValPriority(a) - getValPriority(b); });
+  sortedVals.forEach(function(v) { parts.push(v); });
+  const arSuffix = currentAR ? ' ' + currentAR : '';
+  const prompt = parts.join(', ') + arSuffix + ' ' + NEG;
+  lastPrompt = prompt;
+  el.className = 'prompt-ready';
+  el.textContent = prompt;
+  const tokens = prompt.replace(/ --no .+$/,'').split(/[,\s]+/).filter(Boolean).length;
+  const tokWarn = tokens > 70 ? ' \u26a0\ufe0f' : '';
+  $('charCount').textContent = t.charCount(prompt.length) + ' \xb7 ~' + tokens + ' tokens' + tokWarn;
+  saveHistory(prompt);
+}
+
 function generate() {
   const t = T[currentLang];
   let txt = $('userInput').value.trim();
@@ -1160,19 +1332,24 @@ function generate() {
     $('charCount').textContent = t.charCount(0);
     return;
   }
-  const parts = [];
-  if (txt) parts.push(txt);
-  const sortedVals = Array.from(selected).sort((a, b) => getValPriority(a) - getValPriority(b));
-  sortedVals.forEach(v => parts.push(v));
-  const arSuffix = currentAR ? ' ' + currentAR : '';
-  const prompt = parts.join(', ') + arSuffix + ' ' + NEG;
-  lastPrompt = prompt;
-  el.className = 'prompt-ready';
-  el.textContent = prompt;
-  const tokens = prompt.replace(/ --no .+$/,'').split(/[,\s]+/).filter(Boolean).length;
-  const tokWarn = tokens > 70 ? ' ⚠️' : '';
-  $('charCount').textContent = t.charCount(prompt.length) + ' · ~' + tokens + ' tokens' + tokWarn;
-  saveHistory(prompt);
+  if (txt && selected.size > 0) {
+    const conflicts = detectConflicts(txt);
+    if (conflicts.length > 0) {
+      showConflictModal(
+        conflicts,
+        function() {
+          conflicts.forEach(function(cf) { selected.delete(cf.val); });
+          updateBadges();
+          updateChips();
+          if (activeCatIdx >= 0) openPanel(activeCatIdx);
+          _doGenerate();
+        },
+        function() { _doGenerate(); }
+      );
+      return;
+    }
+  }
+  _doGenerate();
 }
 
 // ─── Search ───────────────────────────────────────────────────
@@ -1209,6 +1386,42 @@ function filterTags() {
 }
 
 // ─── Copy ─────────────────────────────────────────────────────
+function openBrowser() {
+  const t = T[currentLang];
+  if (!lastPrompt) { showToast(t.browseNoPrompt, true); return; }
+  const clean = lastPrompt.replace(/ --no .+$/, '').replace(/--ar [\d:]+/g, '').trim();
+  // העתק clipboard
+  const ta = document.createElement('textarea');
+  ta.value = clean;
+  ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;pointer-events:none;';
+  document.body.appendChild(ta); ta.focus(); ta.select();
+  try { document.execCommand('copy'); } catch(e) { console.warn('[SBP]', e); }
+  document.body.removeChild(ta);
+  // פתח דפדפן — <a> עובד ב-PWA iOS בניגוד ל-window.open
+  const a = document.createElement('a');
+  a.href = 'https://google.com';
+  a.target = '_blank';
+  a.rel = 'noopener';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  showToast(t.browseToast, false, false);
+}
+
+function openBrowser() {
+  const t = T[currentLang];
+  if (!lastPrompt) { showToast(t.browseNoPrompt, true); return; }
+  const clean = lastPrompt.replace(/ --no .+$/, '').replace(/--ar [\d:]+/g, '').trim();
+  const ta = document.createElement('textarea');
+  ta.value = clean;
+  ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;pointer-events:none;';
+  document.body.appendChild(ta); ta.focus(); ta.select();
+  try { document.execCommand('copy'); } catch(e) { console.warn('[SBP]', e); }
+  document.body.removeChild(ta);
+  window.open('about:blank', '_blank');
+  showToast(t.browseToast, false, false);
+}
+
 function copyPrompt() {
   const t = T[currentLang];
   if (!lastPrompt) return;
@@ -1243,14 +1456,68 @@ function copyPrompt() {
 }
 
 // ─── Clear ────────────────────────────────────────────────────
-function clearAll() {
-  $('userInput').value = '';
-  selected.clear();
-  document.querySelectorAll('.tag-btn').forEach(function(b) { b.classList.remove('active'); });
-  $('search').value = '';
-  document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('tag-hidden'));
-  updateBadges(); updateChips(); generate();
+function showClearModal() {
+  const t = T[currentLang];
+  const isHe = currentLang === 'he';
+  const ex = document.getElementById('clearModal');
+  if (ex) ex.remove();
+  const modal = document.createElement('div');
+  modal.id = 'clearModal';
+  modal.className = 'cm-overlay';
+  modal.innerHTML =
+    '<div class="cm-box clr-box" dir="' + (isHe ? 'rtl' : 'ltr') + '">' +
+    '<div class="cm-title">' + escHtml(t.clearTitle) + '</div>' +
+    '<div class="clr-btns">' +
+    '<button class="clr-btn clr-all" id="clrAll">' + escHtml(t.clearAll) + '</button>' +
+    '<button class="clr-btn" id="clrText">' + escHtml(t.clearText) + '</button>' +
+    '<button class="clr-btn" id="clrTags">' + escHtml(t.clearTags) + '</button>' +
+    '<button class="clr-btn clr-cancel" id="clrCancel">' + escHtml(t.clearCancel) + '</button>' +
+    '</div></div>';
+  document.body.appendChild(modal);
+  document.getElementById('clrAll').onclick = function() {
+    modal.remove();
+    $("userInput").value = "";
+    selected.clear();
+    currentAR = "";
+    lastPrompt = "";
+    document.querySelectorAll(".fmt-btn").forEach(function(b) { b.classList.remove("active"); });
+    updateBadges(); updateChips();
+    if (activeCatIdx >= 0) openPanel(activeCatIdx);
+    const el = $("finalPrompt");
+    el.className = "prompt-empty";
+    el.textContent = T[currentLang].emptyPrompt;
+    $("charCount").textContent = T[currentLang].charCount(0);
+  };
+  document.getElementById('clrText').onclick = function() {
+    modal.remove();
+    $("userInput").value = "";
+    if (selected.size > 0) { generate(); } else {
+      lastPrompt = "";
+      $("finalPrompt").className = "prompt-empty";
+      $("finalPrompt").textContent = T[currentLang].emptyPrompt;
+      $("charCount").textContent = T[currentLang].charCount(0);
+    }
+  };
+  document.getElementById('clrTags').onclick = function() {
+    modal.remove();
+    selected.clear();
+    currentAR = "";
+    document.querySelectorAll(".fmt-btn").forEach(function(b) { b.classList.remove("active"); });
+    updateBadges(); updateChips();
+    if (activeCatIdx >= 0) openPanel(activeCatIdx);
+    const txt = $("userInput").value.trim();
+    if (txt) { generate(); } else {
+      lastPrompt = "";
+      $("finalPrompt").className = "prompt-empty";
+      $("finalPrompt").textContent = T[currentLang].emptyPrompt;
+      $("charCount").textContent = T[currentLang].charCount(0);
+    }
+  };
+  document.getElementById('clrCancel').onclick = function() { modal.remove(); };
+  modal.addEventListener('click', function(e) { if (e.target === modal) modal.remove(); });
 }
+
+function clearAll() { showClearModal(); }
 
 // ─── setLang ──────────────────────────────────────────────────
 
@@ -1508,48 +1775,7 @@ function setAR(ar) {
 }
 
 // ── Copy & Open ───────────────────────────────────────────
-function openIn(service) {
-  if (!lastPrompt) {
-    showToast(currentLang === 'he' ? 'צור/י פרומפט תחילה' : 'Create a prompt first', true);
-    return;
-  }
-  const clean = lastPrompt.replace(/ --no .+$/, '').replace(/--ar [\d:]+/g, '').trim();
-  const encoded = encodeURIComponent(clean);
-  const isHe = currentLang === 'he';
-  let url = '', msg = '';
 
-  if (service === 'chatgpt') {
-    url = 'https://chatgpt.com/?q=' + encoded;
-    msg = isHe ? '🤖 הפרומפט הועתק — ChatGPT נפתח, הדבק/י אם לא הופיע' : '🤖 Copied! ChatGPT opened — paste if not pre-filled';
-  } else if (service === 'gemini') {
-    url = 'https://gemini.google.com/app';
-    msg = isHe ? '✨ הועתק! Gemini נפתח — הדבק/י עם Ctrl+V' : '✨ Copied! Gemini opened — paste with Ctrl+V';
-  } else if (service === 'midjourney') {
-    url = 'https://www.midjourney.com/imagine';
-    msg = isHe ? '🎨 הועתק! פתח Discord ↗ /imagine → הדבק/י' : '🎨 Copied! Open Discord ↗ /imagine → paste';
-  } else if (service === 'dalle') {
-    url = 'https://labs.openai.com';
-    msg = isHe ? '🖼️ הועתק! הדבק/י את הפרומפט ב-DALL·E' : '🖼️ Copied! Paste prompt in DALL·E';
-  }
-
-  // 1. פתח חלון קודם — ישירות מ-user gesture, לא ייחסם
-  window.open(url, '_blank');
-
-  // 2. clipboard אחרי — async לא חוסם את window.open
-  try {
-    navigator.clipboard.writeText(clean).catch(() => {
-      const ta = document.createElement('textarea');
-      ta.value = clean; document.body.appendChild(ta); ta.select();
-      document.execCommand('copy'); document.body.removeChild(ta);
-    });
-  } catch(e) {
-    const ta = document.createElement('textarea');
-    ta.value = clean; document.body.appendChild(ta); ta.select();
-    document.execCommand('copy'); document.body.removeChild(ta);
-  }
-
-  showToast(msg, false, false);
-}
 function showToast(msg, isErr, isDeep) {
   let t = $('toast');
   if (!t) { t = document.createElement('div'); t.id = 'toast'; document.body.appendChild(t); }
@@ -1589,8 +1815,6 @@ if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', startApp);
 } else {
   startApp();
-}
-
-</script>
+}</script>
 </body>
 </html>
