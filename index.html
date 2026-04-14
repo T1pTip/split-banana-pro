@@ -1513,36 +1513,29 @@ function openIn(service) {
     showToast(currentLang === 'he' ? 'צור/י פרומפט תחילה' : 'Create a prompt first', true);
     return;
   }
-  // הסר NEG ו-AR מהפרומפט הנשלח
   const clean = lastPrompt.replace(/ --no .+$/, '').replace(/--ar [\d:]+/g, '').trim();
   const encoded = encodeURIComponent(clean);
   const isHe = currentLang === 'he';
-
-  let url = '';
-  let msg = '';
-  let deepLink = false;
+  let url = '', msg = '';
 
   if (service === 'chatgpt') {
-    // ChatGPT תומך ב-?q= — מזין את הפרומפט ישירות לשדה
-    url = 'https://chatgpt.com/?q=' + encoded + '&hints=search';
-    msg = isHe ? '🤖 פותח ChatGPT עם הפרומפט מוכן!' : '🤖 Opening ChatGPT with prompt ready!';
-    deepLink = true;
+    url = 'https://chatgpt.com/?q=' + encoded;
+    msg = isHe ? '🤖 הפרומפט הועתק — ChatGPT נפתח, הדבק/י אם לא הופיע' : '🤖 Copied! ChatGPT opened — paste if not pre-filled';
   } else if (service === 'gemini') {
-    // Gemini תומך ב-?prompt=
-    url = 'https://gemini.google.com/app?prompt=' + encoded;
-    msg = isHe ? '✨ פותח Gemini עם הפרומפט מוכן!' : '✨ Opening Gemini with prompt ready!';
-    deepLink = true;
+    url = 'https://gemini.google.com/app';
+    msg = isHe ? '✨ הועתק! Gemini נפתח — הדבק/י עם Ctrl+V' : '✨ Copied! Gemini opened — paste with Ctrl+V';
   } else if (service === 'midjourney') {
-    // Midjourney — אין deep link, צריך הדבקה ידנית
     url = 'https://www.midjourney.com/imagine';
     msg = isHe ? '🎨 הועתק! פתח Discord ↗ /imagine → הדבק/י' : '🎨 Copied! Open Discord ↗ /imagine → paste';
   } else if (service === 'dalle') {
-    // DALL·E — אין deep link
     url = 'https://labs.openai.com';
     msg = isHe ? '🖼️ הועתק! הדבק/י את הפרומפט ב-DALL·E' : '🖼️ Copied! Paste prompt in DALL·E';
   }
 
-  // העתק ל-clipboard תמיד (גם ב-deep link — למקרה שצריך)
+  // 1. פתח חלון קודם — ישירות מ-user gesture, לא ייחסם
+  window.open(url, '_blank');
+
+  // 2. clipboard אחרי — async לא חוסם את window.open
   try {
     navigator.clipboard.writeText(clean).catch(() => {
       const ta = document.createElement('textarea');
@@ -1555,8 +1548,7 @@ function openIn(service) {
     document.execCommand('copy'); document.body.removeChild(ta);
   }
 
-  window.open(url, '_blank');
-  showToast(msg, false, deepLink);
+  showToast(msg, false, false);
 }
 function showToast(msg, isErr, isDeep) {
   let t = $('toast');
