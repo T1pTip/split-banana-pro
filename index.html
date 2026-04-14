@@ -1571,15 +1571,15 @@ function showInstallSuccess() {
     '<div style="font-size:40px;margin-bottom:12px">🎨</div>' +
     '<div class="cm-title">' + (isHe ? '📲 Palette AI הותקנה!' : '📲 Palette AI Installed!') + '</div>' +
     '<div class="cm-msg" style="margin-top:8px">' +
-      (isHe
-        ? 'תמצא/י את 🎨 ברשימת האפליקציות וגרור/י למסך הבית'
-        : 'Find 🎨 in your app drawer and drag it to your home screen') +
+      (isHe ? 'מצא/י את 🎨 ברשימת האפליקציות וגרור/י למסך הבית' : 'Find 🎨 in your app drawer and drag it to your home screen') +
     '</div>' +
-    '<button class="clr-btn" style="margin-top:16px" onclick="document.getElementById(\'installSuccessModal\').remove()">' +
-      (isHe ? 'בינתי!' : 'Got it!') +
+    '<button class="clr-btn" id="installSuccessOk" style="margin-top:16px">' +
+      (isHe ? 'הבנתי!' : 'Got it!') +
     '</button>' +
     '</div>';
   document.body.appendChild(modal);
+  // event listeners — ללא onclick inline
+  document.getElementById('installSuccessOk').addEventListener('click', function() { modal.remove(); });
   modal.addEventListener('click', function(e) { if (e.target === modal) modal.remove(); });
 }
 function doInstall() {
