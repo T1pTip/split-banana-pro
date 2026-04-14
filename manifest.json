@@ -2,7 +2,7 @@
   "name": "Palette AI",
   "short_name": "Palette AI",
   "description": "מחולל פרומפטים לתמונות AI",
-  "start_url": "/",
+  "start_url": "/split-banana-pro/",
   "display": "standalone",
   "orientation": "portrait-primary",
   "background_color": "#08080f",
@@ -23,5 +23,5 @@
     }
   ],
   "prefer_related_applications": false,
-  "scope": "/"
+  "scope": "/split-banana-pro/"
 }
