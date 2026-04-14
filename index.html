@@ -1014,6 +1014,7 @@ const T = {
     clearText: 'טקסט בלבד',
     clearTags: 'תגיות בלבד',
     clearCancel: 'ביטול',
+    clearPrompt: 'נקה/י פרומפט',
   },
   en: {
     dir: 'ltr', lang: 'en',
@@ -1042,6 +1043,7 @@ const T = {
     clearText: 'Text only',
     clearTags: 'Tags only',
     clearCancel: 'Cancel',
+    clearPrompt: 'Clear Prompt',
     resultLabel: 'Prompt ready', subtitle: 'AI Image Prompt Builder',
     categories: 'Categories',
   }
@@ -1425,6 +1427,7 @@ function showClearModal() {
     '<button class="clr-btn clr-all" id="clrAll">' + escHtml(t.clearAll) + '</button>' +
     '<button class="clr-btn" id="clrText">' + escHtml(t.clearText) + '</button>' +
     '<button class="clr-btn" id="clrTags">' + escHtml(t.clearTags) + '</button>' +
+    '<button class="clr-btn" id="clrPrompt">' + escHtml(t.clearPrompt) + '</button>' +
     '<button class="clr-btn clr-cancel" id="clrCancel">' + escHtml(t.clearCancel) + '</button>' +
     '</div></div>';
   document.body.appendChild(modal);
@@ -1466,6 +1469,14 @@ function showClearModal() {
       $("finalPrompt").textContent = T[currentLang].emptyPrompt;
       $("charCount").textContent = T[currentLang].charCount(0);
     }
+  };
+  document.getElementById('clrPrompt').onclick = function() {
+    modal.remove();
+    lastPrompt = '';
+    const el = $('finalPrompt');
+    el.className = 'prompt-empty';
+    el.textContent = T[currentLang].emptyPrompt;
+    $('charCount').textContent = T[currentLang].charCount(0);
   };
   document.getElementById('clrCancel').onclick = function() { modal.remove(); };
   modal.addEventListener('click', function(e) { if (e.target === modal) modal.remove(); });
@@ -1716,17 +1727,22 @@ function clearHistory() {
 // ── Randomize ─────────────────────────────────────────────
 function randomize() {
   selected.clear();
-  const shuffled = [...DATA].sort(() => Math.random() - 0.5).slice(0, 5);
-  shuffled.forEach(cat => {
-    const tag = cat.tags[Math.floor(Math.random() * cat.tags.length)];
-    selected.add(tag.val);
-  });
+  // אסוף את כל התגיות מכל הקטגוריות לרשימה אחת שטוחה
+  const allTags = [];
+  DATA.forEach(cat => cat.tags.forEach(tag => allTags.push(tag.val)));
+  // ערבב אמיתי — Fisher-Yates shuffle
+  for (let i = allTags.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [allTags[i], allTags[j]] = [allTags[j], allTags[i]];
+  }
+  // בחר מספר אקראי של תגיות בין 3 ל-8
+  const count = 3 + Math.floor(Math.random() * 6);
+  allTags.slice(0, count).forEach(val => selected.add(val));
   if (activeCatIdx >= 0) openPanel(activeCatIdx);
   updateBadges();
   updateChips();
   generate();
   const btn = $('randomBtn');
-  const lbl = $('randomBtnLabel');
   const t = T[currentLang];
   if (btn) {
     btn.innerHTML = '✨';
