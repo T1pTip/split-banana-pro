@@ -1770,8 +1770,50 @@ function showToast(msg, isErr, isDeep) {
   t._timer = setTimeout(() => t.classList.remove('show'), isDeep ? 3500 : 2200);
 }
 
+
+// ── Install Tracker ───────────────────────────────────
+const TRACKER_URL = 'https://script.google.com/macros/s/AKfycbw4T2BKICMlJLgCGWuEPUpbuMtAyy0qD3zGNpwHVISyvzZnG9dW8i18Becg-QdPWfqm/exec';
+const TRACKER_KEY = 'palette_tracked';
+const APP_VERSION = '1.0';
+
+function trackInstall() {
+  try {
+    // מנע ספירה כפולה
+    if (localStorage.getItem(TRACKER_KEY)) return;
+
+    // זיהוי מכשיר
+    const ua = navigator.userAgent || '';
+    let device = 'desktop';
+    if (/android/i.test(ua))              device = 'android';
+    else if (/iphone|ipad|ipod/i.test(ua)) device = 'ios';
+    else if (/mobile/i.test(ua))           device = 'mobile';
+
+    // שפה
+    const lang = typeof currentLang !== 'undefined' ? currentLang : 'unknown';
+
+    // שלח
+    const params = new URLSearchParams({
+      lang:    lang,
+      device:  device,
+      version: APP_VERSION,
+      ua:      ua.slice(0, 200)
+    });
+
+    fetch(TRACKER_URL + '?' + params.toString(), { method: 'GET', mode: 'no-cors' })
+      .then(() => {
+        localStorage.setItem(TRACKER_KEY, '1');
+        console.log('[Palette AI] install tracked');
+      })
+      .catch(err => console.warn('[Palette AI] tracker:', err));
+
+  } catch(e) {
+    console.warn('[Palette AI] tracker error:', e);
+  }
+}
+
 function startApp() {
   initInstall();
+  trackInstall();
   initOnboarding();
   try { buildCatGrid(); } catch(e) { console.error('[SBP] buildCatGrid:', e); setTimeout(buildCatGrid, 100); }
   try { generate(); } catch(e) { console.warn('[SBP]', e); }
