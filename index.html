@@ -1589,7 +1589,10 @@ function doInstall() {
     deferredPrompt = null;
     $('installBanner').classList.remove('show');
     if (choice.outcome === 'accepted') {
-      showInstallSuccess();
+      // Android בלבד — iOS לא צריך הוראות App Drawer
+      if (/Android/i.test(navigator.userAgent)) {
+        showInstallSuccess();
+      }
     }
   });
 }
