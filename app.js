@@ -883,7 +883,7 @@ function trackInstall() {
 }
 
 // ── PayBox Donation ───────────────────────────────────────
-const PAYBOX_URL = 'https://payboxapp.page.link/iCb8';
+const PAYBOX_URL = 'https://links.payboxapp.com/hbbbRHMn91b';
 const PAYPAL_URL = 'https://paypal.me/yourname';
 
 function doPayBox() {
