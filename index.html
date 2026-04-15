@@ -762,117 +762,117 @@ body {
 <script>
 const DATA = [
   {
-    he: { title: '📸 סגנונות צילום ורינדור' },
-    en: { title: '📸 Photography & Render Styles' },
+    he: { title: '📸 סגנון צילום' },
+    en: { title: '📸 Photography Style' },
     tags: [
       { he: { label: 'ריאליסטי', sub: 'Raw Photo 8K' }, en: { label: 'Realistic', sub: 'Raw Photo 8K' }, val: 'photorealistic, 8k, raw photo, sharp details' },
       { he: { label: 'קולנועי', sub: 'Cinematic' }, en: { label: 'Cinematic', sub: 'Film Look' }, val: 'cinematic lighting, dramatic shadows, film grain' },
       { he: { label: 'טשטוש רקע', sub: 'Bokeh' }, en: { label: 'Bokeh', sub: 'Depth of Field' }, val: 'bokeh, shallow depth of field, sharp focus subject' },
-      { he: { label: 'רינדור 3D', sub: 'Unreal Engine 5' }, en: { label: '3D Render', sub: 'Unreal Engine 5' }, val: 'unreal engine 5, octane render, 3d rendering, volumetric' },
+      { he: { label: 'תלת מימד', sub: 'Unreal Engine 5' }, en: { label: '3D Render', sub: 'Unreal Engine 5' }, val: 'unreal engine 5, octane render, 3d rendering, volumetric' },
       { he: { label: 'אנלוגי', sub: 'Film Photography' }, en: { label: 'Analog', sub: 'Film Photography' }, val: 'analog film, 35mm, kodak portra, vintage photography' },
       { he: { label: 'מאקרו', sub: 'Macro Lens' }, en: { label: 'Macro', sub: 'Macro Lens' }, val: 'macro photography, extreme close-up, fine detail' },
       { he: { label: 'HDR', sub: 'High Dynamic Range' }, en: { label: 'HDR', sub: 'High Dynamic Range' }, val: 'HDR photography, high contrast, vivid colors' },
-      { he: { label: 'צילום מסמכי', sub: 'Documentary Style' }, en: { label: 'Documentary', sub: 'Cinematic Doc' }, val: 'documentary-style photography, dramatic cinematic realism, gritty photojournalism' },
+      { he: { label: 'דוקומנטרי', sub: 'Documentary Style' }, en: { label: 'Documentary', sub: 'Cinematic Doc' }, val: 'documentary-style photography, dramatic cinematic realism, gritty photojournalism' },
     ]
   },
   {
-    he: { title: '🎨 סגנונות אמנות' },
-    en: { title: '🎨 Art Styles' },
+    he: { title: '🎨 סגנון אמנות' },
+    en: { title: '🎨 Art Style' },
     tags: [
       { he: { label: 'שמן על בד', sub: 'Oil Painting' }, en: { label: 'Oil Painting', sub: 'Classical Art' }, val: 'oil painting, brushstrokes, classical art style' },
-      { he: { label: 'אקוורל', sub: 'Watercolor' }, en: { label: 'Watercolor', sub: 'Soft Edges' }, val: 'watercolor painting, soft edges, flowing colors' },
+      { he: { label: 'צבעי מים', sub: 'Watercolor' }, en: { label: 'Watercolor', sub: 'Soft Edges' }, val: 'watercolor painting, soft edges, flowing colors' },
       { he: { label: 'קומיקס', sub: 'Comic Book' }, en: { label: 'Comic Book', sub: 'Bold Outlines' }, val: 'comic book art, bold outlines, halftone' },
       { he: { label: 'אנימה', sub: 'Anime Style' }, en: { label: 'Anime', sub: 'Manga Style' }, val: 'anime style, manga art, studio ghibli inspired' },
-      { he: { label: 'ציור קו', sub: 'Line Art' }, en: { label: 'Line Art', sub: 'Ink Drawing' }, val: 'line art, ink drawing, precise linework' },
-      { he: { label: 'פיקסל ארט', sub: 'Pixel Art' }, en: { label: 'Pixel Art', sub: '16-bit Retro' }, val: 'pixel art, 16-bit, retro game style' },
+      { he: { label: 'קו ועיפרון', sub: 'Line Art' }, en: { label: 'Line Art', sub: 'Ink Drawing' }, val: 'line art, ink drawing, precise linework' },
+      { he: { label: 'פיקסל', sub: 'Pixel Art' }, en: { label: 'Pixel Art', sub: '16-bit Retro' }, val: 'pixel art, 16-bit, retro game style' },
       { he: { label: 'קונספט ארט', sub: 'Concept Art' }, en: { label: 'Concept Art', sub: 'ArtStation Style' }, val: 'concept art, artstation, professional illustration' },
-      { he: { label: 'אמפרסיוניסטי', sub: 'Impressionism' }, en: { label: 'Impressionism', sub: 'Monet Inspired' }, val: 'impressionist style, monet inspired, loose brushwork' },
+      { he: { label: 'אימפרסיוניזם', sub: 'Impressionism' }, en: { label: 'Impressionism', sub: 'Monet Inspired' }, val: 'impressionist style, monet inspired, loose brushwork' },
       { he: { label: 'דיסני', sub: 'Disney Animation' }, en: { label: 'Disney Style', sub: 'Disney Animation' }, val: 'Disney animation style, Disney character art, expressive eyes, smooth clean lines, magical Disney aesthetic' },
-      { he: { label: 'קומיקס סופרהירו', sub: 'Superhero Comics' }, en: { label: 'Superhero Comics', sub: 'Action Style' }, val: 'superhero comics art style, dynamic action illustration, bold linework, vibrant colors, heroic pose' },
+      { he: { label: 'גיבורי על', sub: 'Superhero Comics' }, en: { label: 'Superhero Comics', sub: 'Action Style' }, val: 'superhero comics art style, dynamic action illustration, bold linework, vibrant colors, heroic pose' },
     ]
   },
   {
-    he: { title: '🎬 ז׳אנרים וסצנות' },
-    en: { title: '🎬 Genres & Scenes' },
+    he: { title: '🎬 ז׳אנר' },
+    en: { title: '🎬 Genre' },
     tags: [
       { he: { label: 'סייברפאנק', sub: 'Cyberpunk' }, en: { label: 'Cyberpunk', sub: 'Neon Future' }, val: 'cyberpunk, neon lights, futuristic city, rain-slicked streets' },
-      { he: { label: 'פנטזיה אפלה', sub: 'Dark Fantasy' }, en: { label: 'Dark Fantasy', sub: 'Gothic Mood' }, val: 'dark fantasy, gothic atmosphere, moody, arcane' },
+      { he: { label: 'פנטזיה חשוכה', sub: 'Dark Fantasy' }, en: { label: 'Dark Fantasy', sub: 'Gothic Mood' }, val: 'dark fantasy, gothic atmosphere, moody, arcane' },
       { he: { label: 'אימה', sub: 'Horror' }, en: { label: 'Horror', sub: 'Eerie & Scary' }, val: 'horror atmosphere, eerie, unsettling, dark and creepy' },
       { he: { label: 'סטימפאנק', sub: 'Steampunk' }, en: { label: 'Steampunk', sub: 'Victorian Gears' }, val: 'steampunk, gears and cogs, Victorian, brass machinery' },
-      { he: { label: 'פילם נואר', sub: 'Film Noir' }, en: { label: 'Film Noir', sub: 'B&W Shadows' }, val: 'film noir, black and white, high contrast shadows' },
-      { he: { label: '\u05e8\u05d9\u05d8\u05e8\u05d5\u05e4\u05d9\u05d5\u05e6\u05f3\u05e8', sub: 'Retro-Futuristic' }, en: { label: 'Retro-Futuristic', sub: '1960s Space Age' }, val: 'retro-futuristic, 1960s space age, optimistic sci-fi' },
-      { he: { label: 'מדע בדיוני', sub: 'Sci-Fi' }, en: { label: 'Science Fiction', sub: 'Sci-Fi' }, val: 'science fiction, futuristic action, high-tech world, sci-fi movie poster style' },
-      { he: { label: 'מלחמות כוכבים', sub: 'Space Opera' }, en: { label: 'Space Opera', sub: 'Galactic Epic' }, val: 'space opera, galactic epic, deep space environment, alien worlds, interstellar adventure' },
+      { he: { label: 'נואר', sub: 'Noir' }, en: { label: 'Noir', sub: 'B&W Shadows' }, val: 'film noir, black and white, high contrast shadows' },
+      { he: { label: 'רטרו עתידני', sub: 'Retro-Futuristic' }, en: { label: 'Retro-Futuristic', sub: '1960s Space Age' }, val: 'retro-futuristic, 1960s space age, optimistic sci-fi' },
+      { he: { label: 'מדע בדיוני', sub: 'Sci-Fi' }, en: { label: 'Sci-Fi', sub: 'Sci-Fi' }, val: 'science fiction, futuristic action, high-tech world, sci-fi movie poster style' },
+      { he: { label: 'אופרת חלל', sub: 'Space Opera' }, en: { label: 'Space Opera', sub: 'Galactic Epic' }, val: 'space opera, galactic epic, deep space environment, alien worlds, interstellar adventure' },
     ]
   },
   {
-    he: { title: '💡 תאורה ואווירה' },
-    en: { title: '💡 Lighting & Mood' },
+    he: { title: '💡 תאורה' },
+    en: { title: '💡 Lighting' },
     tags: [
       { he: { label: 'שקיעה', sub: 'Golden Hour' }, en: { label: 'Sunset', sub: 'Golden Hour' }, val: 'golden hour, warm sunlight, long shadows' },
       { he: { label: 'ניאון', sub: 'Neon Lights' }, en: { label: 'Neon', sub: 'Neon Lights' }, val: 'neon lighting, colorful reflections, wet pavement' },
-      { he: { label: 'אור עמום', sub: 'Moody Lighting' }, en: { label: 'Moody', sub: 'Dramatic Light' }, val: 'dramatic lighting, moody atmosphere, chiaroscuro' },
+      { he: { label: 'עגמומי', sub: 'Moody Lighting' }, en: { label: 'Moody', sub: 'Dramatic Light' }, val: 'dramatic lighting, moody atmosphere, chiaroscuro' },
       { he: { label: 'אור יום', sub: 'Natural Light' }, en: { label: 'Daylight', sub: 'Natural Light' }, val: 'natural daylight, soft diffused light, bright and airy' },
-      { he: { label: 'בקרוליט', sub: 'Backlight' }, en: { label: 'Backlit', sub: 'Rim Lighting' }, val: 'backlit, rim lighting, silhouette, contre-jour' },
+      { he: { label: 'תאורת רקע', sub: 'Backlight' }, en: { label: 'Backlit', sub: 'Rim Lighting' }, val: 'backlit, rim lighting, silhouette, contre-jour' },
       { he: { label: 'לילה', sub: 'Night Scene' }, en: { label: 'Night', sub: 'Night Scene' }, val: 'night scene, moonlight, stars, dark sky' },
-      { he: { label: 'כיאורוסקורו', sub: 'High Contrast' }, en: { label: 'Chiaroscuro', sub: 'High Contrast' }, val: 'chiaroscuro lighting, extreme contrast, dramatic shadow play, Rembrandt lighting' },
-      { he: { label: 'אור סטודיו', sub: 'Studio Light' }, en: { label: 'Studio Light', sub: 'Softbox' }, val: 'studio lighting, softbox, clean professional light, controlled shadows' },
-      { he: { label: 'שעת כחול', sub: 'Blue Hour' }, en: { label: 'Blue Hour', sub: 'Twilight' }, val: 'blue hour, twilight, cool blue tones, dusk atmosphere' },
-      { he: { label: 'מוקד אור', sub: 'Spotlight' }, en: { label: 'Spotlight', sub: 'Focused Beam' }, val: 'spotlight, focused light beam, theatrical lighting, dramatic center light' },
+      { he: { label: 'ניגוד חזק', sub: 'Strong Contrast' }, en: { label: 'Strong Contrast', sub: 'Strong Contrast' }, val: 'chiaroscuro lighting, extreme contrast, dramatic shadow play, Rembrandt lighting' },
+      { he: { label: 'סטודיו', sub: 'Studio Light' }, en: { label: 'Studio Light', sub: 'Softbox' }, val: 'studio lighting, softbox, clean professional light, controlled shadows' },
+      { he: { label: 'דמדומים', sub: 'Blue Hour' }, en: { label: 'Blue Hour', sub: 'Twilight' }, val: 'blue hour, twilight, cool blue tones, dusk atmosphere' },
+      { he: { label: 'זרקור', sub: 'Spotlight' }, en: { label: 'Spotlight', sub: 'Focused Beam' }, val: 'spotlight, focused light beam, theatrical lighting, dramatic center light' },
     ]
   },
   {
-    he: { title: '⚙️ איכות וטכניקה' },
-    en: { title: '⚙️ Quality & Technique' },
+    he: { title: '⚙️ איכות' },
+    en: { title: '⚙️ Quality' },
     tags: [
       { he: { label: 'Masterpiece', sub: 'Highest Quality' }, en: { label: 'Masterpiece', sub: 'Highest Quality' }, val: 'masterpiece, best quality, ultra high resolution' },
       { he: { label: 'היפר-ריאליסטי', sub: 'Hyperrealistic' }, en: { label: 'Hyperrealistic', sub: 'Ultra-detailed' }, val: 'hyperrealistic, photographic quality, ultra-detailed' },
-      { he: { label: 'פרטים דקים', sub: 'Fine Details' }, en: { label: 'Fine Details', sub: 'Complex Textures' }, val: 'intricate details, highly detailed, complex textures' },
-      { he: { label: 'אמנות דיגיטלית', sub: 'Digital Art' }, en: { label: 'Digital Art', sub: 'Digital Painting' }, val: 'digital art, digital painting, professional artwork' },
+      { he: { label: 'פרטים עדינים', sub: 'Fine Details' }, en: { label: 'Fine Details', sub: 'Complex Textures' }, val: 'intricate details, highly detailed, complex textures' },
+      { he: { label: 'דיגיטל', sub: 'Digital Art' }, en: { label: 'Digital Art', sub: 'Digital Painting' }, val: 'digital art, digital painting, professional artwork' },
       { he: { label: '8K HDR', sub: 'Ultra Resolution' }, en: { label: '8K HDR', sub: 'Ultra Resolution' }, val: '8K resolution, HDR, ultra-detailed textures, sharp focus' },
-      { he: { label: 'גרעין פילם', sub: 'Film Grain' }, en: { label: 'Film Grain', sub: 'Analog Texture' }, val: 'film grain, analog texture, subtle noise, cinematic grain' },
-      { he: { label: 'Trending Artstation', sub: 'Viral Art' }, en: { label: 'Trending Artstation', sub: 'Viral Art' }, val: 'trending on artstation, award winning digital art, featured artwork' },
+      { he: { label: 'גרעין סרט', sub: 'Film Grain' }, en: { label: 'Film Grain', sub: 'Analog Texture' }, val: 'film grain, analog texture, subtle noise, cinematic grain' },
+      { he: { label: 'פופולרי ברשת', sub: 'Viral Art' }, en: { label: 'Trending Online', sub: 'Viral Art' }, val: 'trending on artstation, award winning digital art, featured artwork' },
     ]
   },
   {
-    he: { title: '🎭 דמויות ופנטזיה' },
-    en: { title: '🎭 Characters & Fantasy' },
+    he: { title: '🎭 דמויות' },
+    en: { title: '🎭 Characters' },
     tags: [
-      { he: { label: 'לוחם סייבורג', sub: 'Cybernetic Warrior' }, en: { label: 'Cyborg Warrior', sub: 'Half Machine' }, val: 'cybernetic warrior, half human half machine, mechanical parts, robotic implants' },
+      { he: { label: 'סייבורג', sub: 'Cybernetic Warrior' }, en: { label: 'Cyborg Warrior', sub: 'Half Machine' }, val: 'cybernetic warrior, half human half machine, mechanical parts, robotic implants' },
       { he: { label: 'אסטרונאוט', sub: 'Space Suit' }, en: { label: 'Astronaut', sub: 'Space Suit' }, val: 'astronaut, detailed space suit, helmet visor, scratched suit, dusty, zero gravity' },
-      { he: { label: 'אלת מיתולוגיה', sub: 'Goddess' }, en: { label: 'Mythology Goddess', sub: 'Divine Figure' }, val: 'divine goddess, mythological figure, ethereal beauty, celestial aura' },
-      { he: { label: 'פנטזיה DnD', sub: 'Fantasy RPG' }, en: { label: 'DnD Fantasy', sub: 'Fantasy RPG' }, val: 'fantasy RPG character, tiefling, dark fantasy inn, tavern, gritty realism' },
+      { he: { label: 'אלה מיתולוגית', sub: 'Goddess' }, en: { label: 'Mythology Goddess', sub: 'Divine Figure' }, val: 'divine goddess, mythological figure, ethereal beauty, celestial aura' },
+      { he: { label: 'RPG פנטזיה', sub: 'Fantasy RPG' }, en: { label: 'DnD Fantasy', sub: 'Fantasy RPG' }, val: 'fantasy RPG character, tiefling, dark fantasy inn, tavern, gritty realism' },
       { he: { label: 'לוחמת עתיד', sub: 'Combat Cyborg' }, en: { label: 'Combat Cyborg', sub: 'Female Warrior' }, val: 'female combat cyborg, cracked synthetic skin, mechanical components, post-apocalyptic' },
     ]
   },
   {
-    he: { title: '📐 קומפוזיציה ומצלמה' },
-    en: { title: '📐 Composition & Camera' },
+    he: { title: '📐 מצלמה' },
+    en: { title: '📐 Camera' },
     tags: [
-      { he: { label: 'זווית נמוכה', sub: 'Low Angle' }, en: { label: 'Low Angle', sub: 'Power Shot' }, val: 'low angle shot, worms eye view, dramatic perspective, dominant framing' },
+      { he: { label: 'מלמטה למעלה', sub: 'Low Angle' }, en: { label: 'Low Angle', sub: 'Power Shot' }, val: 'low angle shot, worms eye view, dramatic perspective, dominant framing' },
       { he: { label: 'מבט ציפור', sub: "Bird's Eye" }, en: { label: "Bird's Eye View", sub: 'Top Down' }, val: 'birds eye view, overhead shot, top-down perspective, aerial composition' },
-      { he: { label: 'קלוז-אפ', sub: 'Close Up' }, en: { label: 'Close-Up', sub: 'Tight Shot' }, val: 'close-up shot, tight framing, face detail, extreme proximity' },
+      { he: { label: 'תקריב', sub: 'Close Up' }, en: { label: 'Close-Up', sub: 'Tight Shot' }, val: 'close-up shot, tight framing, face detail, extreme proximity' },
       { he: { label: 'שוט רחב', sub: 'Wide Shot' }, en: { label: 'Wide Shot', sub: 'Establishing Shot' }, val: 'wide shot, establishing shot, full environment, expansive framing' },
       { he: { label: 'POV', sub: 'Point of View' }, en: { label: 'POV', sub: 'First Person' }, val: 'point of view shot, first person perspective, immersive POV' },
-      { he: { label: 'Dutch Angle', sub: 'Tilted Camera' }, en: { label: 'Dutch Angle', sub: 'Tilted Camera' }, val: 'dutch angle, tilted camera, diagonal framing, tension composition' },
-      { he: { label: 'עדשת 50mm', sub: 'Standard Lens' }, en: { label: '50mm Lens', sub: 'Standard Lens' }, val: '50mm lens, eye-level perspective, natural perspective, standard focal length' },
-      { he: { label: 'עדשת 85mm', sub: 'Portrait Lens' }, en: { label: '85mm Lens', sub: 'Portrait Lens' }, val: '85mm portrait lens, compressed background, flattering perspective, sharp subject' },
-      { he: { label: 'פוסטר הירו', sub: 'Hero Shot' }, en: { label: 'Hero Shot', sub: 'Movie Poster' }, val: 'hero shot, poster composition, vertical framing, full body, iconic stance' },
+      { he: { label: 'זווית הולנדית', sub: 'Tilted Camera' }, en: { label: 'Dutch Angle', sub: 'Tilted Camera' }, val: 'dutch angle, tilted camera, diagonal framing, tension composition' },
+      { he: { label: 'עדשה רגילה', sub: 'Standard Lens' }, en: { label: 'Standard Lens', sub: 'Standard Lens' }, val: '50mm lens, eye-level perspective, natural perspective, standard focal length' },
+      { he: { label: 'עדשת פורטרט', sub: 'Portrait Lens' }, en: { label: 'Portrait Lens', sub: 'Portrait Lens' }, val: '85mm portrait lens, compressed background, flattering perspective, sharp subject' },
+      { he: { label: 'שוט הירו', sub: 'Hero Shot' }, en: { label: 'Hero Shot', sub: 'Movie Poster' }, val: 'hero shot, poster composition, vertical framing, full body, iconic stance' },
     ]
   },
   {
-    he: { title: '👗 אופנה ועיצוב' },
-    en: { title: '👗 Fashion & Styling' },
+    he: { title: '👗 אופנה' },
+    en: { title: '👗 Fashion' },
     tags: [
-      { he: { label: 'אדיטוריאל אופנה', sub: 'Fashion Editorial' }, en: { label: 'Fashion Editorial', sub: 'Magazine Style' }, val: 'high fashion editorial, magazine cover, luxury styling, professional fashion photography' },
-      { he: { label: 'חליפה עסקית', sub: 'Power Suit' }, en: { label: 'Power Suit', sub: 'Business Fashion' }, val: 'tailored three-piece suit, power dressing, Italian wool, elegant' },
+      { he: { label: 'עיתוני אופנה', sub: 'Fashion Editorial' }, en: { label: 'Fashion Editorial', sub: 'Magazine Style' }, val: 'high fashion editorial, magazine cover, luxury styling, professional fashion photography' },
+      { he: { label: 'חליפה רשמית', sub: 'Formal Suit' }, en: { label: 'Formal Suit', sub: 'Business Fashion' }, val: 'tailored three-piece suit, power dressing, Italian wool, elegant' },
       { he: { label: 'אבנגארד', sub: 'Avant-Garde' }, en: { label: 'Avant-Garde', sub: 'Experimental Fashion' }, val: 'avant-garde fashion, oversized silhouette, billowing fabric, experimental styling' },
-      { he: { label: 'לוקסוס אפל', sub: 'Dark Luxury' }, en: { label: 'Dark Luxury', sub: 'Gothic Glamour' }, val: 'dark luxury fashion, oxblood velvet, obsidian silk, antique gold embroidery, restrained glamour' },
+      { he: { label: 'לוקסוס כהה', sub: 'Dark Luxury' }, en: { label: 'Dark Luxury', sub: 'Gothic Glamour' }, val: 'dark luxury fashion, oxblood velvet, obsidian silk, antique gold embroidery, restrained glamour' },
     ]
   },
   {
-    he: { title: '🌍 מיקום גאוגרפי ומראה' },
-    en: { title: '🌍 Geographic Appearance' },
+    he: { title: '🌍 מראה' },
+    en: { title: '🌍 Appearance' },
     tags: [
       { he: { label: 'ישראלי / ערבי', sub: 'ים תיכוני' }, en: { label: 'Israeli / Arab', sub: 'Mediterranean' }, val: 'Mediterranean appearance, olive honey skin tone, dark brown eyes, black wavy hair, Levantine features' },
       { he: { label: 'אפריקאי/ת', sub: 'עור כהה עמוק' }, en: { label: 'African', sub: 'Deep Rich Skin' }, val: 'African descent, deep ebony skin, chestnut brown complexion, coiled black hair, strong facial structure' },
@@ -889,8 +889,8 @@ const DATA = [
     ]
   },
   {
-    he: { title: '💇 גוף ומראה' },
-    en: { title: '💇 Body & Appearance' },
+    he: { title: '💇 גוף' },
+    en: { title: '💇 Body' },
     tags: [
       { he: { label: 'שיער ישר שחור', sub: 'Black Straight' }, en: { label: 'Black Straight Hair', sub: 'Silky Smooth' }, val: 'straight black hair, silky smooth texture, glossy dark hair, sleek' },
       { he: { label: 'שיער מתולתל', sub: 'Natural Curls' }, en: { label: 'Curly Hair', sub: 'Natural Coils' }, val: 'natural curly hair, coiled texture, voluminous afro curls, defined ringlets' },
@@ -904,71 +904,292 @@ const DATA = [
     ]
   },
   {
-    he: { title: '🌆 סביבות וסצנות' },
-    en: { title: '🌆 Environments & Scenes' },
+    he: { title: '🌆 סביבה' },
+    en: { title: '🌆 Environment' },
     tags: [
-      { he: { label: 'נוף חייזרי', sub: 'Alien Planet' }, en: { label: 'Alien Planet', sub: 'Sci-Fi Landscape' }, val: 'alien planet landscape, barren rocky terrain, deep space sky, distant Earth, spaceship background' },
+      { he: { label: 'כוכב לכת זר', sub: 'Alien Planet' }, en: { label: 'Alien Planet', sub: 'Sci-Fi Landscape' }, val: 'alien planet landscape, barren rocky terrain, deep space sky, distant Earth, spaceship background' },
       { he: { label: 'ג׳ונגל גשם', sub: 'Rainforest' }, en: { label: 'Rainforest', sub: 'Misty Valley' }, val: 'moss-covered limestone cliff, misty rainforest valley, overgrown vegetation, dramatic nature' },
-      { he: { label: 'נוף אחרי-סוף', sub: 'Post-Apocalyptic' }, en: { label: 'Post-Apocalyptic', sub: 'Ruined Future' }, val: 'ruined futuristic landscape, post-apocalyptic city ruins, morning fog, desolate vast environment' },
-      { he: { label: 'טברנה פנטזיה', sub: 'Fantasy Inn' }, en: { label: 'Fantasy Tavern', sub: 'Medieval Inn' }, val: 'dimly lit fantasy tavern, medieval inn, stone fireplace, bubbling glass lanterns, warm bokeh' },
+      { he: { label: 'אפוקליפסה', sub: 'Post-Apocalyptic' }, en: { label: 'Post-Apocalyptic', sub: 'Ruined Future' }, val: 'ruined futuristic landscape, post-apocalyptic city ruins, morning fog, desolate vast environment' },
+      { he: { label: 'פונדק פנטזיה', sub: 'Fantasy Inn' }, en: { label: 'Fantasy Tavern', sub: 'Medieval Inn' }, val: 'dimly lit fantasy tavern, medieval inn, stone fireplace, bubbling glass lanterns, warm bokeh' },
       { he: { label: 'מסלול כוכבים', sub: 'Meteor Shower' }, en: { label: 'Meteor Shower', sub: 'Stargazing' }, val: 'ancient stone ruins under night sky, meteor shower, Milky Way visible, celestial wonder' },
-      { he: { label: 'ענן חלומי', sub: 'Dream Clouds' }, en: { label: 'Dreamy Clouds', sub: 'Cloud Kingdom' }, val: 'lying on soft cotton clouds, golden hour sky, dreamlike gravity-defying, pastel orange atmosphere' },
-      { he: { label: 'קרנבל פסטל', sub: 'Vintage Carnival' }, en: { label: 'Pastel Carnival', sub: 'Vintage Fairground' }, val: 'pastel-colored vintage carnival, Ferris wheel, fairground atmosphere, warm golden light, nostalgic' },
+      { he: { label: 'ענני חלום', sub: 'Dream Clouds' }, en: { label: 'Dreamy Clouds', sub: 'Cloud Kingdom' }, val: 'lying on soft cotton clouds, golden hour sky, dreamlike gravity-defying, pastel orange atmosphere' },
+      { he: { label: 'קרנבל', sub: 'Vintage Carnival' }, en: { label: 'Pastel Carnival', sub: 'Vintage Fairground' }, val: 'pastel-colored vintage carnival, Ferris wheel, fairground atmosphere, warm golden light, nostalgic' },
     ]
   },
   {
-    he: { title: '🔮 אסתטיקות מיוחדות' },
-    en: { title: '🔮 Special Aesthetics' },
+    he: { title: '🔮 אסתטיקה' },
+    en: { title: '🔮 Aesthetic' },
     tags: [
-      { he: { label: 'פסיפס זהב', sub: 'Gold Mosaic' }, en: { label: 'Gold Mosaic', sub: 'Luxury Portrait' }, val: 'gold mosaic portrait, reflective golden tiles, luxury gold texture, intricate gold fragments, baroque' },
+      { he: { label: 'פסיפס זהוב', sub: 'Gold Mosaic' }, en: { label: 'Gold Mosaic', sub: 'Luxury Portrait' }, val: 'gold mosaic portrait, reflective golden tiles, luxury gold texture, intricate gold fragments, baroque' },
       { he: { label: 'קרח שבור', sub: 'Broken Ice' }, en: { label: 'Broken Ice', sub: 'Ice Plate' }, val: 'broken ice plate, hand pressed against ice, wet surface reflection, crystalline texture, ice shards' },
-      { he: { label: 'לוקסוס עלום', sub: 'Dark Prestige' }, en: { label: 'Dark Prestige', sub: 'Noir Luxury' }, val: 'dark prestige editorial, noir luxury aesthetic, black velvet atmosphere, cinematic high-fashion, shadow and light' },
-      { he: { label: 'ציוד מימי-ביניים', sub: 'Medieval Forge' }, en: { label: 'Medieval Forge', sub: 'Blacksmith' }, val: 'medieval blacksmith forge, incandescent metal, flying sparks, chiaroscuro forge lighting, leather apron' },
-      { he: { label: 'ריזאריקשן', sub: 'Spiritual Rising' }, en: { label: 'Spiritual Rising', sub: 'Resurrection' }, val: 'spiritual awakening symbolism, light breaking through darkness, hope and redemption, ethereal atmosphere' },
+      { he: { label: 'יוקרה כהה', sub: 'Dark Prestige' }, en: { label: 'Dark Prestige', sub: 'Noir Luxury' }, val: 'dark prestige editorial, noir luxury aesthetic, black velvet atmosphere, cinematic high-fashion, shadow and light' },
+      { he: { label: 'נפחיה עתיקה', sub: 'Medieval Forge' }, en: { label: 'Medieval Forge', sub: 'Blacksmith' }, val: 'medieval blacksmith forge, incandescent metal, flying sparks, chiaroscuro forge lighting, leather apron' },
+      { he: { label: 'עלייה רוחנית', sub: 'Spiritual Rising' }, en: { label: 'Spiritual Rising', sub: 'Resurrection' }, val: 'spiritual awakening symbolism, light breaking through darkness, hope and redemption, ethereal atmosphere' },
     ]
   },
   {
-    he: { title: '😊 הבעות ורגשות' },
-    en: { title: '😊 Expressions & Emotions' },
+    he: { title: '😊 הבעה' },
+    en: { title: '😊 Expression' },
     tags: [
       { he: { label: 'חיוך', sub: 'Smiling' }, en: { label: 'Smiling', sub: 'Happy Expression' }, val: 'smiling, warm genuine smile, happy expression, joyful face' },
-      { he: { label: 'רציני/ת', sub: 'Serious' }, en: { label: 'Serious', sub: 'Stern Look' }, val: 'serious expression, stern look, neutral face, focused gaze' },
-      { he: { label: 'נחוש/ה', sub: 'Determined' }, en: { label: 'Determined', sub: 'Fierce Look' }, val: 'determined expression, fierce look, strong willpower, intense focus' },
-      { he: { label: 'חלומי/ת', sub: 'Dreamy' }, en: { label: 'Dreamy', sub: 'Soft Gaze' }, val: 'dreamy expression, soft gaze, distant look, romantic mood' },
-      { he: { label: 'מופתע/ת', sub: 'Surprised' }, en: { label: 'Surprised', sub: 'Shocked' }, val: 'surprised expression, wide eyes, shocked look, mouth open' },
-      { he: { label: 'ביטחון עצמי', sub: 'Confident' }, en: { label: 'Confident', sub: 'Bold Look' }, val: 'confident expression, bold look, self-assured pose, strong presence' },
-      { he: { label: 'עצוב/ה', sub: 'Sad' }, en: { label: 'Sad', sub: 'Melancholic' }, val: 'sad expression, melancholic look, teary eyes, emotional face' },
-      { he: { label: 'מסתורי/ת', sub: 'Mysterious' }, en: { label: 'Mysterious', sub: 'Enigmatic' }, val: 'mysterious expression, enigmatic smile, secretive look, half shadow' },
+      { he: { label: 'רציני', sub: 'Serious' }, en: { label: 'Serious', sub: 'Stern Look' }, val: 'serious expression, stern look, neutral face, focused gaze' },
+      { he: { label: 'נחוש', sub: 'Determined' }, en: { label: 'Determined', sub: 'Fierce Look' }, val: 'determined expression, fierce look, strong willpower, intense focus' },
+      { he: { label: 'חלומי', sub: 'Dreamy' }, en: { label: 'Dreamy', sub: 'Soft Gaze' }, val: 'dreamy expression, soft gaze, distant look, romantic mood' },
+      { he: { label: 'מופתע', sub: 'Surprised' }, en: { label: 'Surprised', sub: 'Shocked' }, val: 'surprised expression, wide eyes, shocked look, mouth open' },
+      { he: { label: 'בטוח בעצמו', sub: 'Confident' }, en: { label: 'Confident', sub: 'Bold Look' }, val: 'confident expression, bold look, self-assured pose, strong presence' },
+      { he: { label: 'עצוב', sub: 'Sad' }, en: { label: 'Sad', sub: 'Melancholic' }, val: 'sad expression, melancholic look, teary eyes, emotional face' },
+      { he: { label: 'מסתורי', sub: 'Mysterious' }, en: { label: 'Mysterious', sub: 'Enigmatic' }, val: 'mysterious expression, enigmatic smile, secretive look, half shadow' },
     ]
   },
   {
-    he: { title: '🧍 פוזות גוף' },
-    en: { title: '🧍 Body Poses' },
+    he: { title: '🧍 פוזה' },
+    en: { title: '🧍 Pose' },
     tags: [
-      { he: { label: 'פול-בודי', sub: 'Full Body' }, en: { label: 'Full Body', sub: 'Head to Toe' }, val: 'full body shot, head to toe, complete figure, standing pose' },
-      { he: { label: 'אפר-בודי', sub: 'Upper Body' }, en: { label: 'Upper Body', sub: 'Waist Up' }, val: 'upper body shot, waist up, portrait framing, torso visible' },
+      { he: { label: 'גוף מלא', sub: 'Full Body' }, en: { label: 'Full Body', sub: 'Head to Toe' }, val: 'full body shot, head to toe, complete figure, standing pose' },
+      { he: { label: 'חצי גוף', sub: 'Half Body' }, en: { label: 'Half Body', sub: 'Waist Up' }, val: 'upper body shot, waist up, portrait framing, torso visible' },
       { he: { label: 'קאובוי שוט', sub: 'Mid Shot' }, en: { label: 'Cowboy Shot', sub: 'Thigh Up' }, val: 'cowboy shot, medium shot, thighs up, classic Western framing' },
-      { he: { label: 'יושב/ת', sub: 'Sitting' }, en: { label: 'Sitting', sub: 'Seated Pose' }, val: 'sitting pose, seated, relaxed seated position, chair or ground' },
-      { he: { label: 'שוכב/ת', sub: 'Lying Down' }, en: { label: 'Lying Down', sub: 'Reclining' }, val: 'lying down, reclining pose, horizontal composition, resting position' },
-      { he: { label: 'אקשן דינמי', sub: 'Dynamic Action' }, en: { label: 'Dynamic Action', sub: 'Motion Pose' }, val: 'dynamic action pose, movement, energetic stance, mid-action freeze' },
-      { he: { label: 'מסתכל/ת לצלם', sub: 'Looking at Camera' }, en: { label: 'Looking at Camera', sub: 'Direct Gaze' }, val: 'looking at camera, direct eye contact, facing viewer, engaging gaze' },
+      { he: { label: 'יושב', sub: 'Sitting' }, en: { label: 'Sitting', sub: 'Seated Pose' }, val: 'sitting pose, seated, relaxed seated position, chair or ground' },
+      { he: { label: 'שוכב', sub: 'Lying Down' }, en: { label: 'Lying Down', sub: 'Reclining' }, val: 'lying down, reclining pose, horizontal composition, resting position' },
+      { he: { label: 'אקשן', sub: 'Dynamic Action' }, en: { label: 'Dynamic Action', sub: 'Motion Pose' }, val: 'dynamic action pose, movement, energetic stance, mid-action freeze' },
+      { he: { label: 'מסתכל למצלמה', sub: 'Looking at Camera' }, en: { label: 'Looking at Camera', sub: 'Direct Gaze' }, val: 'looking at camera, direct eye contact, facing viewer, engaging gaze' },
       { he: { label: 'גב לצלם', sub: 'Back View' }, en: { label: 'Back View', sub: 'From Behind' }, val: 'back view, seen from behind, rear shot, looking away from camera' },
     ]
   },
   {
-    he: { title: '🖌️ פלטת צבעים' },
-    en: { title: '🖌️ Color Palette' },
+    he: { title: '🖌️ צבעים' },
+    en: { title: '🖌️ Colors' },
     tags: [
-      { he: { label: 'צבעים עזים', sub: 'Vibrant' }, en: { label: 'Vibrant', sub: 'Bold Colors' }, val: 'vibrant colors, bold saturated palette, vivid colorful, high saturation' },
+      { he: { label: 'עז וצבעוני', sub: 'Vibrant' }, en: { label: 'Vibrant', sub: 'Bold Colors' }, val: 'vibrant colors, bold saturated palette, vivid colorful, high saturation' },
       { he: { label: 'פסטל', sub: 'Soft Pastels' }, en: { label: 'Pastel', sub: 'Soft Tones' }, val: 'pastel palette, soft muted tones, light delicate colors, dreamy pastels' },
       { he: { label: 'שחור-לבן', sub: 'Monochrome' }, en: { label: 'Black and White', sub: 'Monochrome' }, val: 'black and white, monochrome, grayscale, timeless B&W photography' },
-      { he: { label: 'גוונים חמים', sub: 'Warm Tones' }, en: { label: 'Warm Tones', sub: 'Amber and Orange' }, val: 'warm color palette, amber tones, orange and red hues, warm cozy atmosphere' },
-      { he: { label: 'גוונים קרים', sub: 'Cool Tones' }, en: { label: 'Cool Tones', sub: 'Blue and Teal' }, val: 'cool color palette, blue and teal tones, cold atmosphere, icy hues' },
-      { he: { label: 'מונוכרומטי', sub: 'Single Color' }, en: { label: 'Monochromatic', sub: 'One Hue' }, val: 'monochromatic palette, single hue variations, tonal harmony, one dominant color' },
-      { he: { label: 'קונטרסט גבוה', sub: 'High Contrast' }, en: { label: 'High Contrast', sub: 'Bold Contrast' }, val: 'high contrast colors, bold dark and light, dramatic contrast, vivid opposition' },
-      { he: { label: 'Earth Tones', sub: 'Natural Colors' }, en: { label: 'Earth Tones', sub: 'Natural Colors' }, val: 'earth tones, natural colors, brown and terracotta, organic warm palette' },
+      { he: { label: 'צבעים חמים', sub: 'Warm Tones' }, en: { label: 'Warm Tones', sub: 'Amber and Orange' }, val: 'warm color palette, amber tones, orange and red hues, warm cozy atmosphere' },
+      { he: { label: 'צבעים קרים', sub: 'Cool Tones' }, en: { label: 'Cool Tones', sub: 'Blue and Teal' }, val: 'cool color palette, blue and teal tones, cold atmosphere, icy hues' },
+      { he: { label: 'מונוכרום', sub: 'Single Color' }, en: { label: 'Monochrome', sub: 'One Hue' }, val: 'monochromatic palette, single hue variations, tonal harmony, one dominant color' },
+      { he: { label: 'ניגוד גבוה', sub: 'High Contrast' }, en: { label: 'High Contrast', sub: 'Bold Contrast' }, val: 'high contrast colors, bold dark and light, dramatic contrast, vivid opposition' },
+      { he: { label: 'גוונות אדמה', sub: 'Natural Colors' }, en: { label: 'Earth Tones', sub: 'Natural Colors' }, val: 'earth tones, natural colors, brown and terracotta, organic warm palette' },
     ]
   }
+
+  ,
+  {
+    he:{title:'🧸 צעצועים'},en:{title:'🧸 Toys'},
+    tags:[
+      {he:{label:'פיגורינה באריזה'},en:{label:'Action Figure Box'},val:'action figure box packaging, collectible toy display, plastic window, retail packaging, character accessories'},
+      {he:{label:'לגו מיניפיגור'},en:{label:'LEGO Minifigure'},val:'LEGO minifigure style, blocky proportions, yellow face, classic plastic toy aesthetic, geometric shapes'},
+      {he:{label:'פאנקו פופ'},en:{label:'Funko Pop Style'},val:'Funko Pop vinyl figure, oversized head, tiny body, black bead eyes, collectible figurine design'},
+      {he:{label:'ציידן צבעוני'},en:{label:'Chibi Figurine'},val:'chibi 3D figurine, oversized cute head, tiny body, soft rounded shapes, pastel colors, adorable collectible'},
+      {he:{label:'בובת ברבי באריזה'},en:{label:'Barbie Box Style'},val:'Barbie doll box aesthetic, pink packaging, fashion doll clear window, branded toy packaging design'},
+      {he:{label:'צלמית חרס'},en:{label:'Clay Figurine'},val:'handmade clay figurine, artisan ceramic sculpture, textured surface, whimsical character crafted art'},
+      {he:{label:'דגם תלת-מימד'},en:{label:'3D Printed Model'},val:'3D printed figurine, layer lines visible, matte plastic finish, precise geometric detail, maker aesthetic'},
+    ]
+  }
+  ,
+  {
+    he:{title:'📷 סגנון ישן ורגיל'},en:{title:'📷 Raw & Candid'},
+    tags:[
+      {he:{label:'מצלמה חד-פעמית'},en:{label:'Disposable Camera'},val:'disposable camera aesthetic, slightly blurry, red-eye flash, overexposed edges, nostalgic grain, casual snapshot'},
+      {he:{label:'פולארויד'},en:{label:'Polaroid Shot'},val:'polaroid instant photo, white border frame, faded colors, nostalgic snapshot, soft focus imperfect'},
+      {he:{label:'פלאש מקרי'},en:{label:'Accidental Flash'},val:'accidental flash photography, harsh direct light, blown highlights, casual unposed candid moment'},
+      {he:{label:'טשטוש תנועה'},en:{label:'Motion Blur Candid'},val:'motion blur candid shot, subject in motion, natural movement, street photography dynamic blur'},
+      {he:{label:'גרעין לו-פיי'},en:{label:'Lo-Fi Grain'},val:'heavy film grain, lo-fi aesthetic, analog noise texture, gritty raw look, imperfect analog beauty'},
+      {he:{label:'שריפת סרט'},en:{label:'Film Burn'},val:'film burn effect, light leak at edges, orange red streaks, analog film damage, vintage imperfection'},
+      {he:{label:'תמונה מוצאת'},en:{label:'Found Photo'},val:'found photo aesthetic, creased edges, faded colors, mystery candid snapshot, old photograph'},
+    ]
+  }
+  ,
+  {
+    he:{title:'🃏 קריקטורה'},en:{title:'🃏 Caricature'},
+    tags:[
+      {he:{label:'קריקטורה אישית'},en:{label:'Personal Caricature'},val:'personal caricature, exaggerated facial features, cartoon style, job props, humorous portrait illustration'},
+      {he:{label:'אבטר קרטון'},en:{label:'Cartoon Avatar'},val:'cartoon avatar, simplified stylized face, bold outlines, flat colors, profile picture digital illustration'},
+      {he:{label:'קריקטורה מקצועית'},en:{label:'Job Caricature'},val:'profession caricature, exaggerated work tools, funny career accessories, humorous job illustration'},
+      {he:{label:'אבטר פיקסל ארט'},en:{label:'Pixel Avatar'},val:'pixel art character avatar, 16-bit style, retro game character, grid aesthetic, small resolution'},
+      {he:{label:'מסקוט מותג'},en:{label:'Brand Mascot'},val:'brand mascot design, friendly character, consistent style, expressive personality, commercial illustration'},
+      {he:{label:'דיוקן קומיקס'},en:{label:'Comic Self-Portrait'},val:'comic book self-portrait, halftone dots, bold outlines, vibrant colors, graphic novel illustration'},
+    ]
+  }
+  ,
+  {
+    he:{title:'🐾 חיות'},en:{title:'🐾 Animals'},
+    tags:[
+      {he:{label:'פורטרט חיית מחמד'},en:{label:'Pet Portrait'},val:'detailed pet portrait, expressive animal eyes, soft fur texture, natural lighting, intimate animal photography'},
+      {he:{label:'חיות בר'},en:{label:'Wildlife in Nature'},val:'wildlife photography, animal in natural habitat, golden hour, National Geographic style, nature documentary'},
+      {he:{label:'מאקרו חרק'},en:{label:'Macro Insect'},val:'macro insect photography, extreme close-up, compound eyes detail, intricate wing patterns, fine insect'},
+      {he:{label:'יצור ימי'},en:{label:'Marine Life'},val:'underwater marine life, coral reef, bioluminescent ocean creature, vivid ocean colors, sea photography'},
+      {he:{label:'ציפור טרף'},en:{label:'Bird of Prey'},val:'bird of prey portrait, sharp talons, piercing eyes, feather detail, dramatic sky, eagle or hawk'},
+      {he:{label:'עדר זאבים'},en:{label:'Wolf Pack'},val:'wolf pack in winter forest, dramatic moody light, snow environment, wild predator photography'},
+      {he:{label:'יצור פנטזיה'},en:{label:'Fantasy Creature'},val:'mythical fantasy creature, dragon or phoenix, ethereal magical being, detailed scales or feathers'},
+      {he:{label:'דיוקן סוס'},en:{label:'Horse Portrait'},val:'dramatic horse portrait, flowing mane, muscular form, golden hour backlight, powerful animal photography'},
+    ]
+  }
+  ,
+  {
+    he:{title:'✨ אפקטים'},en:{title:'✨ Visual FX'},
+    tags:[
+      {he:{label:'חשיפה כפולה'},en:{label:'Double Exposure'},val:'double exposure effect, two images merged, silhouette filled with landscape, artistic blend, dreamy overlay'},
+      {he:{label:'אורות דולפים'},en:{label:'Light Leaks'},val:'light leak effect, warm orange pink streaks at edges, analog film light exposure, vintage imperfection'},
+      {he:{label:'זכוכית מנופצת'},en:{label:'Shattered Glass'},val:'shattered glass effect, cracks radiating from center, broken mirror dramatic fragmentation'},
+      {he:{label:'אפקט גליץ'},en:{label:'Glitch Effect'},val:'digital glitch effect, RGB color split, data corruption aesthetic, pixel displacement, cyberpunk distortion'},
+      {he:{label:'אור פריזמה'},en:{label:'Prismatic Light'},val:'prismatic light refraction, rainbow spectrum dispersion, crystal light split, geometric light patterns'},
+      {he:{label:'עשן וערפל'},en:{label:'Smoke and Fog'},val:'smoke and fog atmosphere, swirling mist, mysterious haze, ethereal smoke trails, soft diffused forms'},
+      {he:{label:'שיקוף מראה'},en:{label:'Mirror Reflection'},val:'perfect mirror reflection, symmetrical composition, still water reflection, surreal mirrored world'},
+      {he:{label:'אפקט הולוגרמה'},en:{label:'Holographic Effect'},val:'holographic iridescent surface, rainbow metallic sheen, shifting color spectrum, futuristic finish'},
+    ]
+  }
+  ,
+  {
+    he:{title:'🎞️ סגנון סרטים'},en:{title:'🎞️ Cinematic Style'},
+    tags:[
+      {he:{label:'וס אנדרסון'},en:{label:'Wes Anderson Style'},val:'Wes Anderson aesthetic, symmetrical composition, pastel color palette, flat graphic quirky precise framing'},
+      {he:{label:'בלייד ראנר'},en:{label:'Blade Runner Noir'},val:'Blade Runner noir aesthetic, rain-slicked streets, neon reflections, dense fog, dystopian cityscape'},
+      {he:{label:'ונג קר-ווי'},en:{label:'Wong Kar-Wai Blur'},val:'Wong Kar-Wai visual style, motion blur, warm saturated tones, melancholic mood, slow shutter street'},
+      {he:{label:'פרספקטיבת קובריק'},en:{label:'Kubrick Perspective'},val:'Stanley Kubrick one-point perspective, symmetrical hallway, cold clinical lighting, geometric framing'},
+      {he:{label:'גיאלו איטלקי'},en:{label:'Giallo Color Grade'},val:'Italian Giallo color grading, saturated reds and blues, theatrical lighting, vivid surreal palette'},
+      {he:{label:'סרט שנות 70'},en:{label:'70s Film Look'},val:'70s film aesthetic, warm brown tones, soft focus, grainy film stock, natural organic nostalgic mood'},
+      {he:{label:'IMAX אפי'},en:{label:'IMAX Epic Shot'},val:'IMAX epic wide shot, massive scale, sweeping landscape, premium cinema quality, breathtaking'},
+    ]
+  }
+  ,
+  {
+    he:{title:'🧱 חומרים'},en:{title:'🧱 Materials'},
+    tags:[
+      {he:{label:'שיש מבריק'},en:{label:'Polished Marble'},val:'polished marble surface, white grey veining, glossy reflective finish, luxury stone texture'},
+      {he:{label:'עור ישן'},en:{label:'Aged Leather'},val:'aged leather texture, natural grain, worn patina, warm brown tones, tactile surface detail'},
+      {he:{label:'מתכת מוברשת'},en:{label:'Brushed Metal'},val:'brushed aluminum texture, directional grain lines, industrial matte finish, metallic surface'},
+      {he:{label:'עץ ישן'},en:{label:'Weathered Wood'},val:'weathered wood texture, natural grain pattern, aged patina, cracked paint, rustic organic surface'},
+      {he:{label:'קטיפה רכה'},en:{label:'Soft Velvet'},val:'soft velvet fabric texture, deep pile, rich saturated color, luxurious tactile sheen'},
+      {he:{label:'זכוכית שקופה'},en:{label:'Clear Glass'},val:'clear glass material, light refraction, transparency and reflection, crystal surface imperfections'},
+      {he:{label:'בטון גולמי'},en:{label:'Raw Concrete'},val:'raw concrete texture, aggregate surface, industrial material, matte grey finish, brutal texture'},
+      {he:{label:'בד גס'},en:{label:'Rough Linen'},val:'rough linen fabric texture, natural fiber weave, neutral earth tone, artisan textile woven surface'},
+    ]
+  }
+  ,
+  {
+    he:{title:'🏙️ בניינים וחדרים'},en:{title:'🏙️ Architecture & Interior'},
+    tags:[
+      {he:{label:'חדר יפני מינימליסטי'},en:{label:'Japanese Interior'},val:'Japanese minimalist interior, wabi-sabi aesthetic, natural wood, paper screens, zen calm warm light'},
+      {he:{label:'לופט תעשייתי'},en:{label:'Industrial Loft'},val:'industrial loft interior, exposed brick wall, steel beams, concrete floor, high ceiling urban raw'},
+      {he:{label:'ברוטליזם'},en:{label:'Brutalist'},val:'brutalist concrete architecture, massive geometric forms, raw exposed concrete, monumental scale'},
+      {he:{label:'אולם גותי'},en:{label:'Gothic Cathedral Interior'},val:'gothic cathedral interior, soaring stone arches, stained glass light, dramatic vertical medieval space'},
+      {he:{label:'בית זכוכית מודרני'},en:{label:'Modern Glass House'},val:'modern glass house architecture, floor-to-ceiling windows, clean lines, minimal interior exterior'},
+      {he:{label:'מבנה נטוש'},en:{label:'Abandoned Building'},val:'abandoned building interior, peeling paint, broken windows, nature reclaiming, urban decay beauty'},
+      {he:{label:'מדרגות דרמטיות'},en:{label:'Dramatic Staircase'},val:'dramatic architectural staircase, sweeping curves, grand proportions, natural light from above sculptural'},
+    ]
+  }
+  ,
+  {
+    he:{title:'🌿 טבע מקרוב'},en:{title:'🌿 Nature Up Close'},
+    tags:[
+      {he:{label:'אבן עם טחב'},en:{label:'Moss Covered Stone'},val:'moss covered stone surface, vibrant green texture, damp forest floor, macro detail, lush organic growth'},
+      {he:{label:'טיפות בוקר'},en:{label:'Morning Dew Drops'},val:'morning dew drops on leaf, macro photography, spherical droplets, translucent light, fresh nature'},
+      {he:{label:'שורשי עץ עתיק'},en:{label:'Ancient Tree Roots'},val:'massive ancient tree roots, gnarled twisted forms, forest floor, dramatic scale, old growth forest'},
+      {he:{label:'שונית אלמוגים'},en:{label:'Colorful Coral Reef'},val:'colorful coral reef underwater, vivid marine ecosystem, tropical fish, clear turquoise water'},
+      {he:{label:'יער זוהר'},en:{label:'Bioluminescent Forest'},val:'bioluminescent forest at night, glowing plants and fungi, magical blue-green light, mystical woods'},
+      {he:{label:'פרחי דובדבן נופלים'},en:{label:'Cherry Blossom Rain'},val:'cherry blossom petals falling, pink soft bokeh, spring atmosphere, Japanese garden delicate beauty'},
+      {he:{label:'חולות מדבר'},en:{label:'Desert Sand Dunes'},val:'desert sand dunes, wind-sculpted patterns, warm golden light, minimalist vast landscape, abstract forms'},
+    ]
+  }
+  ,
+  {
+    he:{title:'🌊 מזג אוויר'},en:{title:'🌊 Weather'},
+    tags:[
+      {he:{label:'סערת ברק'},en:{label:'Lightning Storm'},val:'dramatic lightning storm, electric sky, dark storm clouds, powerful lightning bolt, atmospheric energy'},
+      {he:{label:'ערפל בוקר'},en:{label:'Morning Fog'},val:'morning fog rolling through landscape, soft diffused light, mysterious atmosphere, muted dreamy haze'},
+      {he:{label:'שלג ראשון'},en:{label:'First Snow'},val:'first snow fall, clean white landscape, soft quiet atmosphere, snow-covered branches, winter stillness'},
+      {he:{label:'זוהר צפוני'},en:{label:'Northern Lights'},val:'northern lights aurora borealis, green purple sky, star night, arctic landscape, natural phenomenon'},
+      {he:{label:'סופת חול'},en:{label:'Sandstorm'},val:'dramatic sandstorm approaching, orange dust wall, desert landscape, apocalyptic survival mood'},
+      {he:{label:'גשם ניאון'},en:{label:'Neon Rain'},val:'heavy rain with neon reflections, wet street puddles, colorful light streaks, urban night storm noir'},
+      {he:{label:'גלי ים'},en:{label:'Massive Ocean Waves'},val:'massive ocean waves crashing, powerful water force, dramatic spray, seascape raw nature power'},
+    ]
+  }
+  ,
+  {
+    he:{title:'📱 טרנדים'},en:{title:'📱 Trends'},
+    tags:[
+      {he:{label:'אולד מאני'},en:{label:'Old Money'},val:'old money aesthetic, vintage luxury, classical European setting, understated elegance, timeless film texture'},
+      {he:{label:'קוטאג׳קור'},en:{label:'Cottagecore'},val:'cottagecore aesthetic, pastoral countryside, wildflowers, rustic charm, soft natural romantic rural'},
+      {he:{label:'דארק אקדמיה'},en:{label:'Dark Academia'},val:'dark academia aesthetic, old library, candlelight, leather books, scholarly gothic intellectual mood'},
+      {he:{label:'סולארפאנק'},en:{label:'Solarpunk'},val:'solarpunk aesthetic, green sustainable utopia, solar panels with nature, optimistic eco-future lush'},
+      {he:{label:'וייפרוויב'},en:{label:'Vaporwave'},val:'vaporwave aesthetic, pink cyan palette, 80s retro-digital, Greek statues, glowing grid nostalgia'},
+      {he:{label:'Y2K'},en:{label:'Y2K Aesthetic'},val:'Y2K aesthetic, year 2000 style, chrome metallic, butterfly motifs, early internet nostalgia'},
+      {he:{label:'בארביקור'},en:{label:'Barbiecore'},val:'Barbiecore aesthetic, hot pink everything, maximalist glamour, plastic fantastic bold feminine'},
+      {he:{label:'היגה קאזי'},en:{label:'Hygge Cozy'},val:'hygge cozy aesthetic, warm soft candlelight, knit blankets, comfort warmth, Scandinavian calm'},
+    ]
+  }
+  ,
+  {
+    he:{title:'🎮 משחקים'},en:{title:'🎮 Game Design'},
+    tags:[
+      {he:{label:'גיים ארט איזומטרי'},en:{label:'Isometric Game Art'},val:'isometric game art, top-down 45 degree view, clean geometric world, indie game tile-based design'},
+      {he:{label:'קונספט ארט RPG'},en:{label:'RPG Fantasy'},val:'RPG character concept art, fantasy warrior design, detailed armor weapons, artstation quality'},
+      {he:{label:'מפת פנטזיה'},en:{label:'Fantasy Map'},val:'hand-drawn fantasy map, illustrated terrain, decorative borders, medieval cartography adventure world'},
+      {he:{label:'אייקון UI'},en:{label:'Game UI Icon'},val:'game UI icon design, inventory item style, glowing magical item, fantasy pixel clear silhouette'},
+      {he:{label:'בוס מסוכן'},en:{label:'Boss Character'},val:'imposing boss character design, intimidating scale, unique silhouette, dramatic lighting concept art'},
+      {he:{label:'נוף פיקסל ארט'},en:{label:'Pixel Landscape'},val:'pixel art landscape, 16-bit color palette, retro game environment, chunky pixel nostalgic world'},
+    ]
+  }
+  ,
+  {
+    he:{title:'🖼️ פוסטרים'},en:{title:'🖼️ Posters'},
+    tags:[
+      {he:{label:'פוסטר קונצרט'},en:{label:'Vintage Concert Poster'},val:'vintage concert poster design, psychedelic lettering, 60s 70s hand-drawn aesthetic, bold colors'},
+      {he:{label:'עיצוב באוהאוס'},en:{label:'Bauhaus Design'},val:'Bauhaus design aesthetic, primary colors, geometric shapes, functional modernism, clean layout'},
+      {he:{label:'כריכת ספר'},en:{label:'Book Cover Art'},val:'book cover art composition, typographic hierarchy, atmospheric illustration, genre mood publisher quality'},
+      {he:{label:'פוסטר טיולים'},en:{label:'Vintage Travel Poster'},val:'vintage travel poster, retro illustration, bold flat colors, art deco typography, destination graphic'},
+      {he:{label:'פוסטר סרט'},en:{label:'Movie Poster'},val:'cinematic movie poster composition, hero character central, dramatic lighting, title space marketing'},
+      {he:{label:'עיצוב שוויצרי'},en:{label:'Swiss Design Style'},val:'Swiss international typographic style, grid-based layout, Helvetica-inspired, clean rational minimalism'},
+    ]
+  }
+  ,
+  {
+    he:{title:'🤗 נוסטלגיה'},en:{title:'🤗 Nostalgia'},
+    tags:[
+      {he:{label:'זיכרון ילדות'},en:{label:'Childhood Memory'},val:'childhood memory scene, warm nostalgic light, soft focus, playing children, innocent joy emotional warmth'},
+      {he:{label:'אלבום תמונות ישן'},en:{label:'Old Photo Album'},val:'old photo album aesthetic, vintage family photos, yellowed pages, handwritten captions, personal history'},
+      {he:{label:'פגישה עם עצמך'},en:{label:'Meeting Younger Self'},val:'adult embracing younger childhood self, emotional reunion, nostalgic setting, past meets present tender'},
+      {he:{label:'כיתה שנות 90'},en:{label:'90s Classroom'},val:'90s classroom aesthetic, old school desks, VHS player, dated technology, nostalgic school atmosphere'},
+      {he:{label:'חדר ילדות'},en:{label:'Childhood Bedroom'},val:'childhood bedroom scene, favorite toys, vintage posters, warm lamplight, nostalgic safe personal space'},
+      {he:{label:'שקיעה מוכרת'},en:{label:'Familiar Sunset'},val:'emotionally resonant sunset, familiar neighborhood skyline, golden hour warmth, bittersweet feeling home'},
+    ]
+  }
+  ,
+  {
+    he:{title:'🌱 עתיד ירוק'},en:{title:'🌱 Green Future'},
+    tags:[
+      {he:{label:'עיר ירוקה'},en:{label:'Solarpunk City'},val:'solarpunk city, buildings covered in plants, solar panels, clean energy, utopian green architecture'},
+      {he:{label:'גן אנכי'},en:{label:'Vertical Garden'},val:'vertical garden wall, lush plant coverage on building facade, urban green living architecture'},
+      {he:{label:'אנרגיה מתחדשת'},en:{label:'Renewable Energy'},val:'wind turbines at sunset, clean energy landscape, peaceful power generation, environmental optimism'},
+      {he:{label:'ים נקי'},en:{label:'Clean Ocean'},val:'clean ocean scene, transparent turquoise water, healthy coral, marine conservation, pristine natural'},
+      {he:{label:'כפר אקולוגי'},en:{label:'Eco Village'},val:'eco village community, sustainable homes, permaculture gardens, off-grid living, harmonious nature'},
+      {he:{label:'עיר מחדשת'},en:{label:'Rewilded City'},val:'rewilded urban space, nature reclaiming city, wildflowers in streets, urban jungle green renewal'},
+    ]
+  }
+  ,
+  {
+    he:{title:'🏆 פרופיל מקצועי'},en:{title:'🏆 Personal Brand'},
+    tags:[
+      {he:{label:'פורטרט LinkedIn'},en:{label:'LinkedIn Portrait'},val:'professional LinkedIn headshot, neutral gradient background, approachable smile, business attire, corporate'},
+      {he:{label:'פורטרט אדיטוריאל'},en:{label:'Editorial Portrait'},val:'editorial portrait style, creative professional, magazine quality, artistic lighting, personal brand'},
+      {he:{label:'פורטרט הרצאה'},en:{label:'Speaker Portrait'},val:'conference speaker portrait, stage background, confident pose, professional authority, thought leader'},
+      {he:{label:'פורטרט יזמות'},en:{label:'Entrepreneur Portrait'},val:'entrepreneur lifestyle portrait, casual professional, modern office, personal brand approachable authority'},
+      {he:{label:'פורטרט לוקסוס'},en:{label:'Luxury Brand Portrait'},val:'luxury personal brand portrait, high-end styling, premium aesthetic, aspirational lifestyle, fashion editorial'},
+    ]
+  }
+  ,
+  {
+    he:{title:'🍃 עונות השנה'},en:{title:'🍃 Seasons'},
+    tags:[
+      {he:{label:'פריחת אביב'},en:{label:'Spring Blossom'},val:'spring blossom season, cherry trees blooming, soft pink petals, fresh green growth, renewal and hope'},
+      {he:{label:'עלים נשורים'},en:{label:'Autumn Leaves Falling'},val:'autumn leaves falling, warm orange red tones, golden forest floor, melancholic beauty, seasonal transition'},
+      {he:{label:'גבישי קרח'},en:{label:'Winter Ice Crystals'},val:'winter ice crystals on glass, intricate frost patterns, cold blue tones, frozen beauty, macro ice detail'},
+      {he:{label:'חום קיץ'},en:{label:'Summer Heat Haze'},val:'summer heat haze over road, shimmer distortion, intense golden sun, long hot day, dreamy mirage'},
+      {he:{label:'ירח קציר'},en:{label:'Harvest Moon'},val:'harvest moon full rise, deep orange glow, low on horizon, silhouetted landscape, seasonal folklore'},
+      {he:{label:'גשם מונסון'},en:{label:'Monsoon Rain'},val:'monsoon rain season, heavy tropical downpour, dramatic dark clouds, lush wet vegetation, powerful water'},
+      {he:{label:'שלג חורף'},en:{label:'First Winter Snow'},val:'first snow of winter, pristine white landscape, silent stillness, snow on branches, pure seasonal magic'},
+    ]
+  }
+
+  
 ];
 
 
@@ -1193,7 +1414,33 @@ function findLabel(val) {
 // ── Conflict Detection ─────────────────────────────────
 const CONFLICT_MAP = [
   { kw_he: ['\u05e9\u05d7\u05d5\u05e8 \u05dc\u05d1\u05df','\u05e9\u05d7\u05d5\u05e8-\u05dc\u05d1\u05df','\u05de\u05d5\u05e0\u05d5\u05db\u05e8\u05d5\u05dd','\u05d0\u05e4\u05d5\u05e8'], kw_en: ['black and white','b&w','monochrome','grayscale','greyscale'],
-    tags: ['vibrant colors','neon lighting','warm color','cool color','earth tones','pastel palette','high contrast colors','HDR photography'] },
+    tags: ['vibrant colors','neon lighting','warm color','cool color','earth tones','pastel palette','high contrast colors','HDR photography'] 
+  ,
+  lofi_vs_hq: {
+    triggers: ['lo-fi grain','disposable camera','found photo','film burn','lo-fi analog'],
+    conflicts: ['hyperrealistic','photographic quality','8K resolution','ultra-detailed','sharp focus subject'],
+    he: 'לו-פיי מתנגש עם איכות גבוהה',
+    en: 'Lo-Fi conflicts with high resolution'
+  },
+  glitch_vs_clean: {
+    triggers: ['digital glitch','RGB color split','data corruption','pixel displacement'],
+    conflicts: ['studio lighting','clean professional','sharp focus','neutral background'],
+    he: 'גליץ מתנגש עם עיצוב נקי',
+    en: 'Glitch conflicts with clean studio aesthetic'
+  },
+  extreme_weather_vs_calm: {
+    triggers: ['lightning storm','sandstorm','monsoon rain','massive ocean waves'],
+    conflicts: ['natural daylight','golden hour','bright and airy','studio lighting','soft light'],
+    he: 'מזג אוויר קיצוני מתנגש עם תאורה רגועה',
+    en: 'Extreme weather conflicts with calm lighting'
+  },
+  retro_digital_vs_realism: {
+    triggers: ['vaporwave','y2k aesthetic','retro-digital','vaporwave pink cyan'],
+    conflicts: ['photorealistic','documentary-style','hyperrealistic','photographic quality'],
+    he: 'וייפרוויב/Y2K מתנגש עם ריאליזם',
+    en: 'Vaporwave/Y2K conflicts with photorealism'
+  }
+},
   { kw_he: ['\u05e6\u05d1\u05e2\u05d5\u05e0\u05d9','\u05e6\u05d1\u05e2\u05d9\u05dd \u05e2\u05d6\u05d9\u05dd','\u05e1\u05e1\u05d2\u05d5\u05e0\u05d9'], kw_en: ['colorful','vibrant colors','saturated','vivid'],
     tags: ['black and white','monochrome','film noir'] },
   { kw_he: ['\u05e4\u05e1\u05d8\u05dc','\u05e6\u05d1\u05e2\u05d9\u05dd \u05e8\u05db\u05d9\u05dd','\u05e2\u05d3\u05d9\u05df'], kw_en: ['pastel','soft colors','delicate','muted'],
@@ -1246,6 +1493,24 @@ const CONFLICT_MAP = [
     tags: ['straight black hair','dark wavy hair','deep ebony','coiled black hair'] },
   { kw_he: ['\u05e9\u05d9\u05e2\u05e8 \u05e9\u05d7\u05d5\u05e8','\u05e9\u05d9\u05e2\u05e8 \u05db\u05d4\u05d4'], kw_en: ['black hair','dark hair'],
     tags: ['golden blonde hair','light blonde','honey highlights'] },
+
+  // לו-פיי מתנגש עם hyperrealistic
+  { kw_he: ['גרעין לו-פיי','מצלמה חד-פעמית','תמונה מוצאת'], kw_en: ['lo-fi grain','disposable camera','found photo','film burn','lo-fi'],
+    tags: ['hyperrealistic','photographic quality','8K resolution','ultra-detailed','sharp focus subject'] },
+  // glitch מתנגש עם clean/studio
+  { kw_he: ['אפקט גליץ'], kw_en: ['glitch effect','digital glitch','data corruption'],
+    tags: ['studio lighting','clean professional light','sharp focus subject','softbox'] },
+  // סערה קיצונית מתנגש עם אור יום/שקיעה
+  { kw_he: ['סערת ברק','סופת חול','גשם מונסון'], kw_en: ['lightning storm','sandstorm','monsoon rain','blizzard','hurricane'],
+    tags: ['natural daylight','golden hour','bright and airy','studio lighting','spotlight'] },
+  // vaporwave/Y2K מתנגש עם ריאליזם
+  { kw_he: ['וייפרוויב','Y2K'], kw_en: ['vaporwave','y2k aesthetic','retro digital'],
+    tags: ['photorealistic','documentary-style photography','hyperrealistic','8K resolution'] },
+,
+  { kw_he: ['\u05d2\u05e8\u05e2\u05d9\u05df \u05dc\u05d5-\u05e4\u05d9\u05d9','\u05de\u05e6\u05dc\u05de\u05d4 \u05d7\u05d3 \u05e4\u05e2\u05de\u05d9\u05ea','\u05e1\u05e8\u05d8 \u05e9\u05e8\u05d5\u05e3','\u05ea\u05de\u05d5\u05e0\u05d4 \u05de\u05d5\u05e6\u05d0\u05ea'], kw_en: ['lo-fi grain','disposable camera','film burn','found photo','lo-fi analog'], conflicts_he: ['\u05d0\u05d9\u05db\u05d5\u05ea \u05d2\u05d1\u05d5\u05d4\u05d4','\u05e4\u05e8\u05d8\u05d9\u05dd \u05e2\u05d3\u05d9\u05e0\u05d9\u05dd','8K','ultra-detailed'], conflicts_en: ['hyperrealistic','photographic quality','8K resolution','ultra-detailed','sharp focus'], msg_he: '\u05dc\u05d5-\u05e4\u05d9\u05d9 \u05de\u05ea\u05e0\u05d2\u05e9 \u05e2\u05dd \u05d0\u05d9\u05db\u05d5\u05ea \u05d2\u05d1\u05d5\u05d4\u05d4', msg_en: 'Lo-Fi conflicts with high resolution quality' },
+  { kw_he: ['\u05d2\u05dc\u05d9\u05e5 \u05d3\u05d9\u05d2\u05d9\u05d8\u05dc\u05d9'], kw_en: ['digital glitch','RGB color split','data corruption','pixel displacement'], conflicts_he: ['\u05e1\u05d8\u05d5\u05d3\u05d9\u05d5','\u05e0\u05e7\u05d9 \u05d5\u05de\u05e7\u05e6\u05d5\u05e2\u05d9'], conflicts_en: ['studio lighting','clean professional light','sharp focus','neutral background'], msg_he: '\u05d2\u05dc\u05d9\u05e5 \u05de\u05ea\u05e0\u05d2\u05e9 \u05e2\u05dd \u05e1\u05d8\u05d5\u05d3\u05d9\u05d5 \u05e0\u05e7\u05d9', msg_en: 'Glitch effect conflicts with clean studio aesthetic' },
+  { kw_he: ['\u05e1\u05e2\u05e8\u05ea \u05d1\u05e8\u05e7','\u05e1\u05d5\u05e4\u05ea \u05d7\u05d5\u05dc','\u05d2\u05e9\u05dd \u05de\u05d5\u05e0\u05e1\u05d5\u05df','\u05d2\u05dc\u05d9 \u05d9\u05dd'], kw_en: ['lightning storm','sandstorm','monsoon rain','massive waves'], conflicts_he: ['\u05d0\u05d5\u05e8 \u05d9\u05d5\u05dd \u05d8\u05d1\u05e2\u05d9','\u05e9\u05e2\u05ea \u05d6\u05d4\u05d1','\u05e1\u05d8\u05d5\u05d3\u05d9\u05d5'], conflicts_en: ['natural daylight','golden hour','bright and airy','studio lighting'], msg_he: '\u05de\u05d6\u05d2 \u05d0\u05d5\u05d5\u05d9\u05e8 \u05e7\u05d9\u05e6\u05d5\u05e0\u05d9 \u05de\u05ea\u05e0\u05d2\u05e9 \u05e2\u05dd \u05ea\u05d0\u05d5\u05e8\u05d4 \u05e8\u05d2\u05d5\u05e2\u05d4', msg_en: 'Extreme weather conflicts with calm lighting' },
+  { kw_he: ['\u05d5\u05d9\u05d9\u05e4\u05e8\u05d5\u05d5\u05d9\u05d1','Y2K'], kw_en: ['vaporwave','y2k aesthetic','retro-digital','vaporwave pink cyan'], conflicts_he: ['\u05e4\u05d5\u05d8\u05d5\u05e8\u05d9\u05d0\u05dc\u05d9\u05e1\u05d8\u05d9','\u05d3\u05d5\u05e7\u05d5\u05de\u05e0\u05d8\u05e8\u05d9'], conflicts_en: ['photorealistic','documentary-style','hyperrealistic'], msg_he: '\u05d5\u05d9\u05d9\u05e4\u05e8\u05d5\u05d5\u05d9\u05d1/Y2K \u05de\u05ea\u05e0\u05d2\u05e9 \u05e2\u05dd \u05e8\u05d9\u05d0\u05dc\u05d9\u05d6\u05dd', msg_en: 'Vaporwave/Y2K conflicts with photorealism' }
 ];
 
 function detectConflicts(userText) {
