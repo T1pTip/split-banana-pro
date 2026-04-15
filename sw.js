@@ -1,7 +1,7 @@
 // Palette AI — Service Worker
 // גרסה: v2 | offline support מלא
 
-const CACHE = 'palette-ai-v2';
+const CACHE = 'palette-ai-v3';
 const ASSETS = [
   '/palette-ai/',
   '/palette-ai/index.html',
