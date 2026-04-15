@@ -1742,6 +1742,7 @@ function detectConflicts(userText) {
   const txt = userText.toLowerCase();
   const conflicts = [];
   for (const rule of CONFLICT_MAP) {
+    if (!rule || !rule.kw_he || !rule.kw_en || !rule.tags) continue; // safety guard
     const allKw = [...rule.kw_he, ...rule.kw_en];
     const matchedKw = allKw.find(k => txt.includes(k.toLowerCase()));
     if (!matchedKw) continue;
