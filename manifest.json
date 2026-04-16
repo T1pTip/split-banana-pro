@@ -1,27 +1,18 @@
 {
-  "name": "Palette AI",
-  "short_name": "Palette AI",
-  "description": "מחולל פרומפטים לתמונות AI",
-  "start_url": "/palette-ai/",
-  "display": "standalone",
-  "orientation": "portrait-primary",
-  "background_color": "#08080f",
-  "theme_color": "#08080f",
-  "lang": "he",
-  "icons": [
-    {
-      "src": "icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
-  ],
-  "prefer_related_applications": false,
-  "scope": "/palette-ai/"
+    "name": "Palette AI",
+    "short_name": "Palette AI",
+    "description": "AI image prompt builder — מחולל פרומפטים לתמונות AI",
+    "start_url": "/palette-ai/",
+    "display": "standalone",
+    "orientation": "natural",
+    "background_color": "#08080f",
+    "theme_color": "#08080f",
+    "icons": [
+          { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+          { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+          { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+          { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    ],
+    "prefer_related_applications": false,
+    "scope": "/palette-ai/"
 }
