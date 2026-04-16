@@ -1451,7 +1451,7 @@ function initInstall() {
       setText('iosHintText', t.ios);
       $('iosHint').classList.add('show');
       // ✅ REMOVED: setTimeout auto-hide after 8000ms — hint now stays until user taps "סגור"
-    }, 2000); // Show sooner (2s instead of 3s)
+    }, 500); // Show sooner (2s instead of 3s)
     return;
   }
 
@@ -1472,7 +1472,7 @@ function initInstall() {
       if (promptFired) return;
       try { if (localStorage.getItem('sbp_install_dismissed')) return; } catch(e) {}
       showAndroidManualInstall();
-    }, 4000);
+    }, 1500);
   }
 }
 
