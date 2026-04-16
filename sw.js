@@ -1,7 +1,6 @@
-// Palette AI — Service Worker
-// גרסה: v2 | offline support מלא
-
-const CACHE = 'palette-ai-v2';
+// Palette AI — Service Worker v4
+// גרסה: v4 | offline support מלא | cache bump Apr 16 2026
+const CACHE = 'palette-ai-v4';
 const ASSETS = [
   '/palette-ai/',
   '/palette-ai/index.html',
@@ -18,7 +17,7 @@ self.addEventListener('install', function(e) {
   self.skipWaiting();
 });
 
-// Activate — מחק cache ישן
+// Activate — מחק כל cache ישן
 self.addEventListener('activate', function(e) {
   e.waitUntil(
     caches.keys().then(function(keys) {
@@ -34,10 +33,8 @@ self.addEventListener('activate', function(e) {
 // Fetch — cache first, network fallback
 self.addEventListener('fetch', function(e) {
   if (e.request.method !== 'GET') return;
-
   // Install tracker — תמיד network (לא cache)
   if (e.request.url.includes('script.google.com')) return;
-
   e.respondWith(
     caches.match(e.request).then(function(cached) {
       if (cached) return cached;
