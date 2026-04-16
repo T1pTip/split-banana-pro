@@ -1390,19 +1390,51 @@ function setLang(lang) {
 
 // ── PWA Install Translations ──────────────────────────────────
 const T_install = {
-  he: { msg: 'הוסף למסך הבית לגישה מהירה', btn: 'הוסף', ios: 'לחץ על ⬆ ואז "הוסף למסך הבית"' },
-  en: { msg: 'Add to home screen for quick access', btn: 'Add', ios: 'Tap ⬆ then "Add to Home Screen"' },
+  he: {
+    msg: 'הוסף למסך הבית לגישה מהירה', btn: 'הוסף',
+    ios: 'לחץ על ⬆ ואז "הוסף למסך הבית"',
+    androidTitle: 'הוסף למסך הבית',
+    androidMsg: 'לחץ על <strong>⋮</strong> בתפריט Chrome ובחר<br>"הוסף למסך הבית" או "התקן אפליקציה"',
+    androidBtn: 'הבנתי ✓'
+  },
+  en: {
+    msg: 'Add to home screen for quick access', btn: 'Add',
+    ios: 'Tap ⬆ then "Add to Home Screen"',
+    androidTitle: 'Add to Home Screen',
+    androidMsg: 'Tap <strong>⋮</strong> in Chrome menu and choose<br>"Add to Home Screen" or "Install App"',
+    androidBtn: 'Got it ✓'
+  },
 };
 
 // ── PWA Install ──────────────────────────────────────────────
 let deferredPrompt = null;
 const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+const isAndroid = /android/i.test(navigator.userAgent);
 const isInStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+
+// ── FIX PWA-A: Android manual install fallback modal ──────────
+function showAndroidManualInstall() {
+  const isHe = currentLang === 'he';
+  const t = T_install[currentLang] || T_install.he;
+  if (document.getElementById('androidManualModal')) return;
+  const modal = document.createElement('div');
+  modal.id = 'androidManualModal';
+  modal.className = 'cm-overlay';
+  modal.innerHTML = '<div class="cm-box" dir="' + (isHe ? 'rtl' : 'ltr') + '">' +
+    '<div style="font-size:36px;margin-bottom:10px;text-align:center">📲</div>' +
+    '<div class="cm-title">' + t.androidTitle + '</div>' +
+    '<div class="cm-msg" style="margin-top:10px;font-size:13px;line-height:1.7">' + t.androidMsg + '</div>' +
+    '<div class="cm-btns" style="margin-top:16px">' +
+    '<button class="cm-btn cm-yes" onclick="document.getElementById(\'androidManualModal\').remove();try{localStorage.setItem(\'sbp_install_dismissed\',\'1\')}catch(e){}">' +
+    t.androidBtn + '</button></div></div>';
+  document.body.appendChild(modal);
+  modal.addEventListener('click', function(e) { if (e.target === modal) modal.remove(); });
+}
 
 function initInstall() {
   if (isInStandalone) return;
   function showBanner() {
-    // ── FIX #2: Don't show banner if user already dismissed ──
+    // Don't show if user already dismissed
     try { if (localStorage.getItem('sbp_install_dismissed')) return; } catch(e) {}
     const t = T_install[currentLang] || T_install.he;
     setText('installMsg', t.msg);
@@ -1410,21 +1442,38 @@ function initInstall() {
     if (btn) btn.textContent = t.btn;
     $('installBanner').classList.add('show');
   }
+
+  // ── FIX PWA-B: iOS — persistent hint, no auto-hide ────────
   if (isIOS) {
     setTimeout(() => {
       try { if (localStorage.getItem('sbp_install_dismissed')) return; } catch(e) {}
       const t = T_install[currentLang] || T_install.he;
       setText('iosHintText', t.ios);
       $('iosHint').classList.add('show');
-      setTimeout(() => $('iosHint').classList.remove('show'), 8000);
-    }, 3000);
+      // ✅ REMOVED: setTimeout auto-hide after 8000ms — hint now stays until user taps "סגור"
+    }, 2000); // Show sooner (2s instead of 3s)
     return;
   }
+
+  // Android / Desktop: listen for beforeinstallprompt
+  let promptFired = false;
   window.addEventListener('beforeinstallprompt', e => {
     e.preventDefault();
     deferredPrompt = e;
+    promptFired = true;
     showBanner();
   });
+
+  // ── FIX PWA-C: Android fallback ───────────────────────────
+  // Chrome won't fire beforeinstallprompt again for 90 days after a dismiss.
+  // Cache clear doesn't reset this. Show manual instructions instead.
+  if (isAndroid) {
+    setTimeout(() => {
+      if (promptFired) return;
+      try { if (localStorage.getItem('sbp_install_dismissed')) return; } catch(e) {}
+      showAndroidManualInstall();
+    }, 4000);
+  }
 }
 
 function showInstallSuccess() {
