@@ -1717,7 +1717,7 @@ function trackInstall() {
     else if (/iphone|ipad|ipod/i.test(ua)) device = 'ios';
     else if (/mobile/i.test(ua)) device = 'mobile';
     const lang = typeof currentLang !== 'undefined' ? currentLang : 'unknown';
-    const params = new URLSearchParams({ lang, device, version: APP_VERSION, ua: ua.slice(0, 200) });
+    const params = new URLSearchParams({ app: 'palette-ai', lang, device, version: APP_VERSION, ua: ua.slice(0, 200) });
     fetch(TRACKER_URL + '?' + params.toString(), { method: 'GET', mode: 'no-cors' })
       .then(() => { localStorage.setItem(TRACKER_KEY, '1'); })
       .catch(err => console.warn('[Palette AI] tracker:', err));
