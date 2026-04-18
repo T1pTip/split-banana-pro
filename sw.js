@@ -1,6 +1,6 @@
 // Palette AI — Service Worker v4
-// גרסה: v4 | offline support מלא | cache bump Apr 16 2026
-const CACHE = 'palette-ai-v4';
+// גרסה: v5 | offline support מלא | cache bump Apr 16 2026
+const CACHE = 'palette-ai-v5';
 const ASSETS = [
   '/palette-ai/',
   '/palette-ai/index.html',
@@ -56,3 +56,5 @@ self.addEventListener('fetch', function(e) {
     })
   );
 });
+
+// Bumped to v5 — Minimal Mode feature (Session 8, Apr 18 2026)
