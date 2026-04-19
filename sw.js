@@ -1,13 +1,12 @@
 // Palette AI — Service Worker
-// גרסה: v6 | network-first for HTML (fresh content), cache-first for assets
-const CACHE = 'palette-ai-v6';
+// גרסה: v7 | network-first HTML + auto-reload + mobile overflow fix
+const CACHE = 'palette-ai-v7';
 const ASSETS = [
   '/palette-ai/',
   '/palette-ai/index.html',
   '/palette-ai/manifest.json',
 ];
 
-// Install — precache assets
 self.addEventListener('install', function(e) {
   e.waitUntil(
     caches.open(CACHE).then(function(cache) {
@@ -17,7 +16,6 @@ self.addEventListener('install', function(e) {
   self.skipWaiting();
 });
 
-// Activate — delete old caches + claim all clients
 self.addEventListener('activate', function(e) {
   e.waitUntil(
     caches.keys().then(function(keys) {
@@ -28,7 +26,6 @@ self.addEventListener('activate', function(e) {
     }).then(function() {
       return self.clients.claim();
     }).then(function() {
-      // Force reload all open clients to get fresh HTML
       return self.clients.matchAll({ type: 'window' }).then(function(clients) {
         clients.forEach(function(client) {
           client.postMessage({ type: 'SW_UPDATED', cache: CACHE });
@@ -38,11 +35,8 @@ self.addEventListener('activate', function(e) {
   );
 });
 
-// Fetch — Smart strategy
 self.addEventListener('fetch', function(e) {
   if (e.request.method !== 'GET') return;
-  
-  // Tracker requests — always network, never cache
   if (e.request.url.includes('script.google.com')) return;
   
   const url = new URL(e.request.url);
@@ -53,7 +47,6 @@ self.addEventListener('fetch', function(e) {
                  url.pathname === '/palette-ai';
   
   if (isHTML) {
-    // Network-first for HTML — always try fresh, fallback to cache offline
     e.respondWith(
       fetch(e.request, { cache: 'no-store' }).then(function(response) {
         if (response && response.status === 200) {
@@ -68,7 +61,6 @@ self.addEventListener('fetch', function(e) {
       })
     );
   } else {
-    // Cache-first for assets (icons, manifest, etc)
     e.respondWith(
       caches.match(e.request).then(function(cached) {
         if (cached) return cached;
@@ -83,4 +75,4 @@ self.addEventListener('fetch', function(e) {
     );
   }
 });
-// v6 — Force fresh HTML + auto-reload clients on update (Session 8 fix)
+// v7 — fix mobile overflow bug (Session 8 hotfix)
