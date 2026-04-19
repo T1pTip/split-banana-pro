@@ -349,7 +349,7 @@ body {
   <button class="settings-btn" id="settingsBtn" onclick="openSettings()" aria-label="הגדרות">⚙️</button>
 
 <!-- Install banner -->
-<div class="install-banner show" id="installBanner">
+<div class="install-banner" id="installBanner">
   <div class="install-text">
     <strong>Palette AI 🎨</strong><br>
     <span id="installMsg">הוסף למסך הבית לגישה מהירה</span>
@@ -1632,7 +1632,26 @@ const T_install = {
 let deferredPrompt = null;
 const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
 const isAndroid = /android/i.test(navigator.userAgent);
-const isInStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+// S8.5: Hide install banner in standalone mode (PWA installed)
+  function hideInstallBanner() {
+    var b = document.getElementById('installBanner');
+    if (b) b.classList.remove('show');
+  }
+  // Auto-hide on load if already in standalone
+  (function checkStandalone() {
+    var standalone = window.matchMedia('(display-mode: standalone)').matches || 
+                     window.navigator.standalone === true;
+    if (standalone) hideInstallBanner();
+  })();
+  // Auto-hide on future install events
+  window.addEventListener('appinstalled', hideInstallBanner);
+  // Hide on standalone media query change (e.g. when user installs)
+  if (window.matchMedia) {
+    var mql = window.matchMedia('(display-mode: standalone)');
+    if (mql.addEventListener) mql.addEventListener('change', function(e) { if (e.matches) hideInstallBanner(); });
+  }
+  
+  const isInStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
 
 // ── FIX PWA-A: Android manual install fallback modal ──────────
 function showAndroidManualInstall() {
