@@ -1180,7 +1180,7 @@ function updateChips() {
   });
 }
 
-function findLabel(val) {
+function findLabel(val) { val = (typeof val === 'string' ? val : (val && val.val) || '');
   for (let i = 0; i < DATA.length; i++)
     for (let j = 0; j < DATA[i].tags.length; j++)
       if (DATA[i].tags[j].val === val) return DATA[i].tags[j][currentLang].label;
@@ -1229,7 +1229,7 @@ function detectTagConflicts() {
     const matchB = selArr.find(v => { const vs = (typeof v === 'string' ? v : (v && v.val) || ''); return rule.b.some(b => vs.toLowerCase().includes(b.toLowerCase().split(',')[0])); });
     if (matchA && matchB) {
       const already = conflicts.find(c => c.valA === matchA && c.valB === matchB);
-      if (!already) conflicts.push({ valA: matchA, valB: matchB, msg_he: rule.msg_he, msg_en: rule.msg_en });
+      if (!already) conflicts.push({ valA: (typeof matchA === 'string' ? matchA : (matchA && matchA.val) || ''), valB: (typeof matchB === 'string' ? matchB : (matchB && matchB.val) || ''), msg_he: rule.msg_he, msg_en: rule.msg_en });
     }
   }
   return conflicts;
