@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl"><head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="בנה פרומפטים לתמונות AI — בחר סגנון, אווירה, תאורה ועוד. Build AI image prompts in Hebrew and English.">
   <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#08080f">
+<meta name="theme-color" content="#007aff">
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="format-detection" content="telephone=no">
 <title>Palette AI 🎨</title>
-<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&amp;family=JetBrains+Mono:wght@400&amp;display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&amp;family=JetBrains+Mono:wght@400&amp;display=swap" rel="stylesheet">
 <style>
 :root {
   --bg: #08080f;
@@ -279,9 +281,72 @@ body {
         padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600;
       }
       body.ltr .toggle-minimal-btn { direction: ltr; }
-    </style>
+    
+  /* Touch target fixes (Session 8 — WCAG 2.2 AA compliance) */
+  #installBtn { min-height: 44px !important; padding: 8px 14px !important; }
+  .install-dismiss { min-width: 40px !important; min-height: 40px !important; }
+  #search { min-height: 44px !important; padding: 10px 14px !important; }
+  .fmt-btn { min-height: 40px !important; min-width: 72px !important; }
+  .ob-close { min-width: 40px !important; min-height: 40px !important; }
+  
+  /* Settings Button — top-right */
+  .settings-btn {
+    position: fixed; top: 12px; left: 12px; z-index: 90;
+    width: 44px; height: 44px; border-radius: 50%;
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.18);
+    color: #fff; font-size: 20px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+  }
+  .settings-btn:hover { background: rgba(255,255,255,0.12); }
+  
+  /* Settings Modal */
+  .settings-modal {
+    display: none; position: fixed; inset: 0; 
+    background: rgba(0,0,0,0.75); z-index: 10000;
+    align-items: center; justify-content: center; padding: 20px;
+  }
+  .settings-modal.show { display: flex; }
+  .settings-modal-content {
+    background: #1a1a2e; border: 1px solid rgba(124,124,252,0.3);
+    border-radius: 16px; padding: 24px; max-width: 420px; width: 100%;
+    color: #fff; direction: rtl;
+  }
+  .settings-modal h2 { margin: 0 0 20px; font-size: 20px; }
+  .settings-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .settings-row:last-of-type { border-bottom: none; }
+  .settings-row label { flex: 1; font-size: 15px; }
+  .settings-row .settings-sub { font-size: 12px; color: #999; margin-top: 4px; }
+  .settings-row input[type="checkbox"] {
+    width: 44px; height: 24px; appearance: none; background: #444;
+    border-radius: 12px; position: relative; cursor: pointer; transition: background 0.2s;
+  }
+  .settings-row input[type="checkbox"]:checked { background: #1d9e75; }
+  .settings-row input[type="checkbox"]::before {
+    content: ''; position: absolute; width: 18px; height: 18px;
+    background: white; border-radius: 50%; top: 3px; right: 3px;
+    transition: transform 0.2s;
+  }
+  .settings-row input[type="checkbox"]:checked::before { transform: translateX(-20px); }
+  .settings-actions {
+    display: flex; gap: 10px; margin-top: 20px;
+  }
+  .settings-actions button {
+    flex: 1; padding: 12px; border-radius: 10px; border: none;
+    font-size: 15px; cursor: pointer; font-family: inherit; font-weight: 500;
+  }
+  .settings-save { background: #1d9e75; color: white; }
+  .settings-cancel { background: rgba(255,255,255,0.1); color: white; }
+  .settings-save:hover { background: #168863; }
+  .settings-cancel:hover { background: rgba(255,255,255,0.18); }
+</style>
 </head>
 <body data-new-gr-c-s-check-loaded="14.1284.0" data-gr-ext-installed="">
+  <h1 style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;">Palette AI — בנאי פרומפטים לתמונות AI</h1>
+  <button class="settings-btn" id="settingsBtn" onclick="openSettings()" aria-label="הגדרות">⚙️</button>
 
 <!-- Install banner -->
 <div class="install-banner show" id="installBanner">
@@ -311,7 +376,7 @@ body {
   <div class="header-bottom">
     <span class="header-subtitle" id="headerSubtitle">מחולל פרומפטים לתמונות AI</span>
     <div class="search-wrap">
-      <input type="search" id="search" autocomplete="off" oninput="filterTags()" placeholder="חפש/י תגיות, סגנונות...">
+      <input type="search" id="search" autocomplete="off" oninput="filterTags()" placeholder="חפש/י תגיות, סגנונות..." aria-label="חיפוש תגיות וסגנונות">
       <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
         <circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path>
       </svg>
@@ -321,7 +386,7 @@ body {
 
 <div class="app">
   <div class="right-col">
-    <textarea id="userInput" rows="4" placeholder="תאר/י את התמונה שאת/ה רוצה/ה ליצור..."></textarea>
+    <textarea id="userInput" rows="4" placeholder="תאר/י את התמונה שאת/ה רוצה/ה ליצור..." aria-label="תאר את התמונה שאתה רוצה ליצור"></textarea>
     <div class="chips-wrap" id="selectedBar"><div class="sel-chip"><span class="sel-chip-x">✕</span>צבעי מים</div><div class="sel-chip"><span class="sel-chip-x">✕</span>צבעים חמים</div><div class="sel-chip"><span class="sel-chip-x">✕</span>פיקסל</div><div class="sel-chip"><span class="sel-chip-x">✕</span>חיוך</div></div>
     <div class="result-box">
       <div class="result-top">
@@ -412,6 +477,78 @@ body {
 </div>
 
 <script>
+
+// ═══ PROMPT ENHANCEMENT (Session 8 — Final, injected into HTML) ═══
+const STYLE_AMPLIFIERS = {
+  'photorealistic': 'shot on Canon EOS R5, 85mm f/1.4, professional photography',
+  'cinematic': 'anamorphic lens, teal and orange color grading, film still',
+  'oil painting': 'thick impasto brushstrokes, canvas texture, classical composition',
+  'watercolor': 'wet-on-wet technique, paper texture, soft bleeding colors',
+  'anime': 'studio ghibli inspired, vibrant cel shading, expressive eyes',
+  '3d rendering': 'ray tracing, global illumination, subsurface scattering',
+  'pixel art': '16-bit style, limited palette, crisp pixels',
+  'cyberpunk': 'neon lights, holographic displays, rain-slicked streets',
+  'fantasy': 'magical atmosphere, ethereal glow, intricate details',
+  'portrait': 'studio lighting setup, rim light, subject isolation'
+};
+const QUALITY_BOOSTERS = ['hyperdetailed', 'sharp focus', 'masterpiece', 'best quality', 'award-winning', 'trending on artstation'];
+const NEGATIVE_PROMPT_TEXT = 'blurry, deformed, low quality, watermark, text, signature, out of frame, jpeg artifacts';
+function isNegativePromptEnabled() {
+  try { const s = localStorage.getItem('sbp_negative_prompt'); return s === null ? true : s === 'true'; }
+  catch(e) { return true; }
+}
+function isEnhancementEnabled() {
+  try { const s = localStorage.getItem('sbp_enhance_enabled'); return s === null ? true : s === 'true'; }
+  catch(e) { return true; }
+}
+function enhancePromptText(rawPrompt) {
+  if (!rawPrompt || typeof rawPrompt !== 'string') return rawPrompt;
+  if (!isEnhancementEnabled()) return rawPrompt;
+  const parts = rawPrompt.split(',').map(s => s.trim()).filter(Boolean);
+  const lower = rawPrompt.toLowerCase();
+  const amps = new Set();
+  for (const [kw, amp] of Object.entries(STYLE_AMPLIFIERS)) {
+    if (lower.includes(kw) && !lower.includes(amp.split(',')[0].toLowerCase())) amps.add(amp);
+  }
+  const boosters = QUALITY_BOOSTERS.filter(b => !lower.includes(b.toLowerCase())).slice(0, 3);
+  const enhanced = [...parts, ...Array.from(amps), ...boosters].join(', ');
+  return isNegativePromptEnabled() ? enhanced + '\n\nNegative prompt: ' + NEGATIVE_PROMPT_TEXT : enhanced;
+}
+function openSettings() {
+  const m = document.getElementById('settingsModal');
+  if (!m) return;
+  const e = document.getElementById('settingEnhance');
+  const n = document.getElementById('settingNegative');
+  if (e) e.checked = isEnhancementEnabled();
+  if (n) n.checked = isNegativePromptEnabled();
+  m.classList.add('show');
+  m.setAttribute('aria-hidden', 'false');
+}
+function closeSettings() {
+  const m = document.getElementById('settingsModal');
+  if (!m) return;
+  m.classList.remove('show');
+  m.setAttribute('aria-hidden', 'true');
+}
+function saveSettings() {
+  try {
+    const e = document.getElementById('settingEnhance');
+    const n = document.getElementById('settingNegative');
+    if (e) localStorage.setItem('sbp_enhance_enabled', e.checked ? 'true' : 'false');
+    if (n) localStorage.setItem('sbp_negative_prompt', n.checked ? 'true' : 'false');
+  } catch(ex) {}
+  closeSettings();
+}
+// Escape key closes modal (UX polish)
+document.addEventListener('keydown', function(ev) {
+  if (ev.key === 'Escape') {
+    const m = document.getElementById('settingsModal');
+    if (m && m.classList.contains('show')) closeSettings();
+  }
+});
+// ═══ END ENHANCEMENT ═══
+
+
 const DATA = [
   {
     he: { title: '📸 סגנון צילום' }, en: { title: '📸 Photography Style' },
@@ -1088,8 +1225,8 @@ function detectTagConflicts() {
   const conflicts = [];
   const selArr = Array.from(selected);
   for (const rule of TAG_CONFLICT_MAP) {
-    const matchA = selArr.find(v => rule.a.some(a => v.toLowerCase().includes(a.toLowerCase().split(',')[0])));
-    const matchB = selArr.find(v => rule.b.some(b => v.toLowerCase().includes(b.toLowerCase().split(',')[0])));
+    const matchA = selArr.find(v => { const vs = (typeof v === 'string' ? v : (v && v.val) || ''); return rule.a.some(a => vs.toLowerCase().includes(a.toLowerCase().split(',')[0])); });
+    const matchB = selArr.find(v => { const vs = (typeof v === 'string' ? v : (v && v.val) || ''); return rule.b.some(b => vs.toLowerCase().includes(b.toLowerCase().split(',')[0])); });
     if (matchA && matchB) {
       const already = conflicts.find(c => c.valA === matchA && c.valB === matchB);
       if (!already) conflicts.push({ valA: matchA, valB: matchB, msg_he: rule.msg_he, msg_en: rule.msg_en });
@@ -1359,11 +1496,11 @@ function copyPrompt() {
     setTimeout(function() { btn.classList.remove('copied'); icon.textContent = '📋'; label.textContent = t.copyBtn; }, 2200);
   }
   if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(lastPrompt).then(onOk).catch(fallback);
+    navigator.clipboard.writeText(enhancePromptText(lastPrompt)).then(onOk).catch(fallback);
   } else { fallback(); }
   function fallback() {
     const ta = document.createElement('textarea');
-    ta.value = lastPrompt; ta.style.cssText = 'position:fixed;top:-9999px;opacity:0;';
+    ta.value = enhancePromptText(lastPrompt); ta.style.cssText = 'position:fixed;top:-9999px;opacity:0;';
     document.body.appendChild(ta); ta.focus(); ta.select();
     try { document.execCommand('copy'); onOk(); } catch(e) { showToast(currentLang==='he'?'העתקה נכשלה':'Copy failed', true); }
     document.body.removeChild(ta);
@@ -1896,4 +2033,34 @@ if (document.readyState === 'loading') {
       })();
     </script>
     <!-- End SW Auto-Reload -->
+  
+  <!-- Settings Modal (Session 8) -->
+  <div class="settings-modal" id="settingsModal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle" aria-hidden="true">
+    <div class="settings-modal-content">
+      <h2 id="settingsTitle">⚙️ הגדרות</h2>
+      
+      <div class="settings-row">
+        <div>
+          <label for="settingEnhance">✨ שיפור אוטומטי לפרומפט</label>
+          <div class="settings-sub">הוספת מפרטי מצלמה, תאורה ופרטי איכות</div>
+        </div>
+        <input type="checkbox" id="settingEnhance" checked aria-label="שיפור אוטומטי לפרומפט">
+      </div>
+      
+      <div class="settings-row">
+        <div>
+          <label for="settingNegative">🚫 הוספת Negative Prompt</label>
+          <div class="settings-sub">משפר תמונות ב-Stable Diffusion/Midjourney</div>
+        </div>
+        <input type="checkbox" id="settingNegative" checked aria-label="הוספת Negative Prompt">
+      </div>
+      
+      <div class="settings-actions">
+        <button type="button" class="settings-cancel" onclick="closeSettings()">ביטול</button>
+        <button type="button" class="settings-save" onclick="saveSettings()">שמור</button>
+      </div>
+    </div>
+  </div>
+  <!-- End Settings Modal -->
+
   </body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>
