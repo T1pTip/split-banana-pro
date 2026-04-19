@@ -2044,37 +2044,7 @@ if (document.readyState === 'loading') {
           }
         });
       })();
-    
-    // ═══ SAFETY NET — Session 8.2 ═══
-    // אם האפליקציה לא רינדרה תוך 5 שניות — מנסה לשחזר
-    setTimeout(function() {
-      try {
-        var hasRendered = document.querySelector('.cat-pill') !== null;
-        if (!hasRendered) {
-          console.warn('[PaletteAI] App did not render within 5s — attempting auto-recovery');
-          if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.getRegistrations().then(function(regs) {
-              var promises = regs.map(function(r) { return r.unregister(); });
-              Promise.all(promises).then(function() {
-                caches.keys().then(function(keys) {
-                  return Promise.all(keys.map(function(k) { return caches.delete(k); }));
-                }).then(function() {
-                  console.log('[PaletteAI] Recovery complete — reloading');
-                  // מוסיף cachebust param ועושה reload
-                  var sep = location.href.indexOf('?') === -1 ? '?' : '&';
-                  location.href = location.href + sep + 'recover=' + Date.now();
-                });
-              });
-            });
-          } else {
-            location.reload(true);
-          }
-        }
-      } catch(e) { console.error('[PaletteAI] Recovery failed:', e); }
-    }, 5000);
-    // ═══════════════════════════════
-  
-  </script>
+    </script>
     <!-- End SW Auto-Reload -->
   
   <!-- Settings Modal (Session 8) -->
