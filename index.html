@@ -2001,6 +2001,19 @@ if (document.readyState === 'loading') {
         // Listener לעדכוני SW — הSW החדש שולח הודעה אחרי activate
         navigator.serviceWorker.addEventListener('message', function(event) {
           if (event.data && event.data.type === 'SW_UPDATED') {
+          // Session 8.1 hotfix: Skip auto-reload in in-app browsers (WhatsApp/IG/FB/etc.)
+          // WebView reload can cause black-screen on these platforms
+          var __UA = navigator.userAgent || '';
+          var __isInApp = /FBAN|FBAV|Instagram|WhatsApp|Line|MicroMessenger|Pinterest|Snapchat|TikTok|WeiBo/i.test(__UA);
+          if (__isInApp) {
+            console.log('[PaletteAI] Skipping auto-reload in in-app browser (' + __UA.match(/FBAN|FBAV|Instagram|WhatsApp|Line|MicroMessenger|Pinterest|Snapchat|TikTok|WeiBo/i) + ')');
+            return;
+          }
+          // Also skip if page just loaded (< 3s ago) — avoid reload storm on first visit
+          if (performance.now() < 3000) {
+            console.log('[PaletteAI] Skipping auto-reload — page just loaded');
+            return;
+          }
             console.log('[PaletteAI] SW updated to ' + event.data.cache + ', reloading...');
             // סמן flag כדי למנוע loop
             try {
