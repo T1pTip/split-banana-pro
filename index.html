@@ -31,6 +31,10 @@
   --r: 12px;
   --r-sm: 8px;
 }
+.cat-pill-more { opacity: 0.85; border-style: dashed !important; }
+.cat-pill-more:hover { opacity: 1; }
+.cat-pill-more .cat-emoji { font-size: 0.9em; opacity: 0.7; }
+.cat-pill-more .cat-name { font-style: italic; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
   background: var(--bg);
@@ -452,11 +456,7 @@ body {
   </div>
 
       <!-- Minimal Mode Toggle (Session 8) -->
-      <button id="toggleMinimalBtn" class="toggle-minimal-btn" onclick="toggleMinimalMode()">
-        <span class="toggle-label">🔍 הצג עוד קטגוריות</span>
-        <span class="count-badge">+25</span>
-      </button>
-  <div class="left-col">
+      <div class="left-col">
     <div class="onboarding show" id="onboarding">
       <div class="ob-steps">
         <div class="ob-step"><div class="ob-num">1</div><span id="ob1">בחר/י קטגוריה</span></div>
@@ -970,7 +970,6 @@ const KIDS_ONLY_TITLES = new Set(['🌈 עולם הקסם']);
       try { localStorage.setItem('sbp_minimal', isMinimalMode ? 'true' : 'false'); }
       catch(e) { console.warn('[Minimal] localStorage write failed:', e); }
       buildCatGrid();
-      updateMinimalToggleBtn();
     }
     function updateMinimalToggleBtn() {
       const btn = document.getElementById('toggleMinimalBtn');
@@ -1103,6 +1102,27 @@ function buildCatGrid() {
     pill.onclick = (function(idx) { return function() { openPanel(idx); }; })(ci);
     grid.appendChild(pill);
   });
+  // S8.6: Add "more/less" pill as last category item (replaces toggleMinimalBtn)
+  if (isMinimalMode !== undefined) {
+    const morePill = document.createElement('button');
+    morePill.className = 'cat-pill cat-pill-more';
+    morePill.id = 'moreCategoriesPill';
+    
+    const moreEmoji = document.createElement('span');
+    moreEmoji.className = 'cat-emoji';
+    moreEmoji.textContent = isMinimalMode ? '➕' : '➖';
+    
+    const moreName = document.createElement('span');
+    moreName.className = 'cat-name';
+    moreName.textContent = isMinimalMode 
+      ? (currentLang === 'he' ? 'עוד' : 'More') 
+      : (currentLang === 'he' ? 'פחות' : 'Less');
+    
+    morePill.appendChild(moreEmoji);
+    morePill.appendChild(moreName);
+    morePill.onclick = toggleMinimalMode;
+    grid.appendChild(morePill);
+  }
   updateBadges();
 }
 
