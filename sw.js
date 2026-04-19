@@ -1,6 +1,6 @@
 // Palette AI — Service Worker
 // גרסה: v8 | network-first HTML + auto-reload + full offline precache
-const CACHE = 'palette-ai-v8';
+const CACHE = 'palette-ai-v9';
 const ASSETS = [
   '/palette-ai/',
   '/palette-ai/index.html',
