@@ -1854,4 +1854,45 @@ if (document.readyState === 'loading') {
 </script>
 
 
-</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>
+
+    <!-- SW Auto-Reload (Session 8 v6) — מאזין לעדכוני SW ומטען מחדש אוטומטית -->
+    <script>
+      (function() {
+        if (!('serviceWorker' in navigator)) return;
+        
+        // Listener לעדכוני SW — הSW החדש שולח הודעה אחרי activate
+        navigator.serviceWorker.addEventListener('message', function(event) {
+          if (event.data && event.data.type === 'SW_UPDATED') {
+            console.log('[PaletteAI] SW updated to ' + event.data.cache + ', reloading...');
+            // סמן flag כדי למנוע loop
+            try {
+              if (sessionStorage.getItem('sw_just_reloaded') === '1') {
+                sessionStorage.removeItem('sw_just_reloaded');
+                return;
+              }
+              sessionStorage.setItem('sw_just_reloaded', '1');
+            } catch(e) {}
+            // reload עם השהייה קטנה שהSW ישלים את claim
+            setTimeout(function() { location.reload(); }, 300);
+          }
+        });
+        
+        // Check for updates בכל פתיחה — מבקש מהדפדפן לבדוק SW מול הרשת
+        navigator.serviceWorker.ready.then(function(reg) {
+          if (reg && reg.update) {
+            reg.update().catch(function(){});
+          }
+        });
+        
+        // גם ב-visibilitychange — אם המשתמש חוזר לאפליקציה אחרי זמן רב
+        document.addEventListener('visibilitychange', function() {
+          if (document.visibilityState === 'visible') {
+            navigator.serviceWorker.ready.then(function(reg) {
+              if (reg && reg.update) reg.update().catch(function(){});
+            });
+          }
+        });
+      })();
+    </script>
+    <!-- End SW Auto-Reload -->
+  </body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>

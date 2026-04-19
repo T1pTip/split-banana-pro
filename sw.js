@@ -1,13 +1,13 @@
-// Palette AI — Service Worker v4
-// גרסה: v5 | offline support מלא | cache bump Apr 16 2026
-const CACHE = 'palette-ai-v5';
+// Palette AI — Service Worker
+// גרסה: v6 | network-first for HTML (fresh content), cache-first for assets
+const CACHE = 'palette-ai-v6';
 const ASSETS = [
   '/palette-ai/',
   '/palette-ai/index.html',
   '/palette-ai/manifest.json',
 ];
 
-// Install — שמור assets בcache
+// Install — precache assets
 self.addEventListener('install', function(e) {
   e.waitUntil(
     caches.open(CACHE).then(function(cache) {
@@ -17,7 +17,7 @@ self.addEventListener('install', function(e) {
   self.skipWaiting();
 });
 
-// Activate — מחק כל cache ישן
+// Activate — delete old caches + claim all clients
 self.addEventListener('activate', function(e) {
   e.waitUntil(
     caches.keys().then(function(keys) {
@@ -25,36 +25,62 @@ self.addEventListener('activate', function(e) {
         keys.filter(function(k) { return k !== CACHE; })
             .map(function(k)   { return caches.delete(k); })
       );
-    })
-  );
-  self.clients.claim();
-});
-
-// Fetch — cache first, network fallback
-self.addEventListener('fetch', function(e) {
-  if (e.request.method !== 'GET') return;
-  // Install tracker — תמיד network (לא cache)
-  if (e.request.url.includes('script.google.com')) return;
-  e.respondWith(
-    caches.match(e.request).then(function(cached) {
-      if (cached) return cached;
-      return fetch(e.request).then(function(response) {
-        // cache רק responses תקינות מאותו origin
-        if (response && response.status === 200 && response.type === 'basic') {
-          const clone = response.clone();
-          caches.open(CACHE).then(function(cache) {
-            cache.put(e.request, clone);
-          });
-        }
-        return response;
-      }).catch(function() {
-        // offline ואין cache — החזר index.html
-        if (e.request.mode === 'navigate') {
-          return caches.match('/palette-ai/index.html');
-        }
+    }).then(function() {
+      return self.clients.claim();
+    }).then(function() {
+      // Force reload all open clients to get fresh HTML
+      return self.clients.matchAll({ type: 'window' }).then(function(clients) {
+        clients.forEach(function(client) {
+          client.postMessage({ type: 'SW_UPDATED', cache: CACHE });
+        });
       });
     })
   );
 });
 
-// Bumped to v5 — Minimal Mode feature (Session 8, Apr 18 2026)
+// Fetch — Smart strategy
+self.addEventListener('fetch', function(e) {
+  if (e.request.method !== 'GET') return;
+  
+  // Tracker requests — always network, never cache
+  if (e.request.url.includes('script.google.com')) return;
+  
+  const url = new URL(e.request.url);
+  const isHTML = e.request.mode === 'navigate' ||
+                 e.request.destination === 'document' ||
+                 url.pathname.endsWith('.html') ||
+                 url.pathname === '/palette-ai/' ||
+                 url.pathname === '/palette-ai';
+  
+  if (isHTML) {
+    // Network-first for HTML — always try fresh, fallback to cache offline
+    e.respondWith(
+      fetch(e.request, { cache: 'no-store' }).then(function(response) {
+        if (response && response.status === 200) {
+          const clone = response.clone();
+          caches.open(CACHE).then(function(cache) { cache.put(e.request, clone); });
+        }
+        return response;
+      }).catch(function() {
+        return caches.match(e.request).then(function(cached) {
+          return cached || caches.match('/palette-ai/index.html');
+        });
+      })
+    );
+  } else {
+    // Cache-first for assets (icons, manifest, etc)
+    e.respondWith(
+      caches.match(e.request).then(function(cached) {
+        if (cached) return cached;
+        return fetch(e.request).then(function(response) {
+          if (response && response.status === 200 && response.type === 'basic') {
+            const clone = response.clone();
+            caches.open(CACHE).then(function(cache) { cache.put(e.request, clone); });
+          }
+          return response;
+        });
+      })
+    );
+  }
+});
+// v6 — Force fresh HTML + auto-reload clients on update (Session 8 fix)
