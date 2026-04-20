@@ -2617,4 +2617,191 @@ if (document.readyState === 'loading') {
   else install();
 })();
 </script>
+  
+<script>
+// ============================================================
+// Palette AI — PWA Install Fix v4
+// Auto-pilot fixes for ALL platforms:
+//   Android Chrome: auto-expire stale "sbp_install_dismissed" (7d)
+//   iOS Safari:    custom install guide (no beforeinstallprompt on iOS)
+//   In-app browser: "open in Chrome" guide
+//   Legacy flag "1" from old sessions: auto-migrated
+// ============================================================
+(function () {
+  'use strict';
+  var DISMISS_KEY = 'sbp_install_dismissed';
+  var DISMISS_TTL_MS = 7 * 24 * 60 * 60 * 1000;
+
+  // Capture beforeinstallprompt in capture phase so we always have the event
+  // Even if app's handler runs later or uses closure, we have our own copy
+  var capturedBipEvent = null;
+  window.addEventListener('beforeinstallprompt', function (e) {
+    capturedBipEvent = e;
+  }, true);
+
+  // Clear if app successfully installed
+  window.addEventListener('appinstalled', function () {
+    capturedBipEvent = null;
+    localStorage.removeItem(DISMISS_KEY);
+  });
+
+  function isIOS() {
+    var ua = navigator.userAgent || '';
+    return /iPad|iPhone|iPod/.test(ua) ||
+      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  }
+  function isWebview() {
+    var ua = navigator.userAgent || '';
+    return /\bFBAN\/|FBAV\/|WhatsApp\b|Instagram|Line\b/i.test(ua) || /; wv\)/.test(ua);
+  }
+  function isStandalone() {
+    return window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+  }
+
+  function cleanDismissFlag() {
+    var val = localStorage.getItem(DISMISS_KEY);
+    if (!val) return;
+    if (val === '1') { localStorage.removeItem(DISMISS_KEY); return; }
+    try {
+      var o = JSON.parse(val);
+      if (!o || typeof o.ts !== 'number' || Date.now() - o.ts > DISMISS_TTL_MS) {
+        localStorage.removeItem(DISMISS_KEY);
+      }
+    } catch (e) { localStorage.removeItem(DISMISS_KEY); }
+  }
+  function isDismissedRecently() {
+    var val = localStorage.getItem(DISMISS_KEY);
+    if (!val) return false;
+    try {
+      var o = JSON.parse(val);
+      return o && typeof o.ts === 'number' && Date.now() - o.ts < DISMISS_TTL_MS;
+    } catch (e) { return false; }
+  }
+
+  function wrapDismissInstall() {
+    var orig = window.dismissInstall;
+    if (typeof orig !== 'function') return;
+    window.dismissInstall = function () {
+      var r = orig.apply(this, arguments);
+      try { localStorage.setItem(DISMISS_KEY, JSON.stringify({ ts: Date.now() })); } catch (e) {}
+      return r;
+    };
+  }
+
+  function buildModal(title, contentHTML, buttonLabel) {
+    var ex = document.getElementById('__install_guide_modal');
+    if (ex) ex.remove();
+    var overlay = document.createElement('div');
+    overlay.id = '__install_guide_modal';
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;direction:rtl;font-family:system-ui,-apple-system,sans-serif;backdrop-filter:blur(8px)';
+    var box = document.createElement('div');
+    box.style.cssText = 'background:linear-gradient(135deg,#1a1a2e,#16213e);color:#fff;border-radius:16px;padding:24px;max-width:440px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.1)';
+    box.innerHTML = '<div style="font-weight:700;font-size:19px;margin-bottom:14px">' + title + '</div>' + contentHTML;
+    var btn = document.createElement('button');
+    btn.textContent = buttonLabel || '\u05d4\u05d1\u05e0\u05ea\u05d9 \u2014 \u05e1\u05d2\u05d5\u05e8';
+    btn.style.cssText = 'width:100%;margin-top:16px;padding:13px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer';
+    btn.onclick = function () { overlay.remove(); };
+    box.appendChild(btn);
+    overlay.appendChild(box);
+    overlay.addEventListener('click', function (e) { if (e.target === overlay) overlay.remove(); });
+    document.body.appendChild(overlay);
+  }
+
+  function showIOSGuide() {
+    buildModal(
+      '\ud83d\udcf1 \u05d4\u05ea\u05e7\u05e0\u05d4 \u05dc-iPhone / iPad',
+      '<div style="font-size:14px;line-height:1.9">' +
+      '<div style="margin-bottom:12px;opacity:0.85">\u05dc\u05d4\u05d5\u05e1\u05e4\u05ea \u05d4\u05d0\u05e4\u05dc\u05d9\u05e7\u05e6\u05d9\u05d4 \u05dc\u05de\u05e1\u05da \u05d4\u05d1\u05d9\u05ea \u05d1-iOS:</div>' +
+      '<ol style="padding-right:20px;margin:0">' +
+      '<li>\u05dc\u05d7\u05e5 \u05e2\u05dc \u05db\u05e4\u05ea\u05d5\u05e8 <b>\u05e9\u05d9\u05ea\u05d5\u05e3</b> \u05d1-Safari (\u05d4\u05e8\u05d9\u05d1\u05d5\u05e2 \u05e2\u05dd \u05d4\u05d7\u05e5 \u2191 \u05d4\u05e2\u05d5\u05dc\u05d4 \u05d1\u05ea\u05d7\u05ea\u05d9\u05ea \u05d4\u05de\u05e1\u05da)</li>' +
+      '<li>\u05d2\u05dc\u05d5\u05dc \u05d5\u05d1\u05d7\u05e8: <b>\u05d4\u05d5\u05e1\u05e3 \u05dc\u05de\u05e1\u05da \u05d4\u05d1\u05d9\u05ea</b> \ud83c\udfe0</li>' +
+      '<li>\u05d0\u05e9\u05e8 \u05e2\u05dc \u05d9\u05d3\u05d9 \u05dc\u05d7\u05d9\u05e6\u05d4 \u05e2\u05dc <b>\u05d4\u05d5\u05e1\u05e3</b></li>' +
+      '</ol>' +
+      '<div style="margin-top:14px;padding:10px;background:rgba(99,102,241,0.15);border-radius:8px;font-size:13px">\u2728 \u05d4\u05d0\u05e4\u05dc\u05d9\u05e7\u05e6\u05d9\u05d4 \u05ea\u05d9\u05e4\u05ea\u05d7 \u05d1\u05de\u05e1\u05da \u05de\u05dc\u05d0 \u05d1\u05dc\u05d9 \u05e9\u05d5\u05e8\u05d5\u05ea \u05d3\u05e4\u05d3\u05e4\u05df.</div>' +
+      '</div>'
+    );
+  }
+
+  function showWebviewGuide() {
+    buildModal(
+      '\ud83d\udd17 \u05e4\u05ea\u05d7 \u05d1\u05d3\u05e4\u05d3\u05e4\u05df \u05e8\u05d2\u05d9\u05dc',
+      '<div style="font-size:14px;line-height:1.9">' +
+      '<div style="margin-bottom:12px;opacity:0.85">\u05d4\u05d3\u05e4\u05d3\u05e4\u05df \u05d4\u05e0\u05d5\u05db\u05d7\u05d9 (WhatsApp/Instagram \u05d5\u05db\u05d3\u05d5\u05de\u05d4) \u05dc\u05d0 \u05ea\u05d5\u05de\u05da \u05d1\u05d4\u05ea\u05e7\u05e0\u05ea \u05d0\u05e4\u05dc\u05d9\u05e7\u05e6\u05d9\u05d5\u05ea. \u05e1\u05d2\u05d5\u05e8 \u05d0\u05ea \u05d4\u05dc\u05d9\u05e0\u05e7 \u05d1-Chrome:</div>' +
+      '<ol style="padding-right:20px;margin:0">' +
+      '<li>\u05dc\u05d7\u05e5 \u05e2\u05dc <b>\u2026 (3 \u05e0\u05e7\u05d5\u05d3\u05d5\u05ea)</b> \u05d1\u05e4\u05d9\u05e0\u05ea \u05d4\u05e2\u05dc\u05d9\u05d5\u05e0\u05d4 \u05d9\u05de\u05d9\u05df</li>' +
+      '<li>\u05d1\u05d7\u05e8 <b>\u201d\u05e4\u05ea\u05d7 \u05d1\u05d3\u05e4\u05d3\u05e4\u05df\u201c</b> / \u201dOpen in Chrome\u201c / \u201dOpen in Browser\u201c</li>' +
+      '<li>\u05d1-Chrome \u05d4\u05e8\u05d2\u05d9\u05dc, \u05d4\u05de\u05ea\u05df \u05e9\u05e0\u05d9\u05d5\u05ea \u05d5\u05d4\u05db\u05e4\u05ea\u05d5\u05e8 \u05d9\u05d5\u05e4\u05d9\u05e2 \u05d0\u05d5\u05d8\u05d5\u05de\u05d8\u05d9\u05ea</li>' +
+      '</ol>' +
+      '</div>',
+      '\u05d4\u05d1\u05e0\u05ea\u05d9'
+    );
+  }
+
+  function showChromeMenuGuide() {
+    buildModal(
+      '\ud83d\udccb \u05d4\u05d5\u05e1\u05e4\u05ea \u05dc\u05de\u05e1\u05da \u05d4\u05d1\u05d9\u05ea',
+      '<div style="font-size:14px;line-height:1.9">' +
+      '<ol style="padding-right:20px;margin:0">' +
+      '<li>\u05dc\u05d7\u05e5 \u05e2\u05dc <b>\u205d (\u05e9\u05dc\u05d5\u05e9 \u05e0\u05e7\u05d5\u05d3\u05d5\u05ea)</b> \u05d1-Chrome</li>' +
+      '<li>\u05d1\u05d7\u05e8 <b>\u201d\u05d4\u05d5\u05e1\u05e3 \u05dc\u05de\u05e1\u05da \u05d4\u05d1\u05d9\u05ea\u201c</b> \u05d0\u05d5 <b>\u201d\u05d4\u05ea\u05e7\u05df \u05d0\u05e4\u05dc\u05d9\u05e7\u05e6\u05d9\u05d4\u201c</b></li>' +
+      '<li>\u05d0\u05e9\u05e8/\u05d9 \u05d0\u05ea \u05d4\u05d4\u05d5\u05e1\u05e4\u05d4</li>' +
+      '</ol>' +
+      '</div>'
+    );
+  }
+
+  // Replace doInstall entirely — use our capturedBipEvent
+  function replaceDoInstall() {
+    window.doInstall = function () {
+      if (isStandalone()) return;
+      // Native prompt via our captured event
+      if (capturedBipEvent && typeof capturedBipEvent.prompt === 'function') {
+        capturedBipEvent.prompt();
+        if (capturedBipEvent.userChoice && capturedBipEvent.userChoice.then) {
+          capturedBipEvent.userChoice.then(function (choice) {
+            capturedBipEvent = null;
+            var banner = document.getElementById('installBanner');
+            if (banner && choice && choice.outcome === 'accepted') {
+              banner.classList.remove('show');
+            }
+          });
+        }
+        return;
+      }
+      if (isIOS()) return showIOSGuide();
+      if (isWebview()) return showWebviewGuide();
+      return showChromeMenuGuide();
+    };
+  }
+
+  // Force-show banner on platforms without beforeinstallprompt
+  function maybeForceShowBanner() {
+    if (isStandalone()) return;
+    if (isDismissedRecently()) return;
+    setTimeout(function () {
+      var banner = document.getElementById('installBanner');
+      if (!banner || banner.classList.contains('show')) return;
+      // Show on iOS/webview always (they can't get beforeinstallprompt)
+      if (isIOS() || isWebview()) banner.classList.add('show');
+    }, 2500);
+  }
+
+  function init() {
+    cleanDismissFlag();
+    var tries = 0;
+    (function attach() {
+      if (typeof window.doInstall !== 'function' || typeof window.dismissInstall !== 'function') {
+        if (++tries < 50) return setTimeout(attach, 80);
+      }
+      wrapDismissInstall();
+      replaceDoInstall();
+      maybeForceShowBanner();
+      console.log('\u2705 PWA Install Fix v4 installed');
+    })();
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
   </body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>

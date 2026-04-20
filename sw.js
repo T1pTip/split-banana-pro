@@ -1,6 +1,6 @@
-// Palette AI — Service Worker v5
-// גרסה: v5 | Hebrew Enhancer v3 + webview copy fallback + manifest 'any' icons
-const CACHE = 'palette-ai-v5';
+// Palette AI — Service Worker v6
+// גרסה: v6 | PWA Install Fix v4 (iOS guide + webview guide + dismiss TTL)
+const CACHE = 'palette-ai-v6';
 const ASSETS = [
   '/palette-ai/',
   '/palette-ai/index.html',
@@ -30,10 +30,8 @@ self.addEventListener('activate', function(e) {
 // Fetch — network-first ל-HTML, cache-first לשאר
 self.addEventListener('fetch', function(e) {
   if (e.request.method !== 'GET') return;
-  // Install tracker — תמיד network (לא cache)
   if (e.request.url.includes('script.google.com')) return;
 
-  // Network-first עבור HTML navigation — מבטיח שמשתמשים מקבלים deploys חדשים מיד
   const isHTML = e.request.mode === 'navigate' ||
                  e.request.url.endsWith('/') ||
                  e.request.url.endsWith('/index.html') ||
@@ -55,7 +53,6 @@ self.addEventListener('fetch', function(e) {
     return;
   }
 
-  // Cache-first לשאר המשאבים (assets סטטיים)
   e.respondWith(
     caches.match(e.request).then(function(cached) {
       if (cached) return cached;
