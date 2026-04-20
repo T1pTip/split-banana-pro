@@ -2378,16 +2378,15 @@ if (document.readyState === 'loading') {
     </div>
   </div>
   <!-- End Settings Modal -->
-
   
 <script>
 // ============================================================
-// Hebrew Prompt Enhancer v2 — Palette AI
-// Fixes vs v1:
-//   #1 double-comma regex
-//   #2a copy now enhanced (wraps enhancePromptText)
-//   #2b share now enhanced (wraps sharePrompt via navigator.share)
-//   #3 idempotency marker
+// Hebrew Prompt Enhancer v3 — Palette AI
+// Fixes vs v2:
+//   #4 Copy works in restricted webviews (WhatsApp/Instagram/FB)
+//      via tertiary fallback: manual selection modal
+//   #5 Accurate UI feedback — "הועתק" only when copy actually succeeded
+//   #6 In-app browser detection with "open in Chrome" hint
 // ============================================================
 (function () {
   'use strict';
@@ -2432,11 +2431,9 @@ if (document.readyState === 'loading') {
       .map(function (c) { return HEBREW_LETTERS[c] || c; }).join('-');
   }
   function cleanNegativeForHebrew(neg) {
-    return neg
-      .replace(/(^|,)\s*(?:text|watermark)\s*(?=,|$)/gi, '$1')
+    return neg.replace(/(^|,)\s*(?:text|watermark)\s*(?=,|$)/gi, '$1')
       .replace(/,(\s*,)+/g, ',')
-      .replace(/^\s*,\s*|\s*,\s*$/g, '')
-      .trim();
+      .replace(/^\s*,\s*|\s*,\s*$/g, '').trim();
   }
   function enhance(prompt, userInput) {
     if (typeof prompt !== 'string') return prompt;
@@ -2466,9 +2463,52 @@ if (document.readyState === 'loading') {
   }
   window.HebrewPromptEnhancer = { enhance: enhance, extractLiteralHebrew: extractLiteralHebrew, createLetterBreakdown: createLetterBreakdown, MARKER: MARKER };
 
-  function getUserText() {
-    var el = document.getElementById('userInput');
-    return el ? el.value : '';
+  function getUserText() { var el = document.getElementById('userInput'); return el ? el.value : ''; }
+  
+  function isInAppBrowser() {
+    var ua = navigator.userAgent || '';
+    return /\bFBAN\/|FBAV\/|WhatsApp\b|Instagram|Line\b/i.test(ua) || /; wv\)/.test(ua);
+  }
+  
+  function showManualCopyModal(text, fromWebview) {
+    var existing = document.getElementById('__hpe_manual_copy');
+    if (existing) existing.remove();
+    var overlay = document.createElement('div');
+    overlay.id = '__hpe_manual_copy';
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;direction:rtl;font-family:system-ui,-apple-system,sans-serif';
+    var box = document.createElement('div');
+    box.style.cssText = 'background:#1a1a2e;color:#fff;border-radius:14px;padding:20px;max-width:500px;width:100%;box-shadow:0 10px 40px rgba(0,0,0,0.5)';
+    var title = document.createElement('div');
+    title.style.cssText = 'font-weight:700;font-size:18px;margin-bottom:8px';
+    title.textContent = fromWebview ? '\ud83d\udccb \u05d4\u05e2\u05ea\u05e7\u05d4 \u05d9\u05d3\u05e0\u05d9\u05ea (\u05d3\u05e4\u05d3\u05e4\u05df \u05de\u05d5\u05d2\u05d1\u05dc)' : '\ud83d\udccb \u05d4\u05e2\u05ea\u05e7\u05d4 \u05d9\u05d3\u05e0\u05d9\u05ea';
+    box.appendChild(title);
+    var subtitle = document.createElement('div');
+    subtitle.style.cssText = 'font-size:13px;opacity:0.8;margin-bottom:12px;line-height:1.5';
+    subtitle.innerHTML = fromWebview 
+      ? '\ud83d\udca1 \u05d4\u05d3\u05e4\u05d3\u05e4\u05df \u05d4\u05e0\u05d5\u05db\u05d7\u05d9 \u05d7\u05d5\u05e1\u05dd \u05d4\u05e2\u05ea\u05e7\u05d4. \u05dc\u05ea\u05d5\u05e6\u05d0\u05d4 \u05d8\u05d5\u05d1\u05d4 \u05d9\u05d5\u05ea\u05e8: \u05dc\u05d7\u05e6\u05d5 \u05e2\u05dc 3 \u05d4\u05e0\u05e7\u05d5\u05d3\u05d5\u05ea \u05dc\u05de\u05e2\u05dc\u05d4 \u227d "\u05e4\u05ea\u05d7 \u05d1-Chrome".<br>\u05db\u05e8\u05d2\u05e2: \u05dc\u05d7\u05e6\u05d5 "\u05d1\u05d7\u05e8 \u05d4\u05db\u05dc" \u05d5\u05d0\u05d6 \u05dc\u05d7\u05d9\u05e6\u05d4 \u05d0\u05e8\u05d5\u05db\u05d4 \u227d "\u05d4\u05e2\u05ea\u05e7":'
+      : '\ud83d\udc47 \u05dc\u05d7\u05e6\u05d5 "\u05d1\u05d7\u05e8 \u05d4\u05db\u05dc" \u05d5\u05d0\u05d6 Ctrl+C / Cmd+C:';
+    box.appendChild(subtitle);
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.readOnly = true;
+    ta.style.cssText = 'width:100%;min-height:160px;padding:12px;border:2px solid #6366f1;border-radius:8px;background:#0f0f1f;color:#fff;font-size:13px;font-family:monospace;resize:vertical;direction:ltr;text-align:left;box-sizing:border-box';
+    box.appendChild(ta);
+    var btnRow = document.createElement('div');
+    btnRow.style.cssText = 'display:flex;gap:8px;margin-top:12px';
+    var selBtn = document.createElement('button');
+    selBtn.textContent = '\u05d1\u05d7\u05e8 \u05d4\u05db\u05dc';
+    selBtn.style.cssText = 'flex:1;padding:12px;background:#6366f1;color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer';
+    selBtn.onclick = function(){ ta.focus(); ta.select(); ta.setSelectionRange(0, text.length); };
+    btnRow.appendChild(selBtn);
+    var closeBtn = document.createElement('button');
+    closeBtn.textContent = '\u05e1\u05d2\u05d5\u05e8';
+    closeBtn.style.cssText = 'padding:12px 24px;background:#333;color:#fff;border:none;border-radius:8px;font-size:15px;cursor:pointer';
+    closeBtn.onclick = function(){ overlay.remove(); };
+    btnRow.appendChild(closeBtn);
+    box.appendChild(btnRow);
+    overlay.appendChild(box);
+    document.body.appendChild(overlay);
+    setTimeout(function(){ ta.focus(); ta.select(); ta.setSelectionRange(0, text.length); }, 50);
   }
 
   function install() {
@@ -2476,6 +2516,7 @@ if (document.readyState === 'loading') {
     if (window.__hpeInstalled) return;
     window.__hpeInstalled = true;
 
+    // Wrap enhancePromptText so Hebrew enhancement flows to copy AND share
     var origEnhancePromptText = window.enhancePromptText;
     window.enhancePromptText = function (raw) {
       var enhanced = origEnhancePromptText.apply(this, arguments);
@@ -2483,6 +2524,54 @@ if (document.readyState === 'loading') {
       catch (e) { console.warn('[HPE] enhance wrap error:', e); return enhanced; }
     };
 
+    // Replace copyPrompt with robust version that handles WhatsApp/webview
+    var origCopyPrompt = window.copyPrompt;
+    window.copyPrompt = function () {
+      var finalEl = document.getElementById('finalPrompt');
+      if (!finalEl) return origCopyPrompt && origCopyPrompt.apply(this, arguments);
+      var text = finalEl.textContent || '';
+      if (!text || text.indexOf('\u2728') !== -1) {
+        if (typeof window.generate === 'function') window.generate();
+        text = finalEl.textContent || '';
+      }
+      if (!text || text.indexOf('\u2728') !== -1 || text.length < 5) return;
+
+      var btn = document.querySelector('[onclick*="copyPrompt"]');
+      var txtEl = document.getElementById('copyText');
+      var origTxt = txtEl ? txtEl.textContent : null;
+
+      function showSuccess() {
+        if (btn) btn.classList.add('copied');
+        if (txtEl) txtEl.textContent = '\u2705 \u05d4\u05d5\u05e2\u05ea\u05e7!';
+        setTimeout(function(){ if (btn) btn.classList.remove('copied'); if (txtEl && origTxt) txtEl.textContent = origTxt; }, 1800);
+      }
+
+      function tryExecCommand() {
+        try {
+          var ta = document.createElement('textarea');
+          ta.value = text;
+          ta.style.cssText = 'position:fixed;top:-1000px;opacity:0';
+          document.body.appendChild(ta);
+          ta.focus();
+          ta.select();
+          ta.setSelectionRange(0, text.length);
+          var ok = document.execCommand('copy');
+          document.body.removeChild(ta);
+          if (ok) { showSuccess(); return true; }
+          return false;
+        } catch (e) { return false; }
+      }
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(showSuccess).catch(function(){
+          if (!tryExecCommand()) showManualCopyModal(text, isInAppBrowser());
+        });
+      } else {
+        if (!tryExecCommand()) showManualCopyModal(text, isInAppBrowser());
+      }
+    };
+
+    // Wrap sharePrompt (enhance data.text via navigator.share override)
     var origSharePrompt = window.sharePrompt;
     if (typeof origSharePrompt === 'function') {
       window.sharePrompt = function () {
@@ -2504,27 +2593,24 @@ if (document.readyState === 'loading') {
       };
     }
 
+    // Live display wrapper (for generate pipeline)
     var origGenerate = window.generate;
     var reentry = false;
     window.generate = function () {
       var result = origGenerate.apply(this, arguments);
       if (reentry) return result;
       var finalEl = document.getElementById('finalPrompt');
-      var userEl  = document.getElementById('userInput');
+      var userEl = document.getElementById('userInput');
       if (!finalEl || !userEl) return result;
       var current = finalEl.textContent || '';
       var userText = userEl.value || '';
       if (!current || current.indexOf('\u2728') !== -1 || current.length < 5) return result;
       var improved = enhance(current, userText);
-      if (improved !== current) {
-        reentry = true;
-        finalEl.textContent = improved;
-        reentry = false;
-      }
+      if (improved !== current) { reentry = true; finalEl.textContent = improved; reentry = false; }
       return result;
     };
 
-    console.log('\u2705 HebrewPromptEnhancer v2 installed');
+    console.log('\u2705 HebrewPromptEnhancer v3 installed');
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', install);
