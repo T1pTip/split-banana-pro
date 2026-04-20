@@ -58,14 +58,14 @@ const NEG = '--no bad anatomy, deformed hands, extra fingers, text, watermark, b
 const T = {
   he: {
     dir: 'rtl', lang: 'he',
-    placeholder: "תאר/י את התמונה שאת/ה רוצה/ה ליצור...",
+    placeholder: "תאר/י את התמונה שאת/ה רוצה/ה ליצור...\nאו פשוט תלחצ/י על כפתור ההפתעה :)",
     searchPlaceholder: "חפש/י תגיות, סגנונות...",
     emptyPrompt: '✨ הפרומפט יופיע כאן — לחץ/י על 📋 העתק/י פרומפט ופתח/י את מנוע ה-AI שלך.',
     charCount: function(n) { return n + ' תווים'; },
     clearBtn: 'נקה/י', copyBtn: 'העתק/י פרומפט',
     shareBtn: 'שתף/י',
     shareTitle: 'שתף פרומפט AI', copiedBtn: '✅ הועתק/ה!',
-    resultLabel: 'פרומפט מוכן', subtitle: 'מחולל פרומפטים לתמונות AI',
+    resultLabel: 'פרומפט מוכן להעתקה', subtitle: 'מחולל פרומפטים לתמונות AI',
     categories: 'קטגוריות',
     arLabel: 'יחס:',
     fmtStory: 'סטורי', fmtSquare: 'ריבוע', fmtWide: 'רחב',
@@ -85,7 +85,7 @@ const T = {
   },
   en: {
     dir: 'ltr', lang: 'en',
-    placeholder: "Describe the image you want to create...",
+    placeholder: "Describe the image you want to create...\nor just hit the surprise button :)",
     searchPlaceholder: 'Search tags, styles...',
     emptyPrompt: '✨ Your prompt will appear here — tap 📋 Copy Prompt and open your AI tool.',
     charCount: function(n) { return n + ' chars'; },
@@ -106,7 +106,7 @@ const T = {
     clearTitle: 'What to clear?',
     clearAll: 'Everything', clearText: 'Text only', clearTags: 'Tags only',
     clearCancel: 'Cancel', clearPrompt: 'Clear Prompt',
-    resultLabel: 'Prompt ready', subtitle: 'AI Image Prompt Builder',
+    resultLabel: 'Prompt ready to copy', subtitle: 'AI Image Prompt Builder',
     categories: 'Categories',
   }
 };
@@ -590,6 +590,24 @@ function showClearModal() {
 
 function clearAll() { showClearModal(); }
 
+// Clear only the free-text textarea (not tags). Wired to the ✕ button inside the textarea.
+function clearInput() {
+  const ta = $('userInput');
+  if (!ta) return;
+  ta.value = '';
+  try { generate(); } catch(e) {}
+  try { updateHintVisibility(); } catch(e) {}
+  try { updateClearInputBtnState(); } catch(e) {}
+  ta.focus();
+}
+
+function updateClearInputBtnState() {
+  const ta = $('userInput');
+  const btn = $('clearInputBtn');
+  if (!ta || !btn) return;
+  btn.classList.toggle('empty', !ta.value);
+}
+
 function setLang(lang) {
   currentLang = lang;
   const t = T[lang];
@@ -923,7 +941,9 @@ function startApp() {
   if (t.fmtSquare) setText('fmtSquare', t.fmtSquare);
   if (t.fmtWide)   setText('fmtWide',   t.fmtWide);
   $('userInput').addEventListener('input', updateHintVisibility);
+  $('userInput').addEventListener('input', updateClearInputBtnState);
   updateHintVisibility();
+  updateClearInputBtnState();
 }
 
 if ('serviceWorker' in navigator) {
