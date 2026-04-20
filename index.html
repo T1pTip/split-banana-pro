@@ -299,7 +299,35 @@ body {
 .tb-btn { background: transparent; border: 1px solid var(--border); border-radius: 8px; padding: 6px; cursor: pointer; font-size: 16px; min-width: 40px; min-height: 40px; display: flex; align-items: center; justify-content: center; color: var(--text); transition: background 0.15s, border-color 0.15s; }
 .tb-btn:hover { background: var(--surface2); border-color: var(--muted); }
 .tb-btn:active { transform: scale(0.95); }
-.tb-btn-danger:hover { background: rgba(217,83,79,0.15); border-color: #d9534f; }
+.textarea-wrap { position: relative; }
+.ta-clear-btn {
+  position: absolute !important;
+  top: 8px !important;
+  left: 8px !important;
+  width: 24px !important;
+  height: 24px !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 50% !important;
+  background: var(--surface2) !important;
+  color: var(--muted) !important;
+  font-size: 12px !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+  display: none !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  z-index: 2 !important;
+  transition: background 0.15s, color 0.15s, border-color 0.15s !important;
+}
+.ta-clear-btn:hover {
+  background: rgba(217,83,79,0.15);
+  border-color: #d9534f;
+  color: #d9534f;
+}
+.ta-clear-btn.visible { display: flex !important; }
+[dir="ltr"] .ta-clear-btn { left: auto; right: 8px; }
+
   .fmt-btn { min-height: 40px !important; min-width: 72px !important; }
   .ob-close { min-width: 40px !important; min-height: 40px !important; }
   
@@ -402,10 +430,13 @@ body {
     <div class="tb-toolbar" id="inputToolbar">
           <button class="tb-btn" onclick="toggleHistPanel()" title="היסטוריה" aria-label="היסטוריה">🕐</button>
           <button class="tb-btn" onclick="openSettings()" title="הגדרות" aria-label="הגדרות">⚙️</button>
-          <button class="tb-btn tb-btn-danger" onclick="clearUserInput()" title="נקה טקסט" aria-label="נקה טקסט">🗑️</button>
+          
         </div>
-        <textarea id="userInput" rows="4" placeholder="תאר/י את התמונה שאת/ה רוצה/ה ליצור...
+        <div class="textarea-wrap">
+          <button class="ta-clear-btn" id="taClearBtn" onclick="clearUserInput()" title="נקה טקסט" aria-label="נקה טקסט" type="button">✕</button>
+          <textarea id="userInput" rows="4" placeholder="תאר/י את התמונה שאת/ה רוצה/ה ליצור...
 או פשוט תלחצ/י על כפתור ההפתעה :)" aria-label="תאר את התמונה שאתה רוצה ליצור"></textarea>
+        </div>
     <div class="chips-wrap" id="selectedBar"><div class="sel-chip"><span class="sel-chip-x">✕</span>צבעי מים</div><div class="sel-chip"><span class="sel-chip-x">✕</span>צבעים חמים</div><div class="sel-chip"><span class="sel-chip-x">✕</span>פיקסל</div><div class="sel-chip"><span class="sel-chip-x">✕</span>חיוך</div></div>
     <div class="result-box">
       <div class="result-top">
@@ -536,6 +567,17 @@ function clearUserInput() {
       ta.value = '';
       ta.focus();
       try { ta.dispatchEvent(new Event('input', { bubbles: true })); } catch(e) {}
+      toggleClearBtnVisibility();
+    }
+    function toggleClearBtnVisibility() {
+      var ta = document.getElementById('userInput');
+      var btn = document.getElementById('taClearBtn');
+      if (!ta || !btn) return;
+      if (ta.value && ta.value.length > 0) {
+        btn.classList.add('visible');
+      } else {
+        btn.classList.remove('visible');
+      }
     }
     function openSettings() {
   const m = document.getElementById('settingsModal');
@@ -2020,6 +2062,14 @@ function trackInstall() {
 
 // ── FIX #5 + FIX #7: startApp — restore saved language before init ──
 function startApp() {
+      // Init clear button visibility on textarea input
+      try {
+        var _ta = document.getElementById('userInput');
+        if (_ta) {
+          _ta.addEventListener('input', toggleClearBtnVisibility);
+          toggleClearBtnVisibility();
+        }
+      } catch(e) {}
       try { updateMinimalToggleBtn(); } catch(e) { console.warn('[Minimal] init btn failed:', e); }
   // FIX #5: Restore language from localStorage
   try {
