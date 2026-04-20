@@ -63,7 +63,7 @@ body {
 .header-top { display: flex; align-items: center; justify-content: space-between; width: 100%; }
 .header-bottom { display: flex; align-items: center; gap: 8px; width: 100%; }
 .header-subtitle { font-size: 11px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-shrink: 0; }
-.search-wrap { position: relative; flex: 1; max-width: 200px; min-width: 100px; }
+.search-wrap { position: relative; flex: 1; max-width: none; min-width: 100px; }
 .search-icon { position: absolute; right: 9px; top: 50%; transform: translateY(-50%); width: 13px; height: 13px; color: var(--muted); pointer-events: none; }
 #search { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 20px; color: var(--text); font-family: 'Rubik', system-ui, -apple-system, Arial, sans-serif; font-size: 13px; padding: 6px 28px 6px 10px; outline: none; transition: border-color 0.2s; -webkit-appearance: none; }
 #search::placeholder { color: var(--muted); }
@@ -127,7 +127,7 @@ body {
 .result-box { background: var(--surface); border: 1px solid var(--a2); border-radius: var(--r); overflow: hidden; }
 .result-top { display: flex; align-items: center; justify-content: space-between; padding: 9px 13px; border-bottom: 1px solid var(--border); background: var(--a1); }
 .result-label-wrap { display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.7px; }
-.result-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); animation: pulse 2s infinite; }
+.result-dot { display: none !important; }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
 #charCount { font-size: 11px; color: var(--muted); }
 #finalPrompt { padding: 12px 14px; font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 1.7; color: var(--teal); min-height: 70px; white-space: pre-wrap; word-break: break-word; }
@@ -205,7 +205,8 @@ body {
 #toast.toast-deep{background:rgba(0,100,60,.97);border-color:rgba(0,200,120,.3)}
 
 /* ── Random Divider ── */
-.random-divider{order:2;display:flex;align-items:center;justify-content:center;padding:6px 14px 4px;gap:10px}
+.random-divider{order:2;display:flex;align-items:center;justify-content:center;padding:6px 14px 24px;gap:10px;position:relative}
+#randomHint{position:absolute !important;bottom:4px !important;left:50% !important;transform:translateX(-50%) !important;text-align:center !important;white-space:nowrap !important;display:block !important;margin:0 !important}
 .random-divider::before,.random-divider::after{content:'';flex:1;height:1px;background:var(--border)}
 
 /* ── Split Randomize Button ── */
@@ -378,7 +379,6 @@ body {
     </div>
   </div>
   <div class="header-bottom">
-    <span class="header-subtitle" id="headerSubtitle">מחולל פרומפטים לתמונות AI</span>
     <div class="search-wrap">
       <input type="search" id="search" autocomplete="off" oninput="filterTags()" placeholder="חפש/י תגיות, סגנונות..." aria-label="חיפוש תגיות וסגנונות">
       <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -1017,7 +1017,7 @@ const T = {
     payboxTitle: 'אהבתם? פנקו אותי בבירה',
     clearBtn: 'נקה/י', copyBtn: 'העתק/י פרומפט',
     shareBtn: 'שתף/י', shareTitle: 'שתף פרומפט AI', copiedBtn: '✅ הועתק/ה!',
-    resultLabel: 'פרומפט מוכן', subtitle: 'מחולל פרומפטים לתמונות AI',
+    resultLabel: 'פרומפט מוכן להעתקה', subtitle: 'מחולל פרומפטים לתמונות AI',
     categories: 'קטגוריות', arLabel: 'יחס:',
     fmtStory: 'סטורי', fmtSquare: 'ריבוע', fmtWide: 'רחב',
     randomBtn: '🎁 הפתעה!', randomHint: 'ריק? נביא לך רעיון ✨',
@@ -1050,7 +1050,7 @@ const T = {
     copyBtn: 'Copy Prompt', shareBtn: 'Share', shareTitle: 'Share AI Prompt', copiedBtn: '✅ Copied!',
     clearTitle: 'What to clear?', clearAll: 'Everything', clearText: 'Text only',
     clearTags: 'Tags only', clearCancel: 'Cancel', clearPrompt: 'Clear Prompt',
-    resultLabel: 'Prompt ready', subtitle: 'AI Image Prompt Builder', categories: 'Categories',
+    resultLabel: 'Prompt ready to copy', subtitle: 'AI Image Prompt Builder', categories: 'Categories',
   }
 };
 
