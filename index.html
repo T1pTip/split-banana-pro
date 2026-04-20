@@ -227,7 +227,7 @@ body {
 .btn-split-kids .kids-icon{font-size:24px;line-height:1;filter:drop-shadow(0 0 3px rgba(255,210,60,0.2));transition:all 0.2s}
 .btn-split-kids.mode-active .kids-icon{filter:drop-shadow(0 0 10px rgba(255,210,60,0.8))}
 .btn-split-kids .kids-title{font-size:11px;font-weight:700;letter-spacing:0.3px;white-space:nowrap}
-.btn-split-kids .kids-sub{font-size:9px;color:rgba(255,220,100,0.4);white-space:nowrap;transition:color .2s}
+.btn-split-kids .kids-sub{font-size:9px;color:rgba(255,220,100,0.65);font-weight:500;white-space:nowrap;transition:color .2s}
 .btn-split-kids.mode-active .kids-sub{color:rgba(255,220,100,0.75)}
 .btn-rnd-main{display:flex;align-items:center;gap:8px;background:transparent;border:none;color:var(--text);font-size:14px;font-weight:500;padding:10px 22px;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;min-height:54px;white-space:nowrap;transition:background .15s}
 .btn-rnd-main:active{background:var(--a2)}
@@ -236,7 +236,7 @@ body {
 .btn-split-adults:active{transform:scale(0.97)}
 .btn-split-adults .adults-icon{font-size:22px;line-height:1;transition:all 0.2s}
 .btn-split-adults .adults-title{font-size:11px;font-weight:700;white-space:nowrap;letter-spacing:0.3px}
-.btn-split-adults .adults-sub{font-size:9px;color:rgba(100,180,255,0.4);white-space:nowrap;transition:color .2s}
+.btn-split-adults .adults-sub{font-size:9px;color:rgba(100,180,255,0.7);font-weight:500;white-space:nowrap;transition:color .2s}
 .btn-split-adults.mode-active .adults-sub{color:rgba(100,180,255,0.8)}
 
 /* ── Format Row ── */
@@ -469,6 +469,13 @@ body {
 [data-theme="light"] .btn-split-adults { background: linear-gradient(145deg, rgba(0,122,255,0.20), rgba(0,200,200,0.10)) !important; color: #0057c7 !important; border-right-color: rgba(0,122,255,0.35) !important; font-weight: 600; }
 /* S17: Share button light mode */
 [data-theme="light"] .btn-split-adults:hover, [data-theme="light"] .btn-split-adults.active { background: linear-gradient(145deg, rgba(0,122,255,0.35), rgba(0,200,200,0.18)) !important; color: #003d8f !important; }
+/* S18: Sub text in split buttons — bolder in light mode */
+[data-theme="light"] .kids-sub { color: #8b5a00 !important; font-weight: 700 !important; font-size: 10px !important; }
+[data-theme="light"] .adults-sub { color: #003d8f !important; font-weight: 700 !important; font-size: 10px !important; }
+[data-theme="light"] .btn-split-kids:hover .kids-sub,
+[data-theme="light"] .btn-split-kids.active .kids-sub { color: #6b4300 !important; }
+[data-theme="light"] .btn-split-adults:hover .adults-sub,
+[data-theme="light"] .btn-split-adults.active .adults-sub { color: #002c66 !important; }
 /* S17b: Share button polish */
 .btn-share:hover { background: linear-gradient(135deg, #2ee376, #1ebe5a) !important; box-shadow: 0 4px 12px rgba(37,211,102,0.45) !important; transform: translateY(-1px); }
 .btn-share:active { transform: scale(0.97); }
