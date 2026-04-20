@@ -48,8 +48,8 @@ body {
 .header {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 10px 14px;
+  gap: 4px;
+  padding: 6px 14px;
   border-bottom: 1px solid var(--border);
   position: -webkit-sticky;
   position: sticky;
@@ -69,7 +69,7 @@ body {
 #search::placeholder { color: var(--muted); }
 #search:focus { border-color: var(--a4); }
 .lang-toggle { display: flex; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; flex-shrink: 0; }
-.lang-btn { background: transparent; border: none; color: var(--muted); font-family: 'Rubik', system-ui, -apple-system, Arial, sans-serif; font-size: 11px; font-weight: 600; padding: 5px 8px; min-height: 40px; cursor: pointer; transition: all 0.15s; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+.lang-btn { background: transparent; border: none; color: var(--muted); font-family: 'Rubik', system-ui, -apple-system, Arial, sans-serif; font-size: 11px; font-weight: 600; padding: 5px 8px; min-height: 44px; cursor: pointer; transition: all 0.15s; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
 .lang-btn.active { background: var(--accent); color: #fff; }
 
 /* ── App layout ── */
@@ -135,7 +135,7 @@ body {
 /* ── Actions ── */
 .action-row { display: flex; gap: 7px; }
 .btn-copy { flex: 1; background: var(--accent); color: #fff; border: none; border-radius: var(--r-sm); padding: 11px 14px; font-family: 'Rubik', system-ui, -apple-system, Arial, sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 7px; transition: opacity 0.15s; touch-action: manipulation; -webkit-tap-highlight-color: transparent; min-height: 44px; }
-.btn-share{display:flex;align-items:center;gap:6px;background:#25d366;color:#fff;border:none;border-radius:var(--r-sm);padding:11px 14px;font-family:'Rubik',system-ui,-apple-system,Arial,sans-serif;font-size:13px;font-weight:600;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;white-space:nowrap;transition:all .15s;min-height:40px}
+.btn-share{display:flex;align-items:center;gap:6px;background:#25d366;color:#fff;border:none;border-radius:var(--r-sm);padding:11px 14px;font-family:'Rubik',system-ui,-apple-system,Arial,sans-serif;font-size:13px;font-weight:600;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;white-space:nowrap;transition:all .15s;min-height:44px}
 .btn-share:active{transform:scale(.96);background:#1ebe5d}
 .btn-share:disabled{opacity:0.4;cursor:default}
 .btn-copy:active { opacity: 0.85; }
@@ -296,9 +296,11 @@ body {
 [dir="rtl"] #search { padding-right: 32px !important; }
 [dir="ltr"] #search { padding-left: 32px !important; padding-right: 14px !important; }
 .tb-toolbar { display: flex; gap: 6px; padding: 0 0 8px; margin-bottom: 6px; border-bottom: 1px solid var(--border); justify-content: flex-start; }
-.tb-btn { background: transparent; border: 1px solid var(--border); border-radius: 8px; padding: 6px; cursor: pointer; font-size: 16px; min-width: 40px; min-height: 40px; display: flex; align-items: center; justify-content: center; color: var(--text); transition: background 0.15s, border-color 0.15s; }
+.tb-btn { background: transparent; border: 1px solid var(--border); border-radius: 8px; padding: 6px; cursor: pointer; font-size: 16px; min-width: 44px; min-height: 44px; display: flex; align-items: center; justify-content: center; color: var(--text); transition: background 0.15s, border-color 0.15s; }
 .tb-btn:hover { background: var(--surface2); border-color: var(--muted); }
 .tb-btn:active { transform: scale(0.95); }
+.search-icon-emoji { position: absolute; right: 9px; top: 50%; transform: translateY(-50%); font-size: 14px; pointer-events: none; opacity: 0.7; }
+[dir="ltr"] .search-icon-emoji { right: auto; left: 9px; }
 .textarea-wrap { position: relative; }
 .ta-clear-btn {
   position: absolute !important;
@@ -328,8 +330,8 @@ body {
 .ta-clear-btn.visible { display: flex !important; }
 [dir="ltr"] .ta-clear-btn { left: auto; right: 8px; }
 
-  .fmt-btn { min-height: 40px !important; min-width: 72px !important; }
-  .ob-close { min-width: 40px !important; min-height: 40px !important; }
+  .fmt-btn { min-height: 44px !important; min-width: 72px !important; }
+  .ob-close { min-width: 44px !important; min-height: 44px !important; }
   
   /* Settings Button — top-right */
   .settings-btn {
@@ -384,6 +386,36 @@ body {
   .settings-cancel { background: rgba(255,255,255,0.1); color: white; }
   .settings-save:hover { background: #168863; }
   .settings-cancel:hover { background: rgba(255,255,255,0.18); }
+
+/* ══ S12: Light Mode Theme ══ */
+[data-theme="light"] {
+  --bg: #ffffff;
+  --bg2: #f6f7fa;
+  --surface: #ffffff;
+  --surface2: #eef0f5;
+  --text: #1a1a26;
+  --muted: #6b6b8e;
+  --border: #e1e3e9;
+}
+[data-theme="light"] body { background: var(--bg) !important; color: var(--text) !important; }
+[data-theme="light"] .header { background: rgba(255,255,255,0.95) !important; }
+[data-theme="light"] #userInput { background: #fff !important; color: var(--text) !important; }
+[data-theme="light"] #search { background: #fff !important; color: var(--text) !important; }
+[data-theme="light"] .cat-pill { background: var(--surface2) !important; color: var(--text) !important; }
+[data-theme="light"] .cat-pill.active { background: var(--accent) !important; color: #fff !important; }
+[data-theme="light"] .tag-btn { background: var(--surface2) !important; color: var(--text) !important; }
+[data-theme="light"] .tag-btn.active { background: var(--accent) !important; color: #fff !important; }
+[data-theme="light"] .fmt-btn { background: var(--surface2) !important; color: var(--text) !important; }
+[data-theme="light"] .fmt-btn.active { background: var(--accent) !important; color: #fff !important; }
+[data-theme="light"] .result-box { background: var(--surface2) !important; color: var(--text) !important; }
+[data-theme="light"] .tb-btn { color: var(--text) !important; }
+[data-theme="light"] .tb-btn:hover { background: var(--surface2) !important; }
+[data-theme="light"] .ta-clear-btn { background: var(--surface2) !important; color: var(--muted) !important; }
+[data-theme="light"] .btn-rnd-main { background: var(--surface2) !important; color: var(--text) !important; }
+[data-theme="light"] .hist-panel { background: #fff !important; color: var(--text) !important; box-shadow: 0 8px 24px rgba(0,0,0,0.15) !important; }
+[data-theme="light"] .cm-box { background: #fff !important; color: var(--text) !important; }
+[data-theme="light"] .settings-modal-content { background: #fff !important; color: var(--text) !important; }
+
 </style>
 </head>
 <body data-new-gr-c-s-check-loaded="14.1284.0" data-gr-ext-installed="">
@@ -418,9 +450,7 @@ body {
   <div class="header-bottom">
     <div class="search-wrap">
       <input type="search" id="search" autocomplete="off" oninput="filterTags()" placeholder="חפש/י תגיות, סגנונות..." aria-label="חיפוש תגיות וסגנונות">
-      <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-        <circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path>
-      </svg>
+      <span class="search-icon-emoji" aria-hidden="true">🔍</span>
     </div>
   </div>
 </header>
@@ -430,6 +460,7 @@ body {
     <div class="tb-toolbar" id="inputToolbar">
           <button class="tb-btn" onclick="toggleHistPanel()" title="היסטוריה" aria-label="היסטוריה">🕐</button>
           <button class="tb-btn" onclick="openSettings()" title="הגדרות" aria-label="הגדרות">⚙️</button>
+          <button class="tb-btn" id="themeToggleBtn" onclick="toggleTheme()" title="מצב בהיר/כהה" aria-label="מצב בהיר/כהה">🌙</button>
           
         </div>
         <div class="textarea-wrap">
@@ -568,6 +599,23 @@ function clearUserInput() {
       ta.focus();
       try { ta.dispatchEvent(new Event('input', { bubbles: true })); } catch(e) {}
       toggleClearBtnVisibility();
+    }
+    function toggleTheme() {
+      var cur = document.documentElement.getAttribute('data-theme') || 'dark';
+      var next = cur === 'dark' ? 'light' : 'dark';
+      setTheme(next);
+    }
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      try { localStorage.setItem('sbp_theme', theme); } catch(e) {}
+      var btn = document.getElementById('themeToggleBtn');
+      if (btn) btn.textContent = theme === 'dark' ? '🌙' : '☀️';
+    }
+    function loadTheme() {
+      try {
+        var saved = localStorage.getItem('sbp_theme') || 'dark';
+        setTheme(saved);
+      } catch(e) { setTheme('dark'); }
     }
     function toggleClearBtnVisibility() {
       var ta = document.getElementById('userInput');
@@ -2062,6 +2110,8 @@ function trackInstall() {
 
 // ── FIX #5 + FIX #7: startApp — restore saved language before init ──
 function startApp() {
+      // S12: Load saved theme
+      try { loadTheme(); } catch(e) {}
       // Init clear button visibility on textarea input
       try {
         var _ta = document.getElementById('userInput');
