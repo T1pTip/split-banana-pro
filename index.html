@@ -2825,18 +2825,13 @@ if (document.readyState === 'loading') {
 
 <script>
 // ============================================================
-// Palette AI — Release Candidate Fix v5
-// Fixes:
-//   #9  sharePrompt crashes on browsers with readonly navigator.share
-//       → Replace sharePrompt entirely (no more reassignment)
-//   #10 doInstall prompt() with no try/catch → Race condition crash
-//       → Wrap prompt() call with try/catch + fallback to guide
-//   Bonus: Global unhandledrejection handler for silent async errors
+// Palette AI — Release Candidate Fix v5.1 — TIMING FIXED
+// Previous v5 ran too early — was clobbered by v3/v4's DOMContentLoaded
+// v5.1 waits for v3/v4 to complete, THEN applies fixes last
 // ============================================================
 (function () {
   'use strict';
 
-  // === Global error handlers (observability) ===
   if (!window.__hpeErrHandler) {
     window.addEventListener('unhandledrejection', function (ev) {
       console.warn('[HPE] Unhandled promise rejection:', ev.reason);
@@ -2853,8 +2848,6 @@ if (document.readyState === 'loading') {
     var ua = navigator.userAgent || '';
     return /\bFBAN\/|FBAV\/|WhatsApp\b|Instagram|Line\b/i.test(ua) || /; wv\)/.test(ua);
   }
-
-  function getUserText() { var el = document.getElementById('userInput'); return el ? el.value : ''; }
   function getEnhancedText() {
     var el = document.getElementById('finalPrompt');
     if (!el) return '';
@@ -2866,17 +2859,14 @@ if (document.readyState === 'loading') {
     return (!t || t.indexOf('\u2728') !== -1 || t.length < 5) ? '' : t;
   }
 
-  function waitThen(fn) {
-    var tries = 0;
-    (function attach() {
-      if (typeof window.sharePrompt !== 'function' || typeof window.doInstall !== 'function') {
-        if (++tries < 50) return setTimeout(attach, 80);
-      }
-      fn();
-    })();
-  }
+  // ==== Capture beforeinstallprompt with our own handler ====
+  var myBip = null;
+  window.addEventListener('beforeinstallprompt', function (e) {
+    myBip = e;
+  }, true);
+  window.addEventListener('appinstalled', function () { myBip = null; });
 
-  // === Fix #9: sharePrompt — no reassignment of navigator.share ===
+  // ==== FIX #9: sharePrompt replacement ====
   function fixSharePrompt() {
     window.sharePrompt = function () {
       var text = getEnhancedText();
@@ -2891,59 +2881,26 @@ if (document.readyState === 'loading') {
           var p = navigator.share(shareData);
           if (p && typeof p.catch === 'function') {
             p.catch(function (err) {
-              // AbortError = user cancelled, don't fallback
               if (err && err.name !== 'AbortError') {
                 if (typeof window.copyPrompt === 'function') window.copyPrompt();
               }
             });
           }
         } catch (err) {
-          console.warn('[HPE v5] share threw sync:', err);
+          console.warn('[HPE v5.1] share threw sync:', err);
           if (typeof window.copyPrompt === 'function') window.copyPrompt();
         }
       } else {
-        // No share API — fall back to copy
         if (typeof window.copyPrompt === 'function') window.copyPrompt();
       }
     };
   }
 
-  // === Fix #10: doInstall — wrap prompt() with try/catch ===
+  // ==== FIX #10: doInstall with try/catch ====
   function fixDoInstall() {
-    var origDoInstall = window.doInstall;
-    if (typeof origDoInstall !== 'function') return;
-    
-    // Parse out the guides — they're in the v4 patch. We can call them indirectly by
-    // simulating the "no prompt available" path via a temporary flag.
-    // Simpler: re-implement doInstall fully, but delegate to guides via v4's helpers.
-    // v4 exposed nothing globally; we need to detect platform ourselves.
-    
-    // Since v4 guides (showIOSGuide, showWebviewGuide, showChromeMenuGuide) are not exposed,
-    // we'll keep calling origDoInstall for the guide cases (user clicks button with no native prompt).
-    // We only need to intercept the native prompt case to add try/catch.
-    
-    // The sensitive path in v4 is: `capturedBipEvent.prompt()`.
-    // But capturedBipEvent is a closure-scoped variable inside v4's IIFE.
-    // We can't access it. What we CAN do: intercept via our own listener and manage state ourselves.
-    
-    // Strategy: Store our own bipEvent, and always use ours. If v4 uses its own,
-    // ours is additional safety. When user clicks install, our intercept fires first
-    // and has try/catch.
-    
-    // Store capturedBipEvent from a new listener (capture phase, early priority)
-    var myBip = null;
-    window.addEventListener('beforeinstallprompt', function (e) {
-      myBip = e;
-    }, true);
-    window.addEventListener('appinstalled', function () {
-      myBip = null;
-    });
-    
-    // Replace doInstall with safer version
     window.doInstall = function () {
       var isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
       if (isStandalone) return;
-      
       if (myBip && typeof myBip.prompt === 'function') {
         try {
           myBip.prompt();
@@ -2954,30 +2911,51 @@ if (document.readyState === 'loading') {
               if (banner && choice && choice.outcome === 'accepted') {
                 banner.classList.remove('show');
               }
-            }).catch(function (e) { console.warn('[HPE v5] userChoice rejected:', e); });
+            }).catch(function (e) { console.warn('[HPE v5.1] userChoice rejected:', e); });
           }
           return;
         } catch (err) {
-          // prompt() threw (e.g., already consumed, no user gesture, etc.)
-          console.warn('[HPE v5] prompt() failed, falling back to guide:', err.message);
+          console.warn('[HPE v5.1] prompt() failed:', err.message);
           myBip = null;
-          // Fall through to origDoInstall for platform guide
+          // fall through to guides
         }
       }
-      
-      // No bip available — delegate to v4 for platform guide
-      if (typeof origDoInstall === 'function') {
-        try { return origDoInstall.apply(this, arguments); }
-        catch (e) { console.warn('[HPE v5] orig doInstall threw:', e); }
-      }
+      // No bip — show platform guide (duplicate from v4 for safety)
+      // We don't have access to v4's guides directly, but they're on window.doInstall only
+      // (v4 replaced doInstall). Since we replaced it again, use simple native alert fallback
+      var msg;
+      if (isIOS()) msg = '\u05dc\u05d4\u05ea\u05e7\u05e0\u05d4 \u05d1-iPhone: \u05dc\u05d7\u05e5 \u05e2\u05dc \u05db\u05e4\u05ea\u05d5\u05e8 \u05d4\u05e9\u05d9\u05ea\u05d5\u05e3 \u05d1-Safari \u2192 "\u05d4\u05d5\u05e1\u05e3 \u05dc\u05de\u05e1\u05da \u05d4\u05d1\u05d9\u05ea".';
+      else if (isWebview()) msg = '\u05d4\u05d3\u05e4\u05d3\u05e4\u05df \u05d4\u05e0\u05d5\u05db\u05d7\u05d9 \u05d0\u05d9\u05e0\u05d5 \u05ea\u05d5\u05de\u05da \u05d1\u05d4\u05ea\u05e7\u05e0\u05d4. \u05e4\u05ea\u05d7 \u05d0\u05ea \u05d4\u05d3\u05e3 \u05d1-Chrome \u05d3\u05e8\u05da ⁝ → "\u05e4\u05ea\u05d7 \u05d1\u05d3\u05e4\u05d3\u05e4\u05df".';
+      else msg = '\u05dc\u05d4\u05ea\u05e7\u05e0\u05d4: ⁝ (3 \u05e0\u05e7\u05d5\u05d3\u05d5\u05ea) \u2192 "\u05d4\u05ea\u05e7\u05df \u05d0\u05e4\u05dc\u05d9\u05e7\u05e6\u05d9\u05d4".';
+      alert(msg);
     };
   }
 
-  waitThen(function () {
-    fixSharePrompt();
-    fixDoInstall();
-    console.log('\u2705 Palette AI Release Fix v5 installed');
-  });
+  // ==== TIMING FIX: wait for DOMContentLoaded PLUS delay for v3/v4 to complete ====
+  function runInstall() {
+    // Wait an extra moment for v3/v4 to finish their DOMContentLoaded handlers
+    setTimeout(function () {
+      // ALSO wait for __hpeInstalled (v3) flag
+      var tries = 0;
+      (function wait() {
+        if (!window.__hpeInstalled && tries++ < 30) {
+          return setTimeout(wait, 100);
+        }
+        fixSharePrompt();
+        fixDoInstall();
+        console.log('\u2705 Palette AI Release Fix v5.1 installed');
+        // Re-apply periodically to guard against other code over-wrapping
+        setTimeout(function () { fixSharePrompt(); fixDoInstall(); }, 500);
+        setTimeout(function () { fixSharePrompt(); fixDoInstall(); }, 1500);
+      })();
+    }, 300);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', runInstall);
+  } else {
+    runInstall();
+  }
 })();
 </script>
   </body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>
