@@ -55,17 +55,65 @@ const KIDS_TITLES = new Set([
 ]);
 const NEG = '--no bad anatomy, deformed hands, extra fingers, text, watermark, blurry, lowres, ugly, mutation';
 
+// ─── Design-graft S9: Group accordion ───
+// Maps the 33 flat categories (ci indices into DATA) into 6 logical groups.
+// See Palette AI - Current.html design handoff.
+const GROUPS = [
+  { key:'medium',  emoji:'📸',
+    name:{he:'סגנון ומדיום', en:'Style & Medium'},
+    desc:{he:'איך נראית התמונה טכנית', en:'Technical look of the image'},
+    cis:[0,1,4,21,16,17] },
+  { key:'mood',    emoji:'🎬',
+    name:{he:'אווירה ואסתטיקה', en:'Mood & Aesthetic'},
+    desc:{he:'מצב רוח, ז׳אנר, תאורה', en:'Mood, genre, lighting'},
+    cis:[2,3,11,19,20,24] },
+  { key:'people',  emoji:'👤',
+    name:{he:'אנשים ודמויות', en:'People & Characters'},
+    desc:{he:'מי בתמונה', en:'Who is in the image'},
+    cis:[5,8,9,7,12,13] },
+  { key:'place',   emoji:'🌆',
+    name:{he:'מקום וסביבה', en:'Place & Environment'},
+    desc:{he:'היכן זה מתרחש', en:'Where it takes place'},
+    cis:[10,22,23,31] },
+  { key:'framing', emoji:'🎨',
+    name:{he:'מסגור וצבע', en:'Framing & Color'},
+    desc:{he:'זווית וקומפוזיציה', en:'Angle and composition'},
+    cis:[6,14] },
+  { key:'ideas',   emoji:'🌈',
+    name:{he:'רעיונות ועולמות', en:'Ideas & Worlds'},
+    desc:{he:'סגנונות וטרנדים', en:'Styles and trends'},
+    cis:[25,28,29,30,32,26,27,15,18] },
+];
+let openGroup = null; // key of currently-expanded group, or null
+
+// ─── Design-graft S9: Theme ───
+let themeMode = 'dark';
+try { themeMode = localStorage.getItem('palette-theme') || 'dark'; } catch(e) {}
+
+function setTheme(mode) {
+  themeMode = (mode === 'light') ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', themeMode);
+  try { localStorage.setItem('palette-theme', themeMode); } catch(e) {}
+  const btn = document.getElementById('themeToggle');
+  if (btn) {
+    btn.textContent = themeMode === 'dark' ? '☀️' : '🌙';
+    btn.setAttribute('aria-label', themeMode === 'dark' ? 'עבור למצב בהיר' : 'עבור למצב כהה');
+  }
+}
+function toggleTheme() { setTheme(themeMode === 'dark' ? 'light' : 'dark'); }
+
+
 const T = {
   he: {
     dir: 'rtl', lang: 'he',
-    placeholder: "תאר/י את התמונה שאת/ה רוצה/ה ליצור...",
+    placeholder: "תאר/י את התמונה שאת/ה רוצה/ה ליצור...\nאו שפשוט תלחצ/י על כפתור ההפתעה :)",
     searchPlaceholder: "חפש/י תגיות, סגנונות...",
     emptyPrompt: '✨ הפרומפט יופיע כאן — לחץ/י על 📋 העתק/י פרומפט ופתח/י את מנוע ה-AI שלך.',
     charCount: function(n) { return n + ' תווים'; },
     clearBtn: 'נקה/י', copyBtn: 'העתק/י פרומפט',
     shareBtn: 'שתף/י',
     shareTitle: 'שתף פרומפט AI', copiedBtn: '✅ הועתק/ה!',
-    resultLabel: 'פרומפט מוכן', subtitle: 'מחולל פרומפטים לתמונות AI',
+    resultLabel: 'פרומפט מוכן להעתקה', subtitle: 'מחולל פרומפטים לתמונות AI',
     categories: 'קטגוריות',
     arLabel: 'יחס:',
     fmtStory: 'סטורי', fmtSquare: 'ריבוע', fmtWide: 'רחב',
@@ -85,7 +133,7 @@ const T = {
   },
   en: {
     dir: 'ltr', lang: 'en',
-    placeholder: "Describe the image you want to create...",
+    placeholder: "Describe the image you want to create...\nor just hit the surprise button :)",
     searchPlaceholder: 'Search tags, styles...',
     emptyPrompt: '✨ Your prompt will appear here — tap 📋 Copy Prompt and open your AI tool.',
     charCount: function(n) { return n + ' chars'; },
@@ -106,7 +154,7 @@ const T = {
     clearTitle: 'What to clear?',
     clearAll: 'Everything', clearText: 'Text only', clearTags: 'Tags only',
     clearCancel: 'Cancel', clearPrompt: 'Clear Prompt',
-    resultLabel: 'Prompt ready', subtitle: 'AI Image Prompt Builder',
+    resultLabel: 'Prompt ready to copy', subtitle: 'AI Image Prompt Builder',
     categories: 'Categories',
   }
 };
@@ -121,36 +169,151 @@ function setKidsMode(isKids) {
   if (isKids) randomizeKids();
 }
 
+// ─── Design-graft S9: Accordion build ───
+// Kids mode is preserved via KIDS_TITLES: groups whose categories are all
+// filtered out become empty (and are hidden). No separate 3-group kids
+// structure — current kids behavior (21 cats) intact.
+function toggleGroup(key) {
+  openGroup = (openGroup === key) ? null : key;
+  document.querySelectorAll('.grp-card').forEach(function(card) {
+    const isOpen = (card.dataset.grp === openGroup);
+    card.classList.toggle('open', isOpen);
+    const head = card.querySelector('.grp-head');
+    if (head) head.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  });
+  // If user collapsed a group while its tag-panel was open → close panel too
+  if (openGroup === null && activeCatIdx >= 0) {
+    try { closePanel(); } catch(e) {}
+  }
+}
+
 function buildCatGrid() {
   const grid = $('catGrid');
   if (!grid) { setTimeout(buildCatGrid, 50); return; }
   grid.innerHTML = '';
-  DATA.forEach(function(cat, ci) {
-    if (kidsMode && !KIDS_TITLES.has(cat.he.title)) return;
-    const catData = cat[currentLang];
-    const pill = document.createElement('button');
-    pill.className = 'cat-pill';
-    pill.dataset.ci = String(ci);
-    const badge = document.createElement('span');
-    badge.className = 'cat-badge';
-    badge.id = 'badge-' + ci;
-    const titleStr = catData.title;
-    const emojiMatch = titleStr.match(/^(\S+)/);
-    const emoji = emojiMatch ? emojiMatch[1] : '📌';
-    let txt = titleStr.replace(/^\S+\s*/, '').trim();
-    if (txt.length > 14) txt = txt.slice(0, 13) + '…';
-    const emojiEl = document.createElement('span');
-    emojiEl.className = 'cat-emoji';
-    emojiEl.textContent = emoji;
-    const nameEl = document.createElement('span');
-    nameEl.className = 'cat-name';
-    nameEl.textContent = txt;
-    pill.appendChild(badge);
-    pill.appendChild(emojiEl);
-    pill.appendChild(nameEl);
-    pill.onclick = (function(idx) { return function() { openPanel(idx); }; })(ci);
-    grid.appendChild(pill);
+
+  // Section label row: "קטגוריות" + "N קבוצות"
+  const labelRow = document.createElement('div');
+  labelRow.className = 'groups-label';
+  const labelTxt = document.createElement('span');
+  labelTxt.id = 'catsLabel';
+  labelTxt.textContent = T[currentLang].categories || (currentLang === 'he' ? 'קטגוריות' : 'Categories');
+  const labelCount = document.createElement('span');
+  labelCount.className = 'groups-label-count';
+  labelCount.id = 'catsLabelCount';
+  labelRow.appendChild(labelTxt);
+  labelRow.appendChild(labelCount);
+  grid.appendChild(labelRow);
+
+  let visibleGroups = 0;
+
+  GROUPS.forEach(function(g) {
+    // In kids mode, filter out non-kid categories. A group with zero visible cats is skipped.
+    const visibleCis = g.cis.filter(function(ci) {
+      if (!DATA[ci]) return false;
+      if (kidsMode && !KIDS_TITLES.has(DATA[ci].he.title)) return false;
+      return true;
+    });
+    if (visibleCis.length === 0) return;
+    visibleGroups++;
+
+    const card = document.createElement('div');
+    card.className = 'grp-card' + (openGroup === g.key ? ' open' : '');
+    card.dataset.grp = g.key;
+
+    // Head (clickable)
+    const head = document.createElement('button');
+    head.type = 'button';
+    head.className = 'grp-head';
+    head.setAttribute('aria-expanded', openGroup === g.key ? 'true' : 'false');
+    head.setAttribute('aria-controls', 'grp-body-' + g.key);
+
+    const iconEl = document.createElement('span');
+    iconEl.className = 'grp-icon';
+    iconEl.textContent = g.emoji;
+    iconEl.setAttribute('aria-hidden', 'true');
+
+    const infoEl = document.createElement('div');
+    infoEl.className = 'grp-info';
+    const nameEl = document.createElement('div');
+    nameEl.className = 'grp-name';
+    const nameText = document.createElement('span');
+    nameText.textContent = g.name[currentLang] || g.name.he;
+    const grpBadge = document.createElement('span');
+    grpBadge.className = 'grp-badge';
+    grpBadge.id = 'grp-badge-' + g.key;
+    grpBadge.textContent = '0';
+    nameEl.appendChild(nameText);
+    nameEl.appendChild(grpBadge);
+
+    const metaEl = document.createElement('div');
+    metaEl.className = 'grp-meta';
+    const descTxt = g.desc[currentLang] || g.desc.he;
+    const catWord = currentLang === 'he' ? ' קטגוריות' : ' categories';
+    metaEl.textContent = descTxt + ' · ' + visibleCis.length + catWord;
+
+    infoEl.appendChild(nameEl);
+    infoEl.appendChild(metaEl);
+
+    const chevEl = document.createElement('span');
+    chevEl.className = 'grp-chevron';
+    chevEl.textContent = '⌄';
+    chevEl.setAttribute('aria-hidden', 'true');
+
+    head.appendChild(iconEl);
+    head.appendChild(infoEl);
+    head.appendChild(chevEl);
+    head.onclick = (function(k) { return function() { toggleGroup(k); }; })(g.key);
+
+    // Body (expanded categories grid)
+    const body = document.createElement('div');
+    body.className = 'grp-body';
+    body.id = 'grp-body-' + g.key;
+    const cats = document.createElement('div');
+    cats.className = 'grp-cats';
+
+    visibleCis.forEach(function(ci) {
+      const cat = DATA[ci];
+      const catData = cat[currentLang];
+      const pill = document.createElement('button');
+      pill.type = 'button';
+      pill.className = 'cat-pill';
+      pill.dataset.ci = String(ci);
+      const badge = document.createElement('span');
+      badge.className = 'cat-badge';
+      badge.id = 'badge-' + ci;
+      badge.textContent = '0';
+      const titleStr = catData.title;
+      const emojiMatch = titleStr.match(/^(\S+)/);
+      const emoji = emojiMatch ? emojiMatch[1] : '📌';
+      let txt = titleStr.replace(/^\S+\s*/, '').trim();
+      if (txt.length > 14) txt = txt.slice(0, 13) + '…';
+      const emojiEl = document.createElement('span');
+      emojiEl.className = 'cat-emoji';
+      emojiEl.textContent = emoji;
+      const nm = document.createElement('span');
+      nm.className = 'cat-name';
+      nm.textContent = txt;
+      pill.appendChild(badge);
+      pill.appendChild(emojiEl);
+      pill.appendChild(nm);
+      pill.onclick = (function(idx) { return function(e) {
+        if (e && e.stopPropagation) e.stopPropagation();
+        openPanel(idx);
+      }; })(ci);
+      cats.appendChild(pill);
+    });
+
+    body.appendChild(cats);
+    card.appendChild(head);
+    card.appendChild(body);
+    grid.appendChild(card);
   });
+
+  // Group-count label
+  const groupWord = currentLang === 'he' ? ' קבוצות' : ' groups';
+  labelCount.textContent = visibleGroups + groupWord;
+
   updateBadges();
 }
 
@@ -199,11 +362,29 @@ function toggleTag(btn, val) {
 }
 
 function updateBadges() {
+  const groupCounts = {};
   DATA.forEach(function(cat, ci) {
     let count = 0;
     cat.tags.forEach(function(t) { if (selected.has(t.val)) count++; });
     let b = $('badge-' + ci);
     if (b) { b.textContent = count; b.classList.toggle('on', count > 0); }
+    // Aggregate into group totals (design-graft S9)
+    if (count > 0) {
+      for (let i = 0; i < GROUPS.length; i++) {
+        if (GROUPS[i].cis.indexOf(ci) >= 0) {
+          groupCounts[GROUPS[i].key] = (groupCounts[GROUPS[i].key] || 0) + count;
+          break;
+        }
+      }
+    }
+  });
+  // Per-group badge update
+  GROUPS.forEach(function(g) {
+    const gb = $('grp-badge-' + g.key);
+    if (!gb) return;
+    const c = groupCounts[g.key] || 0;
+    gb.textContent = c;
+    gb.classList.toggle('on', c > 0);
   });
 }
 
@@ -510,6 +691,21 @@ function filterTags() {
     });
   });
   if (foundCi >= 0) {
+    // Design-graft S9: expand the group containing this category so the pill is visible
+    for (let i = 0; i < GROUPS.length; i++) {
+      if (GROUPS[i].cis.indexOf(foundCi) >= 0) {
+        if (openGroup !== GROUPS[i].key) {
+          openGroup = GROUPS[i].key;
+          document.querySelectorAll('.grp-card').forEach(function(card) {
+            const isOpen = (card.dataset.grp === openGroup);
+            card.classList.toggle('open', isOpen);
+            const head = card.querySelector('.grp-head');
+            if (head) head.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+          });
+        }
+        break;
+      }
+    }
     openPanel(foundCi);
     document.querySelectorAll('.tag-btn').forEach(function(btn) {
       const text = btn.textContent.toLowerCase();
@@ -899,6 +1095,7 @@ function doPayBox() {
   }
 }
 function startApp() {
+  try { setTheme(themeMode); } catch(e) { console.warn('[SBP] theme:', e); }
   initInstall();
   trackInstall();
   initOnboarding();
