@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl"><head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="description" content="בנה פרומפטים לתמונות AI — בחר סגנון, אווירה, תאורה ועוד. Build AI image prompts in Hebrew and English.">
   <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#007aff">
@@ -304,7 +304,7 @@ body {
 .theme-btn { background: transparent; border: none; color: var(--text); font-size: 18px; cursor: pointer; padding: 8px; min-width: 44px; min-height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 8px; transition: background 0.15s; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
 .theme-btn:hover { background: var(--surface2); }
 .theme-btn:active { transform: scale(0.95); }
-.tb-toolbar { justify-content: center !important; }
+
 .textarea-wrap { position: relative; }
 .ta-clear-btn {
   position: absolute !important;
@@ -462,7 +462,7 @@ body {
 
 <div class="app">
   <div class="right-col">
-    <div class="tb-toolbar" id="inputToolbar" style="justify-content:center;">
+    <div class="tb-toolbar" id="inputToolbar">
           <button class="tb-btn" onclick="toggleHistPanel()" title="היסטוריה" aria-label="היסטוריה">🕐</button>
           <button class="tb-btn" onclick="openSettings()" title="הגדרות" aria-label="הגדרות">⚙️</button>
           
