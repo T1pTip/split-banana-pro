@@ -1,12 +1,11 @@
-// Palette AI — Service Worker v4
-// גרסה: v4 | Hebrew Prompt Enhancer v2 bundled
-const CACHE = 'palette-ai-v4';
+// Palette AI — Service Worker v5
+// גרסה: v5 | Hebrew Enhancer v3 + webview copy fallback + manifest 'any' icons
+const CACHE = 'palette-ai-v5';
 const ASSETS = [
   '/palette-ai/',
   '/palette-ai/index.html',
   '/palette-ai/manifest.json',
 ];
-
 // Install — שמור assets בcache
 self.addEventListener('install', function(e) {
   e.waitUntil(
@@ -16,7 +15,6 @@ self.addEventListener('install', function(e) {
   );
   self.skipWaiting();
 });
-
 // Activate — מחק cache ישן
 self.addEventListener('activate', function(e) {
   e.waitUntil(
@@ -29,7 +27,6 @@ self.addEventListener('activate', function(e) {
   );
   self.clients.claim();
 });
-
 // Fetch — network-first ל-HTML, cache-first לשאר
 self.addEventListener('fetch', function(e) {
   if (e.request.method !== 'GET') return;
