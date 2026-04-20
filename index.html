@@ -318,7 +318,6 @@ body {
 .ta-clear-btn {
   position: absolute !important;
   top: 8px !important;
-  left: 8px !important;
   width: 24px !important;
   height: 24px !important;
   border: 1px solid var(--border) !important;
@@ -347,7 +346,8 @@ body {
   color: #d9534f;
 }
 
-[dir="ltr"] .ta-clear-btn { left: auto; right: 8px; }
+[dir="rtl"] .ta-clear-btn { left: 8px !important; right: auto !important; }
+[dir="ltr"] .ta-clear-btn { right: 8px !important; left: auto !important; }
 
   .fmt-btn { min-height: 44px !important; min-width: 72px !important; }
   .ob-close { min-width: 44px !important; min-height: 44px !important; }
