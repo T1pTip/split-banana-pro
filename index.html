@@ -39,6 +39,7 @@
 body {
   background: var(--bg);
   color: var(--text);
+  transition: background-color 0.3s ease, color 0.3s ease;
   font-family: 'Rubik', system-ui, -apple-system, Arial, sans-serif;
   min-height: 100vh;
   overflow-x: hidden;
@@ -321,19 +322,25 @@ body {
   font-size: 12px !important;
   line-height: 1 !important;
   cursor: pointer !important;
-  display: none !important;
+  display: flex !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
   align-items: center !important;
   justify-content: center !important;
   padding: 0 !important;
   z-index: 2 !important;
-  transition: background 0.15s, color 0.15s, border-color 0.15s !important;
+  transition: opacity 0.2s ease, background 0.15s, color 0.15s, border-color 0.15s !important;
+}
+.ta-clear-btn.visible {
+  opacity: 1 !important;
+  pointer-events: auto !important;
 }
 .ta-clear-btn:hover {
   background: rgba(217,83,79,0.15);
   border-color: #d9534f;
   color: #d9534f;
 }
-.ta-clear-btn.visible { display: flex !important; }
+
 [dir="ltr"] .ta-clear-btn { left: auto; right: 8px; }
 
   .fmt-btn { min-height: 44px !important; min-width: 72px !important; }
@@ -417,10 +424,37 @@ body {
 [data-theme="light"] .tb-btn { color: var(--text) !important; }
 [data-theme="light"] .tb-btn:hover { background: var(--surface2) !important; }
 [data-theme="light"] .ta-clear-btn { background: var(--surface2) !important; color: var(--muted) !important; }
+/* S16: Entry animations */
+@keyframes fadeInSlide { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+.hist-panel.open { animation: fadeInSlide 0.22s ease-out; }
+.hist-item { animation: fadeInSlide 0.25s ease-out both; }
+.hist-item:nth-child(1) { animation-delay: 0.02s; }
+.hist-item:nth-child(2) { animation-delay: 0.06s; }
+.hist-item:nth-child(3) { animation-delay: 0.10s; }
+.hist-item:nth-child(4) { animation-delay: 0.14s; }
+.hist-item:nth-child(5) { animation-delay: 0.18s; }
+/* Smoother interactive hover */
+.cat-pill, .tag-btn, .fmt-btn, .tb-btn { transition: background 0.15s, border-color 0.15s, transform 0.1s; }
+.cat-pill:hover, .tag-btn:hover, .fmt-btn:hover, .tb-btn:hover { transform: translateY(-1px); }
+.btn-copy, .btn-share, .btn-clear { transition: opacity 0.15s, transform 0.1s, background 0.15s; }
+.btn-copy:active, .btn-share:active, .btn-clear:active { transform: scale(0.97); }
 [data-theme="light"] .btn-rnd-main { background: var(--surface2) !important; color: var(--text) !important; }
 [data-theme="light"] .hist-panel { background: #fff !important; color: var(--text) !important; box-shadow: 0 8px 24px rgba(0,0,0,0.15) !important; }
 [data-theme="light"] .cm-box { background: #fff !important; color: var(--text) !important; }
 [data-theme="light"] .settings-modal-content { background: #fff !important; color: var(--text) !important; }
+/* S16: Light mode deep overrides */
+[data-theme="light"] .install-banner { background: linear-gradient(135deg, rgba(0,122,255,0.08), rgba(0,229,204,0.04)) !important; }
+[data-theme="light"] .hist-panel { background: #fff !important; color: var(--text) !important; box-shadow: 0 8px 32px rgba(0,0,0,0.12) !important; border: 1px solid var(--border) !important; }
+[data-theme="light"] .hist-item:hover { background: var(--surface2) !important; }
+[data-theme="light"] .cm-box { box-shadow: 0 8px 32px rgba(0,0,0,0.15) !important; border: 1px solid var(--border) !important; }
+[data-theme="light"] .settings-modal { background: rgba(0,0,0,0.35) !important; }
+[data-theme="light"] .cat-pill:hover { background: var(--accent) !important; color: #fff !important; opacity: 0.85; }
+[data-theme="light"] .tag-btn:hover { background: var(--accent) !important; color: #fff !important; opacity: 0.85; }
+[data-theme="light"] .fmt-btn:hover { background: var(--accent) !important; color: #fff !important; opacity: 0.85; }
+[data-theme="light"] .tb-btn:hover { background: var(--surface2) !important; border-color: var(--muted) !important; }
+[data-theme="light"] .ta-clear-btn:hover { background: rgba(217,83,79,0.12) !important; border-color: #d9534f !important; color: #d9534f !important; }
+[data-theme="light"] .toast { background: #1a1a26 !important; color: #fff !important; }
+[data-theme="light"] .onboarding.show { background: linear-gradient(135deg, rgba(0,122,255,0.08), rgba(0,229,204,0.04)) !important; color: var(--text) !important; }
 
 </style>
 </head>
@@ -605,6 +639,40 @@ function clearUserInput() {
       ta.focus();
       try { ta.dispatchEvent(new Event('input', { bubbles: true })); } catch(e) {}
       toggleClearBtnVisibility();
+    }
+    function handleGlobalShortcuts(e) {
+      var mod = e.metaKey || e.ctrlKey;
+      if (!mod) return;
+      // Ctrl+Enter / Cmd+Enter — Copy prompt
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        try { copyPrompt(); } catch(err) {}
+      }
+      // Ctrl+K / Cmd+K — Focus search
+      else if (e.key === 'k' || e.key === 'K') {
+        e.preventDefault();
+        var s = document.getElementById('search');
+        if (s) s.focus();
+      }
+      // Ctrl+/ / Cmd+/ — Toggle theme
+      else if (e.key === '/') {
+        e.preventDefault();
+        try { toggleTheme(); } catch(err) {}
+      }
+    }
+    function handleEscKey(e) {
+      if (e.key !== 'Escape') return;
+      // סגירת modals פתוחים
+      var sm = document.getElementById('settingsModal');
+      if (sm && sm.style.display !== 'none' && sm.style.display !== '') {
+        try { closeSettings(); } catch(err) { sm.style.display = 'none'; }
+        return;
+      }
+      var hp = document.getElementById('histPanel');
+      if (hp && hp.classList.contains('open')) {
+        try { toggleHistPanel(); } catch(err) { hp.classList.remove('open'); }
+        return;
+      }
     }
     function toggleTheme() {
       var cur = document.documentElement.getAttribute('data-theme') || 'dark';
@@ -2116,6 +2184,11 @@ function trackInstall() {
 
 // ── FIX #5 + FIX #7: startApp — restore saved language before init ──
 function startApp() {
+      // S16: Keyboard shortcuts
+      try {
+        document.addEventListener('keydown', handleGlobalShortcuts);
+        document.addEventListener('keydown', handleEscKey);
+      } catch(e) {}
       // S12: Load saved theme
       try { loadTheme(); } catch(e) {}
       // S13: Force zoom reset on load (prevent stuck zoom from previous sessions)
