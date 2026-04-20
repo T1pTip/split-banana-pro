@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl"><head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="description" content="בנה פרומפטים לתמונות AI — בחר סגנון, אווירה, תאורה ועוד. Build AI image prompts in Hebrew and English.">
   <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#007aff">
@@ -254,7 +254,7 @@ body {
 .cm-tag-name{font-size:12px;font-weight:500;color:var(--text)}
 .cm-tag-kw{font-size:11px;color:var(--muted)}
 .cm-btns{display:flex;gap:8px}
-.cm-btn{flex:1;padding:10px;border-radius:8px;border:none;font-size:13px;font-weight:500;cursor:pointer;min-height:40px;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.cm-btn{flex:1;padding:10px;border-radius:8px;border:none;font-size:13px;font-weight:500;cursor:pointer;min-height:44px;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .cm-yes{background:#1a4a2e;color:#4ade80;border:1px solid #2d6b42}
 .cm-yes:active{opacity:.8}
 .cm-no{background:var(--surface2);color:var(--muted);border:1px solid var(--border)}
@@ -298,7 +298,7 @@ body {
     
   /* Touch target fixes (Session 8 — WCAG 2.2 AA compliance) */
   #installBtn { min-height: 44px !important; padding: 8px 14px !important; }
-  .install-dismiss { min-width: 40px !important; min-height: 40px !important; }
+  .install-dismiss { min-width: 44px !important; min-height: 44px !important; }
   #search { min-height: 44px !important; padding: 10px 14px !important; }
 [dir="rtl"] #search { padding-right: 32px !important; }
 [dir="ltr"] #search { padding-left: 32px !important; padding-right: 14px !important; }
@@ -311,15 +311,17 @@ body {
 .theme-btn { background: transparent; border: none; color: var(--text); font-size: 18px; cursor: pointer; padding: 8px; min-width: 44px; min-height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 8px; transition: background 0.15s; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
 .theme-btn:hover { background: var(--surface2); }
 .theme-btn:active { transform: scale(0.95); }
-.lang-toggle .theme-btn { border-radius: 7px; min-height: 40px; min-width: 40px; padding: 4px; font-size: 16px; }
-.lang-toggle .lang-btn { border-radius: 7px; min-height: 40px; }
+.lang-toggle .theme-btn { border-radius: 7px; min-height: 44px; min-width: 44px; padding: 4px; font-size: 16px; }
+.lang-toggle .lang-btn { border-radius: 7px; min-height: 44px; }
 
 .textarea-wrap { position: relative; }
 .ta-clear-btn {
   position: absolute !important;
   top: 8px !important;
-  width: 24px !important;
-  height: 24px !important;
+  width: 44px !important;
+  height: 44px !important;
+  padding: 12px !important;
+  box-sizing: border-box !important;
   border: 1px solid var(--border) !important;
   border-radius: 50% !important;
   background: var(--surface2) !important;
@@ -332,7 +334,7 @@ body {
   pointer-events: none !important;
   align-items: center !important;
   justify-content: center !important;
-  padding: 0 !important;
+  /* padding managed above */
   z-index: 2 !important;
   transition: opacity 0.2s ease, background 0.15s, color 0.15s, border-color 0.15s !important;
 }
@@ -485,8 +487,23 @@ body {
 [data-theme="light"] .btn-share:hover { background: linear-gradient(135deg, #25d366, #159846) !important; box-shadow: 0 4px 14px rgba(30,190,90,0.5) !important; }
 
 </style>
+
+  <!-- SEO & Social Meta (v5) -->
+  <meta name="description" content="בנאי פרומפטים חכם לתמונות AI — ממיר בקשה בעברית לפרומפט מלא ומשופר עם תמיכה מיוחדת לטקסט עברי.">
+  <link rel="canonical" href="https://t1ptip.github.io/palette-ai/">
+  <meta property="og:title" content="Palette AI — בנאי פרומפטים חכם לתמונות AI">
+  <meta property="og:description" content="בנאי פרומפטים לתמונות AI עם תמיכה מלאה בעברית, לרבות טיפול בטקסט עברי בתמונה.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://t1ptip.github.io/palette-ai/">
+  <meta property="og:image" content="https://t1ptip.github.io/palette-ai/icon-512.png">
+  <meta property="og:locale" content="he_IL">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Palette AI">
+  <meta name="twitter:description" content="בנאי פרומפטים לתמונות AI עם תמיכה בעברית.">
+  <meta name="twitter:image" content="https://t1ptip.github.io/palette-ai/icon-192.png">
 </head>
 <body data-new-gr-c-s-check-loaded="14.1284.0" data-gr-ext-installed="">
+<main role="main" style="display:contents">
   <h1 style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">Palette AI — בנאי פרומפטים לתמונות AI</h1>
   <!-- settings-btn moved to toolbar above textarea -->
 
@@ -2802,6 +2819,165 @@ if (document.readyState === 'loading') {
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
+})();
+</script>
+  </main>
+
+<script>
+// ============================================================
+// Palette AI — Release Candidate Fix v5
+// Fixes:
+//   #9  sharePrompt crashes on browsers with readonly navigator.share
+//       → Replace sharePrompt entirely (no more reassignment)
+//   #10 doInstall prompt() with no try/catch → Race condition crash
+//       → Wrap prompt() call with try/catch + fallback to guide
+//   Bonus: Global unhandledrejection handler for silent async errors
+// ============================================================
+(function () {
+  'use strict';
+
+  // === Global error handlers (observability) ===
+  if (!window.__hpeErrHandler) {
+    window.addEventListener('unhandledrejection', function (ev) {
+      console.warn('[HPE] Unhandled promise rejection:', ev.reason);
+    });
+    window.__hpeErrHandler = true;
+  }
+
+  function isIOS() {
+    var ua = navigator.userAgent || '';
+    return /iPad|iPhone|iPod/.test(ua) ||
+      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  }
+  function isWebview() {
+    var ua = navigator.userAgent || '';
+    return /\bFBAN\/|FBAV\/|WhatsApp\b|Instagram|Line\b/i.test(ua) || /; wv\)/.test(ua);
+  }
+
+  function getUserText() { var el = document.getElementById('userInput'); return el ? el.value : ''; }
+  function getEnhancedText() {
+    var el = document.getElementById('finalPrompt');
+    if (!el) return '';
+    var t = el.textContent || '';
+    if (!t || t.indexOf('\u2728') !== -1 || t.length < 5) {
+      if (typeof window.generate === 'function') window.generate();
+      t = el.textContent || '';
+    }
+    return (!t || t.indexOf('\u2728') !== -1 || t.length < 5) ? '' : t;
+  }
+
+  function waitThen(fn) {
+    var tries = 0;
+    (function attach() {
+      if (typeof window.sharePrompt !== 'function' || typeof window.doInstall !== 'function') {
+        if (++tries < 50) return setTimeout(attach, 80);
+      }
+      fn();
+    })();
+  }
+
+  // === Fix #9: sharePrompt — no reassignment of navigator.share ===
+  function fixSharePrompt() {
+    window.sharePrompt = function () {
+      var text = getEnhancedText();
+      if (!text) return;
+      var shareData = {
+        title: 'Palette AI Prompt',
+        text: text,
+        url: 'https://t1ptip.github.io/palette-ai/'
+      };
+      if (typeof navigator.share === 'function') {
+        try {
+          var p = navigator.share(shareData);
+          if (p && typeof p.catch === 'function') {
+            p.catch(function (err) {
+              // AbortError = user cancelled, don't fallback
+              if (err && err.name !== 'AbortError') {
+                if (typeof window.copyPrompt === 'function') window.copyPrompt();
+              }
+            });
+          }
+        } catch (err) {
+          console.warn('[HPE v5] share threw sync:', err);
+          if (typeof window.copyPrompt === 'function') window.copyPrompt();
+        }
+      } else {
+        // No share API — fall back to copy
+        if (typeof window.copyPrompt === 'function') window.copyPrompt();
+      }
+    };
+  }
+
+  // === Fix #10: doInstall — wrap prompt() with try/catch ===
+  function fixDoInstall() {
+    var origDoInstall = window.doInstall;
+    if (typeof origDoInstall !== 'function') return;
+    
+    // Parse out the guides — they're in the v4 patch. We can call them indirectly by
+    // simulating the "no prompt available" path via a temporary flag.
+    // Simpler: re-implement doInstall fully, but delegate to guides via v4's helpers.
+    // v4 exposed nothing globally; we need to detect platform ourselves.
+    
+    // Since v4 guides (showIOSGuide, showWebviewGuide, showChromeMenuGuide) are not exposed,
+    // we'll keep calling origDoInstall for the guide cases (user clicks button with no native prompt).
+    // We only need to intercept the native prompt case to add try/catch.
+    
+    // The sensitive path in v4 is: `capturedBipEvent.prompt()`.
+    // But capturedBipEvent is a closure-scoped variable inside v4's IIFE.
+    // We can't access it. What we CAN do: intercept via our own listener and manage state ourselves.
+    
+    // Strategy: Store our own bipEvent, and always use ours. If v4 uses its own,
+    // ours is additional safety. When user clicks install, our intercept fires first
+    // and has try/catch.
+    
+    // Store capturedBipEvent from a new listener (capture phase, early priority)
+    var myBip = null;
+    window.addEventListener('beforeinstallprompt', function (e) {
+      myBip = e;
+    }, true);
+    window.addEventListener('appinstalled', function () {
+      myBip = null;
+    });
+    
+    // Replace doInstall with safer version
+    window.doInstall = function () {
+      var isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+      if (isStandalone) return;
+      
+      if (myBip && typeof myBip.prompt === 'function') {
+        try {
+          myBip.prompt();
+          if (myBip.userChoice && myBip.userChoice.then) {
+            myBip.userChoice.then(function (choice) {
+              myBip = null;
+              var banner = document.getElementById('installBanner');
+              if (banner && choice && choice.outcome === 'accepted') {
+                banner.classList.remove('show');
+              }
+            }).catch(function (e) { console.warn('[HPE v5] userChoice rejected:', e); });
+          }
+          return;
+        } catch (err) {
+          // prompt() threw (e.g., already consumed, no user gesture, etc.)
+          console.warn('[HPE v5] prompt() failed, falling back to guide:', err.message);
+          myBip = null;
+          // Fall through to origDoInstall for platform guide
+        }
+      }
+      
+      // No bip available — delegate to v4 for platform guide
+      if (typeof origDoInstall === 'function') {
+        try { return origDoInstall.apply(this, arguments); }
+        catch (e) { console.warn('[HPE v5] orig doInstall threw:', e); }
+      }
+    };
+  }
+
+  waitThen(function () {
+    fixSharePrompt();
+    fixDoInstall();
+    console.log('\u2705 Palette AI Release Fix v5 installed');
+  });
 })();
 </script>
   </body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>

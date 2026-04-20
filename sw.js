@@ -1,6 +1,6 @@
-// Palette AI — Service Worker v6
-// גרסה: v6 | PWA Install Fix v4 (iOS guide + webview guide + dismiss TTL)
-const CACHE = 'palette-ai-v6';
+// Palette AI — Service Worker v7
+// גרסה: v7 | Release Candidate v5 — a11y/SEO/share/install fixes
+const CACHE = 'palette-ai-v7';
 const ASSETS = [
   '/palette-ai/',
   '/palette-ai/index.html',
