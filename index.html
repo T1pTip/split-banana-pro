@@ -666,6 +666,30 @@ function clearUserInput() {
       try { ta.dispatchEvent(new Event('input', { bubbles: true })); } catch(e) {}
       toggleClearBtnVisibility();
     }
+    function haptic(type) {
+      if (!navigator.vibrate) return;
+      var patterns = {
+        light: 8,
+        tap: 15,
+        action: 20,
+        confirm: [15, 40, 15]
+      };
+      try { navigator.vibrate(patterns[type] || 15); } catch(e) {}
+    }
+    function initHaptics() {
+      document.addEventListener('pointerdown', function(e) {
+        var el = e.target.closest('button, [onclick]');
+        if (!el) return;
+        var type = null;
+        if (el.id === 'copyBtn' || el.classList.contains('btn-copy')) type = 'action';
+        else if (el.id === 'shareBtn' || el.classList.contains('btn-share')) type = 'action';
+        else if (el.id === 'clearBtn' || el.classList.contains('btn-clear')) type = 'confirm';
+        else if (el.id === 'randomBtn' || el.classList.contains('btn-rnd-main')) type = 'tap';
+        else if (el.classList.contains('btn-split-kids')) type = 'tap';
+        else if (el.classList.contains('btn-split-adults')) type = 'tap';
+        if (type) haptic(type);
+      }, { passive: true, capture: true });
+    }
     function handleGlobalShortcuts(e) {
       var mod = e.metaKey || e.ctrlKey;
       if (!mod) return;
@@ -2215,6 +2239,8 @@ function startApp() {
         document.addEventListener('keydown', handleGlobalShortcuts);
         document.addEventListener('keydown', handleEscKey);
       } catch(e) {}
+      // S19: Haptic feedback on button presses
+      try { initHaptics(); } catch(e) {}
       // S12: Load saved theme
       try { loadTheme(); } catch(e) {}
       // S13: Force zoom reset on load (prevent stuck zoom from previous sessions)
