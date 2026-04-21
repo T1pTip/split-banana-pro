@@ -2823,7 +2823,7 @@ if (document.readyState === 'loading') {
 </script>
 <style id="pae-v6-styles">
 /* =====================================================================
- * Palette AI Enhancements v6.1 (consolidated + perf)
+ * Palette AI Enhancements v6.2 (hotfix)
  * Consolidates: v5.1 (share timing) + v5.2 (ESC+SW+a11y+muted)
  *             + v5.3 (chips+contrast+modal-theme)
  * Plus fixes:  HPE modal button contrast, duplicate log guard,
@@ -2968,7 +2968,7 @@ if (document.readyState === 'loading') {
   if (window.__paeV6Installed) return;
   window.__paeV6Installed = true;
 
-  var SIGNAL = '\u2705 Palette AI Enhancements v6.1 installed (perf)';
+  var SIGNAL = '\u2705 Palette AI Enhancements v6.2 installed (hotfix)';
 
   function safeCall(fn, label) {
     try { return fn(); } catch (e) { console.warn('[PAE v6]', label, e && e.message); }
@@ -3206,5 +3206,223 @@ if (document.readyState === 'loading') {
 })();
 </script>
   </main>
+<script>
+  /*! Palette AI Enhancements v6.2 — Hot patch */
+  (function() {
+    if (window.__paeV62Installed) { return; }
+    window.__paeV62Installed = true;
+    
+    var FLAGS = { paybox: false, langReload: false };
+    var _log = function(msg) { try { console.log('[pae-v62]', msg); } catch(e){} };
+    
+    function isDesktop() {
+      var ua = navigator.userAgent || '';
+      var isIOS = /iPhone|iPad|iPod/i.test(ua);
+      var isAndroid = /Android/i.test(ua);
+      var isMobileWidth = window.innerWidth < 768 && 'ontouchstart' in window;
+      return !(isIOS || isAndroid || isMobileWidth);
+    }
+    
+    function installPayBoxDesktopFix() {
+      if (FLAGS.paybox) return;
+      if (typeof window.doPayBox !== 'function') {
+        setTimeout(installPayBoxDesktopFix, 500);
+        return;
+      }
+      var origDoPayBox = window.doPayBox;
+      window.doPayBox = function() {
+        if (!isDesktop()) {
+          return origDoPayBox.apply(this, arguments);
+        }
+        showDesktopPayBoxModal();
+      };
+      FLAGS.paybox = true;
+      _log('PayBox desktop fallback installed');
+    }
+    
+    function showDesktopPayBoxModal() {
+      var existing = document.getElementById('__pb_desktop_modal');
+      if (existing) existing.remove();
+      
+      var isRTL = (document.documentElement.getAttribute('dir') !== 'ltr');
+      var currentLang = document.documentElement.getAttribute('lang') || 'he';
+      var T = currentLang === 'he' ? {
+        title: 'פנקו אותי בבירה 🍺',
+        subtitle: 'סרקו את ה-QR בנייד כדי לפתוח את PayBox',
+        orText: 'או העתיקו את הלינק ופתחו בנייד:',
+        openMobile: 'נסו בכל זאת אולי ✊',
+        copyLink: 'העתק לינק',
+        copied: 'הועתק! ✓',
+        close: 'סגור',
+        tipNote: 'PayBox עובד רק דרך האפליקציה בנייד'
+      } : {
+        title: 'Buy me a beer 🍺',
+        subtitle: 'Scan the QR with your phone to open PayBox',
+        orText: 'Or copy the link and open on your phone:',
+        openMobile: 'Try opening anyway ✊',
+        copyLink: 'Copy link',
+        copied: 'Copied! ✓',
+        close: 'Close',
+        tipNote: 'PayBox only works via the mobile app'
+      };
+      
+      var payboxUrl = (window.PAYBOX_URL) || 'https://links.payboxapp.com/hbbbRHMn91b';
+      
+      var overlay = document.createElement('div');
+      overlay.id = '__pb_desktop_modal';
+      overlay.setAttribute('role', 'dialog');
+      overlay.setAttribute('aria-modal', 'true');
+      overlay.setAttribute('aria-labelledby', '__pb_modal_title');
+      overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:99998;display:flex;align-items:center;justify-content:center;padding:20px;direction:' + (isRTL ? 'rtl' : 'ltr') + ';backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)';
+      
+      var box = document.createElement('div');
+      box.style.cssText = 'background:linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);color:#fff;border-radius:18px;padding:28px;max-width:440px;width:100%;box-shadow:0 25px 60px rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.1);position:relative';
+      
+      var header = document.createElement('div');
+      header.style.cssText = 'display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;gap:12px';
+      var titleBox = document.createElement('div');
+      titleBox.style.cssText = 'flex:1';
+      var h3 = document.createElement('h3');
+      h3.id = '__pb_modal_title';
+      h3.textContent = T.title;
+      h3.style.cssText = 'font-size:22px;font-weight:700;margin:0 0 4px 0;line-height:1.2';
+      var p = document.createElement('p');
+      p.textContent = T.subtitle;
+      p.style.cssText = 'font-size:14px;opacity:0.75;margin:0;line-height:1.4';
+      titleBox.appendChild(h3);
+      titleBox.appendChild(p);
+      
+      var closeBtn = document.createElement('button');
+      closeBtn.textContent = '✕';
+      closeBtn.setAttribute('aria-label', T.close);
+      closeBtn.style.cssText = 'background:transparent;border:1px solid rgba(255,255,255,0.2);color:#fff;width:36px;height:36px;border-radius:8px;cursor:pointer;font-size:18px;flex-shrink:0;display:flex;align-items:center;justify-content:center';
+      closeBtn.onclick = function() { overlay.remove(); };
+      header.appendChild(titleBox);
+      header.appendChild(closeBtn);
+      box.appendChild(header);
+      
+      var qrSize = 220;
+      var qrImg = document.createElement('img');
+      qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=' + qrSize + 'x' + qrSize + '&data=' + encodeURIComponent(payboxUrl) + '&bgcolor=ffffff&color=1a1a2e&margin=10';
+      qrImg.alt = 'QR code for PayBox';
+      qrImg.style.cssText = 'display:block;width:' + qrSize + 'px;height:' + qrSize + 'px;margin:10px auto 18px;background:#fff;border-radius:12px;padding:8px;box-shadow:0 4px 20px rgba(0,0,0,0.3)';
+      box.appendChild(qrImg);
+      
+      var btnRow = document.createElement('div');
+      btnRow.style.cssText = 'display:flex;gap:10px;flex-direction:column';
+      
+      var openBtn = document.createElement('button');
+      openBtn.textContent = T.openMobile;
+      openBtn.style.cssText = 'padding:14px;background:linear-gradient(135deg, #007aff, #00a3ff);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;min-height:44px;width:100%';
+      openBtn.onclick = function() { window.open(payboxUrl, '_blank', 'noopener,noreferrer'); };
+      btnRow.appendChild(openBtn);
+      
+      var copyBtn = document.createElement('button');
+      copyBtn.textContent = T.copyLink;
+      copyBtn.style.cssText = 'padding:12px;background:rgba(255,255,255,0.08);color:#fff;border:1px solid rgba(255,255,255,0.15);border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;min-height:44px;width:100%';
+      copyBtn.onclick = function() {
+        try {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(payboxUrl).then(function() {
+              copyBtn.textContent = T.copied;
+              setTimeout(function(){ copyBtn.textContent = T.copyLink; }, 1800);
+            });
+          } else {
+            var ta = document.createElement('textarea');
+            ta.value = payboxUrl;
+            ta.style.cssText = 'position:fixed;left:-9999px';
+            document.body.appendChild(ta);
+            ta.select();
+            try { document.execCommand('copy'); } catch(e){}
+            document.body.removeChild(ta);
+            copyBtn.textContent = T.copied;
+            setTimeout(function(){ copyBtn.textContent = T.copyLink; }, 1800);
+          }
+        } catch(e) {}
+      };
+      btnRow.appendChild(copyBtn);
+      box.appendChild(btnRow);
+      
+      var note = document.createElement('p');
+      note.textContent = T.tipNote;
+      note.style.cssText = 'font-size:12px;opacity:0.6;margin:14px 0 0;text-align:center;line-height:1.5';
+      box.appendChild(note);
+      
+      overlay.appendChild(box);
+      document.body.appendChild(overlay);
+      
+      var escH = function(e) {
+        if (e.key === 'Escape') { overlay.remove(); document.removeEventListener('keydown', escH); }
+      };
+      document.addEventListener('keydown', escH);
+      overlay.addEventListener('click', function(e) { if (e.target === overlay) overlay.remove(); });
+      setTimeout(function(){ closeBtn.focus(); }, 50);
+    }
+    
+    function installLangAutoReload() {
+      if (FLAGS.langReload) return;
+      if (typeof window.setLang !== 'function') {
+        setTimeout(installLangAutoReload, 500);
+        return;
+      }
+      
+      var origSetLang = window.setLang;
+      window.setLang = function(lang) {
+        var prevLang = document.documentElement.getAttribute('lang');
+        if (prevLang === lang) return origSetLang.apply(this, arguments);
+        
+        window.__paeV62_suppressLangToast = true;
+        var result = origSetLang.apply(this, arguments);
+        showAutoReloadToast(lang);
+        setTimeout(function() { try { location.reload(); } catch(e) {} }, 500);
+        return result;
+      };
+      
+      var obs = new MutationObserver(function(mutations) {
+        if (!window.__paeV62_suppressLangToast) return;
+        mutations.forEach(function(m) {
+          m.addedNodes.forEach(function(node) {
+            if (node.nodeType !== 1) return;
+            var nid = (node.id || '') + ' ' + (node.className || '');
+            if (/lang.*reload|lang.*hint|langReloadHint/i.test(nid)) {
+              node.remove();
+              _log('suppressed v6 lang toast');
+            }
+          });
+        });
+      });
+      obs.observe(document.body, { childList: true, subtree: false });
+      
+      FLAGS.langReload = true;
+      _log('Lang auto-reload installed');
+    }
+    
+    function showAutoReloadToast(newLang) {
+      var T = newLang === 'he' ? 'עובר לעברית...' : 'Switching to English...';
+      var existing = document.getElementById('__pb62_lang_toast');
+      if (existing) existing.remove();
+      var toast = document.createElement('div');
+      toast.id = '__pb62_lang_toast';
+      toast.setAttribute('role', 'status');
+      toast.setAttribute('aria-live', 'polite');
+      toast.textContent = T;
+      toast.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);background:rgba(0,122,255,0.95);color:#fff;padding:10px 20px;border-radius:24px;font-size:14px;font-weight:500;z-index:100000;box-shadow:0 4px 20px rgba(0,0,0,0.4)';
+      document.body.appendChild(toast);
+    }
+    
+    function boot() {
+      installPayBoxDesktopFix();
+      installLangAutoReload();
+      _log('v6.2 hot patch installed (PayBox desktop + Lang auto-reload)');
+    }
+    
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', boot);
+    } else {
+      boot();
+    }
+  })();
+</script>
+
 
 

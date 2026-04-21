@@ -1,5 +1,5 @@
 // Palette AI — Service Worker v12
-// גרסה: v12 | Release v6.1 — performance optimization (async fonts)
+// גרסה: v12 | Release v6.2 — hot patch (PayBox desktop + Lang auto-reload)
 const CACHE = 'palette-ai-v12';
 const ASSETS = [
   '/palette-ai/',
