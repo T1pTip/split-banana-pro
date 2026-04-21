@@ -2968,7 +2968,7 @@ if (document.readyState === 'loading') {
   if (window.__paeV6Installed) return;
   window.__paeV6Installed = true;
 
-  var SIGNAL = '\u2705 Palette AI Enhancements v7.8 installed (desktop layout overhaul)';
+  var SIGNAL = '\u2705 Palette AI Enhancements v7.9 installed (typo + signature)';
 
   function safeCall(fn, label) {
     try { return fn(); } catch (e) { console.warn('[PAE v6]', label, e && e.message); }
@@ -3206,6 +3206,109 @@ if (document.readyState === 'loading') {
 })();
 </script>
   </main>
+<script>/*! Palette AI v7.9 - typo fix + Moran signature on slide 5 */
+  (function() {
+    if (window.__paeV79Installed) { return; }
+    window.__paeV79Installed = true;
+    var _log = function(m) { try { console.log('[pae-v79]', m); } catch(e){} };
+    
+    // === FIX 1: Typo in slide 1 Hebrew subtitle ===
+    // 'תמונות מאייד AI' -> 'תמונות בעזרת AI'
+    function fixSlide1Typo() {
+      if (!window.GUIDE_SLIDES && !window.__paeGuideSlidesPatched) {
+        // The GUIDE_SLIDES is inside v7.6 closure. Patch it by hooking renderGuide.
+        return false;
+      }
+      return true;
+    }
+    
+    // === FIX 2: Inject signature styles ===
+    function injectSignatureStyles() {
+      if (document.getElementById('__pae_v79_styles')) return;
+      var st = document.createElement('style');
+      st.id = '__pae_v79_styles';
+      var css = '';
+      css += '.pae-sig-container { border-top: 1px solid rgba(255,255,255,0.08); margin-top: 8px; padding-top: 16px; display: flex; flex-direction: column; align-items: center; gap: 6px; }';
+      css += '.pae-sig-label { font-size: 11px; color: rgba(255,255,255,0.45); letter-spacing: 1px; text-transform: uppercase; }';
+      css += '.pae-sig-svg { width: 160px; height: auto; max-width: 100%; }';
+      css += '.pae-sig-letter { fill: none; stroke: #d4af37; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 5px rgba(212,175,55,0.8)) drop-shadow(0 0 10px rgba(212,175,55,0.5)); }';
+      css += '.pae-sig-svg.pae-sig-animate #paeSigM { stroke-dasharray: 400; animation: paeSigDrawM 1s ease-in-out forwards; }';
+      css += '.pae-sig-svg.pae-sig-animate #paeSigO { stroke-dasharray: 300; animation: paeSigDrawO 0.8s ease-in-out 1.1s forwards; }';
+      css += '.pae-sig-svg.pae-sig-animate #paeSigR { stroke-dasharray: 250; animation: paeSigDrawR 0.7s ease-in-out 2s forwards; }';
+      css += '.pae-sig-svg.pae-sig-animate #paeSigA { stroke-dasharray: 300; animation: paeSigDrawA 0.8s ease-in-out 2.8s forwards; }';
+      css += '.pae-sig-svg.pae-sig-animate #paeSigN { stroke-dasharray: 300; animation: paeSigDrawN 0.8s ease-in-out 3.7s forwards; }';
+      css += '.pae-sig-svg:not(.pae-sig-animate) .pae-sig-letter { stroke-dashoffset: 400; }';
+      css += '@keyframes paeSigDrawM { from { stroke-dashoffset: 400; } to { stroke-dashoffset: 0; } }';
+      css += '@keyframes paeSigDrawO { from { stroke-dashoffset: 300; } to { stroke-dashoffset: 0; } }';
+      css += '@keyframes paeSigDrawR { from { stroke-dashoffset: 250; } to { stroke-dashoffset: 0; } }';
+      css += '@keyframes paeSigDrawA { from { stroke-dashoffset: 300; } to { stroke-dashoffset: 0; } }';
+      css += '@keyframes paeSigDrawN { from { stroke-dashoffset: 300; } to { stroke-dashoffset: 0; } }';
+      st.textContent = css;
+      document.head.appendChild(st);
+    }
+    
+    // === Build signature HTML ===
+    function buildSignatureHTML() {
+      return '<div class="pae-sig-container">' +
+        '<div class="pae-sig-label">Created by</div>' +
+        '<svg class="pae-sig-svg" viewBox="0 0 340 110">' +
+          '<text id="paeSigM" class="pae-sig-letter" x="15" y="80" font-family="Georgia, Times New Roman, serif" font-size="70" font-weight="700">M</text>' +
+          '<text id="paeSigO" class="pae-sig-letter" x="82" y="80" font-family="Georgia, Times New Roman, serif" font-size="70" font-weight="700">o</text>' +
+          '<text id="paeSigR" class="pae-sig-letter" x="130" y="80" font-family="Georgia, Times New Roman, serif" font-size="70" font-weight="700">r</text>' +
+          '<text id="paeSigA" class="pae-sig-letter" x="170" y="80" font-family="Georgia, Times New Roman, serif" font-size="70" font-weight="700">a</text>' +
+          '<text id="paeSigN" class="pae-sig-letter" x="223" y="80" font-family="Georgia, Times New Roman, serif" font-size="70" font-weight="700">n</text>' +
+        '</svg>' +
+      '</div>';
+    }
+    
+    // === DOM observer: on slide 5 shown, inject signature + trigger animation. On slide 1, fix typo. ===
+    function watchGuideModal() {
+      var obs = new MutationObserver(function() {
+        var overlay = document.getElementById('paeGuideOverlay');
+        if (!overlay) return;
+        
+        // FIX 1: Slide 1 HE typo
+        var subtitle = overlay.querySelector('.pae-guide-subtitle');
+        if (subtitle && subtitle.textContent.indexOf('\u05de\u05d0\u05d9\u05d9\u05d3 AI') > -1) {
+          subtitle.textContent = subtitle.textContent.replace('\u05ea\u05de\u05d5\u05e0\u05d5\u05ea \u05de\u05d0\u05d9\u05d9\u05d3 AI', '\u05ea\u05de\u05d5\u05e0\u05d5\u05ea \u05d1\u05e2\u05d6\u05e8\u05ea AI');
+        }
+        
+        // FIX 2: Detect slide 5 (last dot is active) and inject signature
+        var dots = overlay.querySelectorAll('.pae-guide-dot');
+        if (dots.length !== 5) return;
+        var activeIdx = -1;
+        dots.forEach(function(d, i) { if (d.classList.contains('active')) activeIdx = i; });
+        
+        if (activeIdx === 4) {
+          var body = overlay.querySelector('.pae-guide-body');
+          if (body && !body.querySelector('.pae-sig-container')) {
+            body.insertAdjacentHTML('beforeend', buildSignatureHTML());
+            // Trigger animation after a tick
+            setTimeout(function() {
+              var svg = body.querySelector('.pae-sig-svg');
+              if (svg) svg.classList.add('pae-sig-animate');
+            }, 50);
+            _log('signature injected on slide 5');
+          }
+        }
+      });
+      obs.observe(document.body, { childList: true, subtree: true, characterData: true });
+    }
+    
+    function boot() {
+      injectSignatureStyles();
+      watchGuideModal();
+      _log('v7.9 ready');
+    }
+    
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', boot);
+    } else {
+      boot();
+    }
+  })();
+</script>
+
 <script>/*! Palette AI v7.8 - desktop flex column layout (fix sticky overlap) */
   (function() {
     if (window.__paeV78Installed) { return; }
