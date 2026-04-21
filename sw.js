@@ -1,6 +1,6 @@
-// Palette AI — Service Worker v8
-// גרסה: v8 | Release Candidate v5.1 — timing fix for share/install replacement
-const CACHE = 'palette-ai-v8';
+// Palette AI — Service Worker v9
+// גרסה: v9 | Release Candidate v5.2 — a11y + contrast + ESC + SW update
+const CACHE = 'palette-ai-v9';
 const ASSETS = [
   '/palette-ai/',
   '/palette-ai/index.html',
