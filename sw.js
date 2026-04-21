@@ -1,6 +1,6 @@
-// Palette AI — Service Worker v11
-// גרסה: v11 | Release v6.0 — consolidated enhancements module
-const CACHE = 'palette-ai-v11';
+// Palette AI — Service Worker v12
+// גרסה: v12 | Release v6.1 — performance optimization (async fonts)
+const CACHE = 'palette-ai-v12';
 const ASSETS = [
   '/palette-ai/',
   '/palette-ai/index.html',

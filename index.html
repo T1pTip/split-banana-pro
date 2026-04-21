@@ -13,7 +13,7 @@
 <title>Palette AI 🎨</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&amp;family=JetBrains+Mono:wght@400&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&amp;family=JetBrains+Mono:wght@400&amp;display=swap" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&amp;family=JetBrains+Mono:wght@400&amp;display=swap" rel="stylesheet"></noscript>
 <style>
 :root {
   --bg: #08080f;
@@ -2823,7 +2823,7 @@ if (document.readyState === 'loading') {
 </script>
 <style id="pae-v6-styles">
 /* =====================================================================
- * Palette AI Enhancements v6.0 (consolidated)
+ * Palette AI Enhancements v6.1 (consolidated + perf)
  * Consolidates: v5.1 (share timing) + v5.2 (ESC+SW+a11y+muted)
  *             + v5.3 (chips+contrast+modal-theme)
  * Plus fixes:  HPE modal button contrast, duplicate log guard,
@@ -2968,7 +2968,7 @@ if (document.readyState === 'loading') {
   if (window.__paeV6Installed) return;
   window.__paeV6Installed = true;
 
-  var SIGNAL = '\u2705 Palette AI Enhancements v6.0 installed';
+  var SIGNAL = '\u2705 Palette AI Enhancements v6.1 installed (perf)';
 
   function safeCall(fn, label) {
     try { return fn(); } catch (e) { console.warn('[PAE v6]', label, e && e.message); }
