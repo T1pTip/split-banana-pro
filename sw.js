@@ -1,5 +1,5 @@
 // Palette AI — Service Worker v12
-// גרסה: v12 | Release v7.0 — toggle spacing + share with context
+// גרסה: v12 | Release v7.1 — divider removed + share cleaned up
 const CACHE = 'palette-ai-v12';
 const ASSETS = [
   '/palette-ai/',

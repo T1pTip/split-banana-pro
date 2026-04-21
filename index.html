@@ -2823,7 +2823,7 @@ if (document.readyState === 'loading') {
 </script>
 <style id="pae-v6-styles">
 /* =====================================================================
- * Palette AI Enhancements v7.0 (toggles + share)
+ * Palette AI Enhancements v7.1 (hotfix: divider removed + share cleaned)
  * Consolidates: v5.1 (share timing) + v5.2 (ESC+SW+a11y+muted)
  *             + v5.3 (chips+contrast+modal-theme)
  * Plus fixes:  HPE modal button contrast, duplicate log guard,
@@ -2968,7 +2968,7 @@ if (document.readyState === 'loading') {
   if (window.__paeV6Installed) return;
   window.__paeV6Installed = true;
 
-  var SIGNAL = '\u2705 Palette AI Enhancements v7.0 installed (toggles + share)';
+  var SIGNAL = '\u2705 Palette AI Enhancements v7.1 installed (hotfix)';
 
   function safeCall(fn, label) {
     try { return fn(); } catch (e) { console.warn('[PAE v6]', label, e && e.message); }
@@ -3206,6 +3206,188 @@ if (document.readyState === 'loading') {
 })();
 </script>
   </main>
+<script>
+  /*! Palette AI v7.1 — FIXED: force share override + remove divider */
+  (function() {
+    if (window.__paeV71Installed) { return; }
+    window.__paeV71Installed = true;
+    
+    var _log = function(msg) { try { console.log('[pae-v71]', msg); } catch(e){} };
+    
+    // FIX 1: Remove theme button divider
+    function removeThemeDivider() {
+      if (document.getElementById('__pae_v71_styles')) return;
+      var st = document.createElement('style');
+      st.id = '__pae_v71_styles';
+      st.textContent = '#themeToggleBtn::before { display: none !important; content: none !important; }';
+      document.head.appendChild(st);
+      _log('theme divider removed');
+    }
+    
+    // Clean share message builder (no asterisks, no dividers)
+    function buildCleanShare(promptText, lang) {
+      if (lang === 'en') {
+        return [
+          '🎨 I created a prompt with Palette AI',
+          '',
+          '📖 What is Palette AI?',
+          'A free Hebrew app that helps build professional prompts for AI image generators (like Nano Banana, Midjourney, or ChatGPT).',
+          '',
+          '✨ How does it work?',
+          'You write in plain Hebrew like "a cat drinking coffee",',
+          'and the app converts it into a professional English prompt',
+          'with all the keywords and styles that actually work.',
+          '',
+          '👇 My prompt:',
+          '',
+          promptText,
+          '',
+          '💡 Want to try?',
+          '1. Open the link',
+          '2. Write an idea + pick a style',
+          '3. Copy the result to your AI tool',
+          '',
+          '🔗 https://t1ptip.github.io/palette-ai',
+          '(no signup, works on mobile too)'
+        ].join('\n');
+      } else {
+        return [
+          '🎨 יצרתי פרומפט עם Palette AI',
+          '',
+          '📖 מה זה Palette AI?',
+          'אפליקציה חינמית בעברית שעוזרת לבנות פרומפטים מקצועיים למחוללי תמונות AI (כמו Nano Banana, Midjourney או ChatGPT).',
+          '',
+          '✨ איך זה עובד?',
+          'כותבים בעברית פשוטה "חתול שותה קפה",',
+          'והאפליקציה מתרגמת לפרומפט מקצועי באנגלית',
+          'עם כל הטריקים והסגנונות שבאמת עובדים.',
+          '',
+          '👇 הפרומפט שיצרתי:',
+          '',
+          promptText,
+          '',
+          '💡 רוצים לנסות?',
+          '1. פותחים את הקישור',
+          '2. כותבים רעיון + בוחרים סגנון',
+          '3. מעתיקים את התוצאה לכלי ה-AI',
+          '',
+          '🔗 https://t1ptip.github.io/palette-ai',
+          '(לא צריך להירשם, עובד גם בנייד)'
+        ].join('\n');
+      }
+    }
+    
+    // FIX 2: FORCE OVERRIDE sharePrompt with a RETRY LOOP that keeps checking every 300ms
+    // for up to 10 seconds, and overrides whatever sharePrompt is currently set to.
+    var overrideAttempts = 0;
+    var MAX_ATTEMPTS = 33; // 33 * 300ms = ~10 seconds
+    
+    function forceOverrideShare() {
+      overrideAttempts++;
+      
+      if (typeof window.sharePrompt !== 'function') {
+        if (overrideAttempts < MAX_ATTEMPTS) {
+          setTimeout(forceOverrideShare, 300);
+        }
+        return;
+      }
+      
+      // Check if already the v7.1 version
+      var currentStr = window.sharePrompt.toString();
+      if (currentStr.indexOf('__paeV71_shareInstalled') !== -1) {
+        _log('v7.1 share already installed');
+        return;
+      }
+      
+      // OVERRIDE — no matter what v7.0 or others did
+      window.sharePrompt = function() {
+        // Marker for future overrides to detect
+        var __paeV71_shareInstalled = true;
+        try {
+          var finalEl = document.getElementById('finalPrompt');
+          var promptText = finalEl ? finalEl.textContent.trim() : '';
+          
+          if (!promptText || promptText.length < 5) {
+            var lang0 = document.documentElement.getAttribute('lang') || 'he';
+            var emptyMsg = lang0 === 'en' ? 'Nothing to share yet! Generate a prompt first.' : 'אין מה לשתף עדין! צרו פרומפט קודם.';
+            try { alert(emptyMsg); } catch(e){}
+            return;
+          }
+          
+          var currentLang = document.documentElement.getAttribute('lang') === 'en' ? 'en' : 'he';
+          var message = buildCleanShare(promptText, currentLang);
+          
+          if (navigator.share) {
+            navigator.share({ title: 'Palette AI', text: message }).catch(function(err) {
+              _log('share failed: ' + err.message);
+              fallbackCopy(message, currentLang);
+            });
+          } else {
+            fallbackCopy(message, currentLang);
+          }
+        } catch(e) { _log('share err: ' + e.message); }
+      };
+      
+      _log('v7.1 share OVERRIDDEN (attempt ' + overrideAttempts + ')');
+      
+      // Keep retrying a few more times to catch any later overrides from other versions
+      if (overrideAttempts < 5) {
+        setTimeout(forceOverrideShare, 500);
+      }
+    }
+    
+    function fallbackCopy(message, lang) {
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(message).then(function() {
+            showToast(lang);
+          }).catch(function() { legacyCopy(message, lang); });
+        } else {
+          legacyCopy(message, lang);
+        }
+      } catch(e) { legacyCopy(message, lang); }
+    }
+    
+    function legacyCopy(message, lang) {
+      try {
+        var ta = document.createElement('textarea');
+        ta.value = message;
+        ta.style.cssText = 'position:fixed;left:-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch(e){}
+        document.body.removeChild(ta);
+        showToast(lang);
+      } catch(e) {}
+    }
+    
+    function showToast(lang) {
+      var msg = lang === 'en' ? '✓ Copied! Ready to share' : '✓ הועתק! מוכן לשיתוף';
+      var existing = document.getElementById('__v71_toast');
+      if (existing) existing.remove();
+      var toast = document.createElement('div');
+      toast.id = '__v71_toast';
+      toast.setAttribute('role', 'status');
+      toast.textContent = msg;
+      toast.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#10b981;color:#fff;padding:12px 24px;border-radius:24px;font-size:14px;font-weight:600;z-index:100000;box-shadow:0 4px 20px rgba(16,185,129,0.4);font-family:inherit';
+      document.body.appendChild(toast);
+      setTimeout(function() { toast.remove(); }, 2500);
+    }
+    
+    function boot() {
+      removeThemeDivider();
+      forceOverrideShare();
+      _log('v7.1 boot complete (divider removed + share override scheduled)');
+    }
+    
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', boot);
+    } else {
+      boot();
+    }
+  })();
+</script>
+
 <script>
   /*! Palette AI v7.0 — Toggle spacing + Share-with-context (Nano Banana first) */
   (function() {
