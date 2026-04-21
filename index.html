@@ -2968,7 +2968,7 @@ if (document.readyState === 'loading') {
   if (window.__paeV6Installed) return;
   window.__paeV6Installed = true;
 
-  var SIGNAL = '\u2705 Palette AI Enhancements v7.9 installed (typo + signature)';
+  var SIGNAL = '\u2705 Palette AI Enhancements v7.9.1 installed (M cutoff hotfix)';
 
   function safeCall(fn, label) {
     try { return fn(); } catch (e) { console.warn('[PAE v6]', label, e && e.message); }
@@ -3206,6 +3206,61 @@ if (document.readyState === 'loading') {
 })();
 </script>
   </main>
+<script>/*! Palette AI v7.9.1 - signature M cutoff hotfix */
+  (function() {
+    if (window.__paeV791Installed) { return; }
+    window.__paeV791Installed = true;
+    var _log = function(m) { try { console.log('[pae-v791]', m); } catch(e){} };
+    
+    // v7.9.1 FIX: The signature M letter was being cut off.
+    // Root cause 1: SVG inherited dir=rtl from parent modal, causing text to flip.
+    // Root cause 2: viewBox 0 0 340 110 was too narrow for letters at these x positions.
+    // Fix: Force direction:ltr on SVG + widen viewBox + reposition letters.
+    
+    function fixSignature() {
+      var svgs = document.querySelectorAll('.pae-sig-svg');
+      svgs.forEach(function(svg) {
+        svg.style.direction = 'ltr';
+        svg.setAttribute('viewBox', '0 0 280 100');
+        var positions = {
+          'paeSigM': 10,
+          'paeSigO': 70,
+          'paeSigR': 115,
+          'paeSigA': 148,
+          'paeSigN': 192
+        };
+        Object.keys(positions).forEach(function(id) {
+          var el = svg.querySelector('#' + id);
+          if (el) {
+            el.setAttribute('x', positions[id]);
+            el.setAttribute('y', 70);
+          }
+        });
+      });
+    }
+    
+    // Watch for signature being injected by v7.9 and fix it
+    var obs = new MutationObserver(function(muts) {
+      muts.forEach(function(m) {
+        m.addedNodes.forEach(function(node) {
+          if (node.nodeType === 1) {
+            if (node.classList && node.classList.contains('pae-sig-container')) {
+              setTimeout(fixSignature, 10);
+            } else if (node.querySelector && node.querySelector('.pae-sig-container')) {
+              setTimeout(fixSignature, 10);
+            }
+          }
+        });
+      });
+    });
+    obs.observe(document.body, { childList: true, subtree: true });
+    
+    // Also run immediately in case signature already present
+    fixSignature();
+    _log('v7.9.1 hotfix armed');
+  })();
+</script>
+
 <script>/*! Palette AI v7.9 - typo fix + Moran signature on slide 5 */
   (function() {
     if (window.__paeV79Installed) { return; }
