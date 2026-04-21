@@ -1,5 +1,5 @@
 // Palette AI - Service Worker v12
-// גרסה: v12 | Release v7.5 - textInput header repositioned
+// גרסה: v12 | Release v7.6 - guide + categories rename
 const CACHE = 'palette-ai-v12';
 const ASSETS = ['/palette-ai/', '/palette-ai/index.html', '/palette-ai/manifest.json'];
 self.addEventListener('install', function(e) { e.waitUntil(caches.open(CACHE).then(function(c) { return c.addAll(ASSETS); })); self.skipWaiting(); });

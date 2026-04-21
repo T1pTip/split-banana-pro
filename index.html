@@ -2968,7 +2968,7 @@ if (document.readyState === 'loading') {
   if (window.__paeV6Installed) return;
   window.__paeV6Installed = true;
 
-  var SIGNAL = '\u2705 Palette AI Enhancements v7.5 installed (textInput header repositioned)';
+  var SIGNAL = '\u2705 Palette AI Enhancements v7.6 installed (guide + categories)';
 
   function safeCall(fn, label) {
     try { return fn(); } catch (e) { console.warn('[PAE v6]', label, e && e.message); }
@@ -3206,6 +3206,210 @@ if (document.readyState === 'loading') {
 })();
 </script>
   </main>
+<script>/*! Palette AI v7.6 - help button + guide + categories rename */
+  (function() {
+    if (window.__paeV76Installed) { return; }
+    window.__paeV76Installed = true;
+    var _log = function(m) { try { console.log('[pae-v76]', m); } catch(e){} };
+    
+    // TASK 1: Rename 'סגנונות' -> 'קטגוריות'
+    function renameStylesHeader() {
+      var hdr = document.getElementById('paeHdrStyles');
+      if (!hdr) return false;
+      var textEl = hdr.querySelector('.pae-section-text');
+      if (!textEl) return false;
+      var lang = document.documentElement.getAttribute('lang') === 'en' ? 'en' : 'he';
+      var newText = lang === 'en' ? 'Categories' : '\u05e7\u05d8\u05d2\u05d5\u05e8\u05d9\u05d5\u05ea';
+      textEl.textContent = newText;
+      textEl.dataset.key = 'categories';
+      return true;
+    }
+    
+    function observeLangForCategories() {
+      var obs = new MutationObserver(function(muts) {
+        muts.forEach(function(m) {
+          if (m.type === 'attributes' && m.attributeName === 'lang') {
+            setTimeout(renameStylesHeader, 50);
+            setTimeout(function() {
+              var btn = document.getElementById('paeHelpBtn');
+              if (btn) {
+                var lang = document.documentElement.getAttribute('lang') === 'en' ? 'en' : 'he';
+                var tip = lang === 'en' ? 'Guide' : '\u05de\u05d3\u05e8\u05d9\u05da';
+                btn.setAttribute('aria-label', tip);
+                btn.setAttribute('title', tip);
+              }
+            }, 50);
+          }
+        });
+      });
+      obs.observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
+    }
+    
+    // TASK 2: Guide content
+    var GUIDE_SLIDES = {
+      he: [
+        { emoji: '\ud83c\udfa8', title: '\u05d1\u05e8\u05d5\u05db\u05d9\u05dd \u05d4\u05d1\u05d0\u05d9\u05dd \u05dc-Palette!', subtitle: '\u05d4\u05de\u05e7\u05d5\u05dd \u05e9\u05d1\u05d5 \u05e8\u05e2\u05d9\u05d5\u05e0\u05d5\u05ea \u05d4\u05d5\u05e4\u05db\u05d9\u05dd \u05dc\u05ea\u05de\u05d5\u05e0\u05d5\u05ea \u05de\u05d0\u05d9\u05d9\u05d3 AI', body: '\u05d9\u05e6\u05e8\u05ea\u05d9 \u05d0\u05ea \u05d4\u05db\u05dc\u05d9 \u05d4\u05d6\u05d4 \u05db\u05d3\u05d9 \u05e9\u05db\u05dc \u05d0\u05d7\u05d3 \u05d9\u05d5\u05db\u05dc \u05dc\u05db\u05ea\u05d5\u05d1 \u05d4\u05d5\u05e8\u05d0\u05d5\u05ea \u05de\u05e7\u05e6\u05d5\u05e2\u05d9\u05d5\u05ea \u05dc-AI \u05d1\u05e2\u05d1\u05e8\u05d9\u05ea \u05e4\u05e9\u05d5\u05d8\u05d4. \u05d1\u05dc\u05d9 \u05de\u05d5\u05e0\u05d7\u05d9\u05dd \u05de\u05e1\u05d5\u05d1\u05db\u05d9\u05dd. \u05e4\u05e9\u05d5\u05d8, \u05de\u05d4\u05d9\u05e8, \u05d5\u05e7\u05e6\u05ea \u05db\u05d9\u05e3 \ud83d\ude09' },
+        { emoji: '\u2728', title: '\u05e2\u05d1\u05e8\u05d9\u05ea \u05e4\u05e9\u05d5\u05d8\u05d4 \u2192 \u05ea\u05d5\u05e6\u05d0\u05d5\u05ea \u05de\u05e7\u05e6\u05d5\u05e2\u05d9\u05d5\u05ea', subtitle: '\u05de\u05d4 \u05d4\u05d0\u05e4\u05dc\u05d9\u05e7\u05e6\u05d9\u05d4 \u05e2\u05d5\u05e9\u05d4 \u05d1\u05e4\u05d5\u05e2\u05dc?', body: '\u05de\u05d7\u05d5\u05dc\u05dc\u05d9 \u05d4\u05ea\u05de\u05d5\u05e0\u05d5\u05ea (Midjourney, Nano Banana) \u05d3\u05d5\u05e8\u05e9\u05d9\u05dd \u05e4\u05e8\u05d5\u05de\u05e4\u05d8\u05d9\u05dd \u05de\u05d3\u05d5\u05d9\u05e7\u05d9\u05dd \u05d1\u05d0\u05e0\u05d2\u05dc\u05d9\u05ea \u05e2\u05dd \u05de\u05d5\u05e0\u05d7\u05d9\u05dd \u05de\u05e7\u05e6\u05d5\u05e2\u05d9\u05d9\u05dd. \u05d4\u05d0\u05e4\u05dc\u05d9\u05e7\u05e6\u05d9\u05d4 \u05de\u05db\u05d9\u05e8\u05d4 \u05d0\u05ea \u05d4\u05de\u05d9\u05dc\u05d9\u05dd \u05d5\u05d4\u05d8\u05e8\u05d9\u05e7\u05d9\u05dd \u05e9\u05d1\u05d0\u05de\u05ea \u05e2\u05d5\u05d1\u05d3\u05d9\u05dd \u2014 \u05d5\u05de\u05ea\u05e8\u05d2\u05de\u05ea \u05d0\u05ea \u05d4\u05e8\u05e2\u05d9\u05d5\u05df \u05e9\u05dc\u05da \u05dc\u05e4\u05e8\u05d5\u05de\u05e4\u05d8 \u05de\u05e7\u05e6\u05d5\u05e2\u05d9 \u05d1\u05d0\u05e0\u05d2\u05dc\u05d9\u05ea.' },
+        { emoji: '\ud83d\udcdd', title: '3 \u05e6\u05e2\u05d3\u05d9\u05dd \u05e4\u05e9\u05d5\u05d8\u05d9\u05dd', subtitle: '\u05d6\u05d4 \u05d1\u05d0\u05de\u05ea \u05d4\u05db\u05dc', isSteps: true },
+        { emoji: '\ud83e\uddea', title: '\u05db\u05de\u05d4 \u05d3\u05d1\u05e8\u05d9\u05dd \u05e9\u05db\u05d3\u05d0\u05d9 \u05dc\u05d4\u05db\u05d9\u05e8', subtitle: '\u05e9\u05d5\u05d5\u05d4 \u05dc\u05d3\u05e2\u05ea \u05e9\u05d9\u05e9', isFeatures: true },
+        { emoji: '\ud83d\ude80', title: '\u05d9\u05d0\u05dc\u05dc\u05d4, \u05d1\u05d5\u05d0 \u05e0\u05ea\u05d7\u05d9\u05dc!', subtitle: '', body: '\u05dc\u05d0 \u05e6\u05e8\u05d9\u05da \u05dc\u05d4\u05d9\u05e8\u05e9\u05dd. \u05d4\u05db\u05dc \u05d7\u05d9\u05e0\u05dd. \u05d2\u05dd \u05d1\u05e2\u05d1\u05e8\u05d9\u05ea.<br><br>\u05e8\u05d5\u05e6\u05d4 \u05dc\u05e8\u05d0\u05d5\u05ea \u05d0\u05ea \u05d4\u05de\u05d3\u05e8\u05d9\u05da \u05e9\u05d5\u05d1? \u05d9\u05e9 \u05db\u05e4\u05ea\u05d5\u05e8 <b>?</b> \u05d1\u05e8\u05d0\u05e9 \u05d4\u05e2\u05de\u05d5\u05d3 \u05e9\u05d9\u05d7\u05d6\u05d9\u05e8 \u05d0\u05d5\u05ea\u05da \u05dc\u05db\u05d0\u05df \u05d1\u05db\u05dc \u05e8\u05d2\u05e2.' }
+      ],
+      en: [
+        { emoji: '\ud83c\udfa8', title: 'Welcome to Palette!', subtitle: 'Where ideas become stunning AI images', body: 'I built this so anyone can write pro-level AI prompts in plain words. No jargon. Just fun and fast \ud83d\ude09' },
+        { emoji: '\u2728', title: 'Simple words \u2192 pro results', subtitle: 'What does the app actually do?', body: 'AI image generators (Midjourney, Nano Banana) need precise prompts in English with professional terms. The app knows the keywords and tricks that really work \u2014 and it translates your idea into a professional English prompt.' },
+        { emoji: '\ud83d\udcdd', title: '3 simple steps', subtitle: "That's really all", isSteps: true },
+        { emoji: '\ud83e\uddea', title: 'A few cool things to know', subtitle: 'Worth knowing these exist', isFeatures: true },
+        { emoji: '\ud83d\ude80', title: "Alright, let's go!", subtitle: '', body: 'No registration. Free. Hebrew too.<br><br>Want to see this guide again? Click the <b>?</b> button at the top anytime.' }
+      ]
+    };
+    
+    var GUIDE_STEPS = {
+      he: [
+        { num: '1\ufe0f\u20e3', title: '\u05d1\u05d7\u05e8\u05d5 \u05e1\u05d2\u05e0\u05d5\u05df', desc: '\u05e6\u05d9\u05d5\u05e8? \u05de\u05e6\u05d9\u05d0\u05d5\u05ea\u05d9? \u05d0\u05e0\u05d9\u05de\u05e6\u05d9\u05d4?' },
+        { num: '2\ufe0f\u20e3', title: '\u05db\u05ea\u05d1\u05d5 \u05e8\u05e2\u05d9\u05d5\u05df', desc: '\u05dc\u05de\u05e9\u05dc: "\u05d7\u05ea\u05d5\u05dc \u05e7\u05d8\u05df \u05e9\u05d5\u05ea\u05d4 \u05e7\u05e4\u05d4"' },
+        { num: '3\ufe0f\u20e3', title: '\u05dc\u05d7\u05e6\u05d5 "\u05e6\u05d5\u05e8"', desc: '\u05d5\u05d4\u05e2\u05ea\u05d9\u05e7\u05d5 \u05d0\u05ea \u05d4\u05ea\u05d5\u05e6\u05d0\u05d4' }
+      ],
+      en: [
+        { num: '1\ufe0f\u20e3', title: 'Pick a style', desc: 'Drawing? Realistic? Animation?' },
+        { num: '2\ufe0f\u20e3', title: 'Type an idea', desc: 'e.g., "a small cat drinking coffee"' },
+        { num: '3\ufe0f\u20e3', title: 'Hit "Generate"', desc: 'And copy the result' }
+      ]
+    };
+    
+    var GUIDE_FEATURES = {
+      he: [
+        { emoji: '\u2728', title: '\u05de\u05e6\u05d1 \u05d9\u05dc\u05d3\u05d9\u05dd', desc: '\u05dc\u05d9\u05e6\u05d9\u05e8\u05ea \u05ea\u05de\u05d5\u05e0\u05d5\u05ea \u05d1\u05d8\u05d5\u05d7\u05d5\u05ea' },
+        { emoji: '\ud83c\udfb2', title: '\u05d4\u05e4\u05ea\u05d9\u05e2\u05d5 \u05d0\u05d5\u05ea\u05d9', desc: '\u05dc\u05e8\u05e2\u05d9\u05d5\u05e0\u05d5\u05ea \u05e1\u05e4\u05d5\u05e0\u05d8\u05e0\u05d9\u05d9\u05dd' },
+        { emoji: '\ud83d\udcda', title: '\u05d4\u05d9\u05e1\u05d8\u05d5\u05e8\u05d9\u05d4', desc: '\u05db\u05dc \u05d4\u05e4\u05e8\u05d5\u05de\u05e4\u05d8\u05d9\u05dd \u05d4\u05e7\u05d5\u05d3\u05de\u05d9\u05dd' },
+        { emoji: '\ud83d\udce4', title: '\u05e9\u05d9\u05ea\u05d5\u05e3 \u05d7\u05db\u05dd', desc: '\u05e9\u05dc\u05d9\u05d7\u05ea \u05d4\u05e4\u05e8\u05d5\u05de\u05e4\u05d8 \u05dc\u05d7\u05d1\u05e8\u05d9\u05dd \u05d9\u05d7\u05d3 \u05e2\u05dd \u05d4\u05e1\u05d1\u05e8 \u05e2\u05dc \u05d4\u05d0\u05e4\u05dc\u05d9\u05e7\u05e6\u05d9\u05d4 \u05d5\u05e7\u05d9\u05e9\u05d5\u05e8' }
+      ],
+      en: [
+        { emoji: '\u2728', title: 'Kids mode', desc: 'Safe images for children' },
+        { emoji: '\ud83c\udfb2', title: 'Surprise me', desc: 'For spontaneous ideas' },
+        { emoji: '\ud83d\udcda', title: 'History', desc: 'All your past prompts' },
+        { emoji: '\ud83d\udce4', title: 'Smart share', desc: 'Share your prompt with friends, including app info and link' }
+      ]
+    };
+    
+    var GUIDE_T = {
+      skip: { he: '\u05d3\u05dc\u05d2', en: 'Skip' },
+      back: { he: '\u05d7\u05d6\u05d5\u05e8', en: 'Back' },
+      next: { he: '\u05d4\u05d1\u05d0 \u2190', en: 'Next \u2192' },
+      start: { he: '\u05d9\u05d0\u05dc\u05dc\u05d4, \u05d1\u05d5\u05d0 \u05e0\u05d9\u05db\u05e0\u05e1! \u2728', en: "Let's go! \u2728" },
+      of: { he: '\u05de\u05ea\u05d5\u05da', en: 'of' },
+      close: { he: '\u05e1\u05d2\u05d5\u05e8', en: 'Close' },
+      tooltip: { he: '\u05de\u05d3\u05e8\u05d9\u05da', en: 'Guide' }
+    };
+    
+    var guideSlide = 0;
+    function getGuideLang() { return document.documentElement.getAttribute('lang') === 'en' ? 'en' : 'he'; }
+    
+    function injectGuideStyles() {
+      if (document.getElementById('__pae_v76_styles')) return;
+      var st = document.createElement('style');
+      st.id = '__pae_v76_styles';
+      var css = '';
+      css += '#paeHelpBtn{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:#FFD93D;border:1.5px solid rgba(0,0,0,0.15);color:#1a1a2e;font-size:16px;font-weight:700;font-family:inherit;cursor:pointer;margin-inline-start:15px;vertical-align:middle;box-shadow:0 2px 8px rgba(255,217,61,0.45);transition:transform 0.15s,box-shadow 0.15s;padding:0;line-height:1;flex-shrink:0;}';
+      css += '#paeHelpBtn:hover{transform:scale(1.08);box-shadow:0 4px 12px rgba(255,217,61,0.6);}';
+      css += '#paeHelpBtn:active{transform:scale(0.95);}';
+      css += 'body.light-mode #paeHelpBtn,[data-theme="light"] #paeHelpBtn{background:#F9C015;border:1.5px solid rgba(0,0,0,0.4);color:#000;box-shadow:0 2px 8px rgba(0,0,0,0.25);}';
+      css += '.pae-guide-overlay{position:fixed;inset:0;z-index:99997;background:rgba(0,0,0,0.88);backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;padding:16px;animation:paeGuideFadeIn 0.3s ease-out;}';
+      css += '.pae-guide-box{background:linear-gradient(135deg,#1a1a2e 0%,#16213e 100%);color:#fff;border-radius:24px;padding:28px 24px 22px;max-width:460px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 30px 80px rgba(0,0,0,0.7);border:1px solid rgba(255,255,255,0.1);position:relative;animation:paeGuideSlideUp 0.4s cubic-bezier(0.16,1,0.3,1);}';
+      css += '.pae-guide-top{display:flex;align-items:center;justify-content:flex-end;margin-bottom:16px;}';
+      css += '.pae-guide-close{background:transparent;border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.6);width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:14px;font-family:inherit;}';
+      css += '.pae-guide-close:hover{color:#fff;border-color:rgba(255,255,255,0.3);}';
+      css += '.pae-guide-content{text-align:center;min-height:260px;display:flex;flex-direction:column;justify-content:center;}';
+      css += '.pae-guide-emoji{font-size:52px;line-height:1;margin-bottom:14px;}';
+      css += '.pae-guide-title{font-size:21px;font-weight:700;margin:0 0 6px;line-height:1.3;color:#fff;}';
+      css += '.pae-guide-subtitle{font-size:13px;color:#00e5cc;margin:0 0 14px;font-weight:500;}';
+      css += '.pae-guide-body{font-size:14.5px;line-height:1.6;color:rgba(255,255,255,0.85);}';
+      css += '.pae-guide-dots{display:flex;gap:6px;justify-content:center;margin:24px 0 16px;}';
+      css += '.pae-guide-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all 0.3s;}';
+      css += '.pae-guide-dot.active{background:#00e5cc;width:28px;border-radius:4px;}';
+      css += '.pae-guide-btn-row{display:flex;gap:10px;align-items:center;justify-content:space-between;}';
+      css += '.pae-guide-btn-primary{background:linear-gradient(135deg,#007aff,#00a3ff);color:#fff;border:none;padding:13px 24px;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;min-height:46px;font-family:inherit;}';
+      css += '.pae-guide-btn-secondary{background:rgba(255,255,255,0.06);color:#fff;border:1px solid rgba(255,255,255,0.1);padding:13px 20px;border-radius:12px;font-size:14px;font-weight:500;cursor:pointer;min-height:46px;font-family:inherit;}';
+      css += '.pae-guide-btn-text{background:transparent;border:none;color:rgba(255,255,255,0.5);padding:8px 16px;font-size:13px;cursor:pointer;font-family:inherit;}';
+      css += '.pae-guide-step-list,.pae-guide-feat-list{display:flex;flex-direction:column;gap:12px;text-align:start;margin:14px 0;}';
+      css += '.pae-guide-step-list > div{display:flex;gap:12px;align-items:flex-start;}';
+      css += '.pae-guide-step-list .num{font-size:22px;flex-shrink:0;}';
+      css += '.pae-guide-step-list .title{font-weight:600;margin-bottom:2px;font-size:15px;}';
+      css += '.pae-guide-step-list .desc{opacity:0.7;font-size:13px;}';
+      css += '.pae-guide-feat-list > div{padding:10px 14px;background:rgba(0,122,255,0.1);border-radius:10px;border-inline-start:3px solid #007aff;font-size:13.5px;}';
+      css += '@keyframes paeGuideFadeIn{from{opacity:0;}to{opacity:1;}}';
+      css += '@keyframes paeGuideSlideUp{from{transform:translateY(30px);opacity:0;}to{transform:translateY(0);opacity:1;}}';
+      st.textContent = css;
+      document.head.appendChild(st);
+    }
+    
+    function openGuide(){if(document.getElementById('paeGuideOverlay'))return;guideSlide=0;renderGuide();}
+    window.__paeOpenGuide=openGuide;
+    
+    function closeGuide(){var ov=document.getElementById('paeGuideOverlay');if(!ov)return;ov.style.opacity='0';setTimeout(function(){if(ov.parentNode)ov.parentNode.removeChild(ov);},200);}
+    window.__paeCloseGuide=closeGuide;
+    window.__paeGoSlide=function(idx){guideSlide=idx;renderGuide();};
+    
+    function renderGuide(){
+      var lang=getGuideLang();
+      var slides=GUIDE_SLIDES[lang];
+      var slide=slides[guideSlide];
+      var total=slides.length;
+      var bodyHTML='';
+      if(slide.isSteps){
+        bodyHTML='<div class="pae-guide-step-list">'+GUIDE_STEPS[lang].map(function(s){return '<div><span class="num">'+s.num+'</span><div><div class="title">'+s.title+'</div><div class="desc">'+s.desc+'</div></div></div>';}).join('')+'</div>';
+      }else if(slide.isFeatures){
+        bodyHTML='<div class="pae-guide-feat-list">'+GUIDE_FEATURES[lang].map(function(f){return '<div>'+f.emoji+' <b>'+f.title+'</b> \u2014 '+f.desc+'</div>';}).join('')+'</div>';
+      }else{bodyHTML=slide.body;}
+      var leftBtnHTML=guideSlide===0?'<button class="pae-guide-btn-text" onclick="__paeCloseGuide()">'+GUIDE_T.skip[lang]+'</button>':'<button class="pae-guide-btn-secondary" onclick="__paeGoSlide('+(guideSlide-1)+')">'+GUIDE_T.back[lang]+'</button>';
+      var rightBtnHTML=guideSlide===total-1?'<button class="pae-guide-btn-primary" onclick="__paeCloseGuide()">'+GUIDE_T.start[lang]+'</button>':'<button class="pae-guide-btn-primary" onclick="__paeGoSlide('+(guideSlide+1)+')">'+GUIDE_T.next[lang]+'</button>';
+      var ov=document.getElementById('paeGuideOverlay');
+      if(!ov){ov=document.createElement('div');ov.id='paeGuideOverlay';ov.className='pae-guide-overlay';ov.style.direction=lang==='en'?'ltr':'rtl';ov.addEventListener('click',function(e){if(e.target===ov)closeGuide();});document.body.appendChild(ov);}else{ov.style.direction=lang==='en'?'ltr':'rtl';}
+      var dotsHTML='';
+      for(var i=0;i<total;i++){dotsHTML+='<div class="pae-guide-dot'+(i===guideSlide?' active':'')+'"></div>';}
+      var subtitleHTML=slide.subtitle?'<p class="pae-guide-subtitle">'+slide.subtitle+'</p>':'';
+      ov.innerHTML='<div class="pae-guide-box"><div class="pae-guide-top"><button class="pae-guide-close" onclick="__paeCloseGuide()" aria-label="'+GUIDE_T.close[lang]+'">\u2715</button></div><div class="pae-guide-content"><div class="pae-guide-emoji">'+slide.emoji+'</div><h2 class="pae-guide-title">'+slide.title+'</h2>'+subtitleHTML+'<div class="pae-guide-body">'+bodyHTML+'</div></div><div class="pae-guide-dots">'+dotsHTML+'</div><div class="pae-guide-btn-row">'+leftBtnHTML+rightBtnHTML+'</div></div>';
+    }
+    
+    function addHelpButton(){
+      if(document.getElementById('paeHelpBtn'))return true;
+      var headerTitle=document.querySelector('.header-title');
+      if(!headerTitle)return false;
+      var btn=document.createElement('button');
+      btn.id='paeHelpBtn';
+      btn.type='button';
+      btn.textContent='?';
+      var lang=getGuideLang();
+      var tip=lang==='en'?'Guide':'\u05de\u05d3\u05e8\u05d9\u05da';
+      btn.setAttribute('aria-label',tip);
+      btn.setAttribute('title',tip);
+      btn.onclick=openGuide;
+      if(headerTitle.nextSibling){headerTitle.parentNode.insertBefore(btn,headerTitle.nextSibling);}else{headerTitle.parentNode.appendChild(btn);}
+      return true;
+    }
+    
+    document.addEventListener('keydown',function(e){
+      if(!document.getElementById('paeGuideOverlay'))return;
+      var lang=getGuideLang();
+      var total=GUIDE_SLIDES[lang].length;
+      if(e.key==='Escape')closeGuide();
+      else if(e.key==='ArrowLeft'){if(lang==='he'&&guideSlide<total-1)window.__paeGoSlide(guideSlide+1);else if(lang==='en'&&guideSlide>0)window.__paeGoSlide(guideSlide-1);}
+      else if(e.key==='ArrowRight'){if(lang==='he'&&guideSlide>0)window.__paeGoSlide(guideSlide-1);else if(lang==='en'&&guideSlide<total-1)window.__paeGoSlide(guideSlide+1);}
+    });
+    
+    var attempts=0;
+    function tryBoot(){
+      attempts++;
+      injectGuideStyles();
+      var renamed=renameStylesHeader();
+      var btnAdded=addHelpButton();
+      if((!renamed||!btnAdded)&&attempts<33){setTimeout(tryBoot,300);}
+      else{observeLangForCategories();_log('v7.6 ready attempt='+attempts);if(attempts<6)setTimeout(tryBoot,500);}
+    }
+    
+    if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',tryBoot);}else{tryBoot();}
+  })();
+</script>
+
 <script>/*! Palette AI v7.5 - move textInput header below toolbar */
   (function() {
     if (window.__paeV75Installed) { return; }
