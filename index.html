@@ -2823,7 +2823,7 @@ if (document.readyState === 'loading') {
 </script>
 <style id="pae-v6-styles">
 /* =====================================================================
- * Palette AI Enhancements v7.1 (hotfix: divider removed + share cleaned)
+ * Palette AI Enhancements v7.2 (section headers)
  * Consolidates: v5.1 (share timing) + v5.2 (ESC+SW+a11y+muted)
  *             + v5.3 (chips+contrast+modal-theme)
  * Plus fixes:  HPE modal button contrast, duplicate log guard,
@@ -2968,7 +2968,7 @@ if (document.readyState === 'loading') {
   if (window.__paeV6Installed) return;
   window.__paeV6Installed = true;
 
-  var SIGNAL = '\u2705 Palette AI Enhancements v7.1 installed (hotfix)';
+  var SIGNAL = '\u2705 Palette AI Enhancements v7.2 installed (section headers)';
 
   function safeCall(fn, label) {
     try { return fn(); } catch (e) { console.warn('[PAE v6]', label, e && e.message); }
@@ -3206,6 +3206,152 @@ if (document.readyState === 'loading') {
 })();
 </script>
   </main>
+<script>
+  /*! Palette AI v7.2 — Section headers for UI clarity */
+  (function() {
+    if (window.__paeV72Installed) { return; }
+    window.__paeV72Installed = true;
+    
+    var _log = function(msg) { try { console.log('[pae-v72]', msg); } catch(e){} };
+    
+    // Translations
+    var T = {
+      styles: { he: 'סגנונות', en: 'Styles' },
+      display: { he: 'סוגי תצוגה', en: 'Display types' },
+      textInput: { he: 'הכנס/י כאן את הטקסט שלך בשביל התמונה', en: 'Enter the text for your image here' }
+    };
+    
+    function getLang() {
+      return document.documentElement.getAttribute('lang') === 'en' ? 'en' : 'he';
+    }
+    
+    // ========= Style injection for section headers =========
+    function injectStyles() {
+      if (document.getElementById('__pae_v72_styles')) return;
+      var st = document.createElement('style');
+      st.id = '__pae_v72_styles';
+      st.textContent = [
+        '.pae-section-header {',
+        '  display: flex;',
+        '  align-items: center;',
+        '  gap: 8px;',
+        '  font-size: 13px;',
+        '  font-weight: 600;',
+        '  letter-spacing: 0.3px;',
+        '  color: var(--muted, #a0a0b8);',
+        '  text-transform: uppercase;',
+        '  margin: 14px 4px 8px;',
+        '  padding-bottom: 6px;',
+        '  border-bottom: 1px solid rgba(255, 255, 255, 0.06);',
+        '  opacity: 0.85;',
+        '}',
+        '.pae-section-header .pae-section-icon {',
+        '  font-size: 15px;',
+        '  opacity: 0.9;',
+        '}',
+        '/* Light mode */',
+        'body.light-mode .pae-section-header,',
+        '[data-theme="light"] .pae-section-header {',
+        '  border-bottom-color: rgba(0, 0, 0, 0.08);',
+        '  color: rgba(0, 0, 0, 0.55);',
+        '}',
+        '/* First header in container — reduce top margin */',
+        '.right-col > .pae-section-header:first-child,',
+        '.left-col > .pae-section-header:first-child {',
+        '  margin-top: 2px;',
+        '}'
+      ].join('\n');
+      document.head.appendChild(st);
+    }
+    
+    // ========= Header creator =========
+    function makeHeader(id, iconEmoji, keyName) {
+      var el = document.createElement('div');
+      el.className = 'pae-section-header';
+      el.id = id;
+      el.setAttribute('role', 'heading');
+      el.setAttribute('aria-level', '3');
+      var icon = document.createElement('span');
+      icon.className = 'pae-section-icon';
+      icon.textContent = iconEmoji;
+      icon.setAttribute('aria-hidden', 'true');
+      var text = document.createElement('span');
+      text.className = 'pae-section-text';
+      text.dataset.key = keyName;
+      text.textContent = T[keyName][getLang()];
+      el.appendChild(icon);
+      el.appendChild(text);
+      return el;
+    }
+    
+    // ========= Insert all headers =========
+    function insertHeaders() {
+      // 1. "סגנונות" — above #catGrid
+      var catGrid = document.getElementById('catGrid');
+      if (catGrid && !document.getElementById('paeHdrStyles')) {
+        var hdrStyles = makeHeader('paeHdrStyles', '🎨', 'styles');
+        catGrid.parentNode.insertBefore(hdrStyles, catGrid);
+        _log('inserted Styles header');
+      }
+      
+      // 2. "סוגי תצוגה" — above .format-row
+      var formatRow = document.querySelector('.format-row');
+      if (formatRow && !document.getElementById('paeHdrDisplay')) {
+        var hdrDisplay = makeHeader('paeHdrDisplay', '🎬', 'display');
+        formatRow.parentNode.insertBefore(hdrDisplay, formatRow);
+        _log('inserted Display types header');
+      }
+      
+      // 3. "הכנס/י כאן..." — above .textarea-wrap (BUT tb-toolbar sits above it; need to insert BEFORE tb-toolbar)
+      var taWrap = document.querySelector('.textarea-wrap');
+      var tbToolbar = document.querySelector('.tb-toolbar');
+      if (taWrap && !document.getElementById('paeHdrTextInput')) {
+        var hdrTextInput = makeHeader('paeHdrTextInput', '✍️', 'textInput');
+        // Insert BEFORE tb-toolbar if it exists (which is above textarea), else before textarea-wrap
+        var insertTarget = tbToolbar && tbToolbar.parentNode === taWrap.parentNode ? tbToolbar : taWrap;
+        insertTarget.parentNode.insertBefore(hdrTextInput, insertTarget);
+        _log('inserted Text Input header');
+      }
+    }
+    
+    // ========= Update text on language change =========
+    function updateHeaderTexts() {
+      var lang = getLang();
+      document.querySelectorAll('.pae-section-header .pae-section-text[data-key]').forEach(function(el) {
+        var key = el.dataset.key;
+        if (T[key] && T[key][lang]) {
+          el.textContent = T[key][lang];
+        }
+      });
+    }
+    
+    // Observe lang attribute changes
+    function observeLangChanges() {
+      var obs = new MutationObserver(function(mutations) {
+        mutations.forEach(function(m) {
+          if (m.type === 'attributes' && m.attributeName === 'lang') {
+            updateHeaderTexts();
+          }
+        });
+      });
+      obs.observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
+    }
+    
+    function boot() {
+      injectStyles();
+      insertHeaders();
+      observeLangChanges();
+      _log('v7.2 installed (section headers)');
+    }
+    
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', boot);
+    } else {
+      boot();
+    }
+  })();
+</script>
+
 <script>
   /*! Palette AI v7.1 — FIXED: force share override + remove divider */
   (function() {
