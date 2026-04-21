@@ -1,6 +1,6 @@
-// Palette AI — Service Worker v9
-// גרסה: v9 | Release Candidate v5.2 — a11y + contrast + ESC + SW update
-const CACHE = 'palette-ai-v9';
+// Palette AI — Service Worker v10
+// גרסה: v10 | Release Candidate v5.3 — chip a11y + HPE theme + button contrast
+const CACHE = 'palette-ai-v10';
 const ASSETS = [
   '/palette-ai/',
   '/palette-ai/index.html',

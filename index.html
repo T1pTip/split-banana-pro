@@ -3103,4 +3103,164 @@ if (document.readyState === 'loading') {
   }
 })();
 </script>
+<style id="v53-styles">
+/* ============================================================
+ * Palette AI — Release Candidate Fix v5.3
+ * G#8 chip a11y, G#9 HPE modals theme, #11-14 contrast
+ * ============================================================ */
+
+/* #11-14: Button contrast — introduce --accent-ink for AA text-on-bg */
+:root {
+  --accent-ink: #0056b3; /* 7:1 vs #fff (AA+) */
+}
+
+.btn-copy,
+.btn-share,
+.lang-btn.active {
+  background: var(--accent-ink) !important;
+}
+
+/* Generated prompt readability — change from teal to readable text color */
+#finalPrompt {
+  color: var(--text) !important;
+}
+/* Keep teal accent only for the READY label or other small markers */
+
+/* G#8: sel-chip keyboard focus ring */
+.sel-chip {
+  /* Improve color contrast: #a8c8ff on transparent/a2 bg */
+  color: #c8d8ff !important; /* lighter, better contrast */
+}
+.sel-chip:focus-visible,
+.sel-chip-x:focus-visible {
+  outline: 2px solid #5eaaff !important;
+  outline-offset: 2px !important;
+  border-radius: 99px !important;
+}
+.sel-chip:hover {
+  filter: brightness(1.1);
+}
+
+/* G#9: HPE manual copy modal — theme-aware overrides */
+#__hpe_manual_copy {
+  background: rgba(0, 0, 0, 0.7) !important;
+}
+#__hpe_manual_copy > div,
+#__hpe_manual_copy > div > div {
+  background: var(--surface, #0f0f1a) !important;
+  color: var(--text, #e8e8f0) !important;
+  border-color: var(--border, rgba(255,255,255,0.07)) !important;
+}
+#__hpe_manual_copy textarea {
+  background: var(--bg, #08080f) !important;
+  color: var(--text, #e8e8f0) !important;
+  border: 1px solid var(--border, rgba(255,255,255,0.15)) !important;
+}
+#__hpe_manual_copy button {
+  color: #fff !important;
+}
+#__hpe_manual_copy button[style*="007aff"],
+#__hpe_manual_copy button[style*="accent"] {
+  background: var(--accent-ink, #0056b3) !important;
+}
+
+/* Install guide modals (iOS, Chrome, Webview from v4) */
+[id^="__pwa_install_"] > div,
+[id^="__install_guide_"] > div {
+  background: var(--surface, #0f0f1a) !important;
+  color: var(--text, #e8e8f0) !important;
+}
+</style>
+<script>
+// ============================================================
+// Palette AI — Release Candidate Fix v5.3
+// G#8 chip a11y, G#9 modal theme, #11-14 contrast
+// ============================================================
+(function () {
+  'use strict';
+
+  function retrofitChips() {
+    var chips = document.querySelectorAll('.sel-chip:not(.v53-retrofitted)');
+    chips.forEach(function (chip) {
+      chip.classList.add('v53-retrofitted');
+      chip.setAttribute('role', 'button');
+      chip.setAttribute('tabindex', '0');
+      var txt = chip.textContent.replace(/\u2715/g, '').replace(/\u00d7/g, '').trim();
+      chip.setAttribute('aria-label', '\u05d4\u05e1\u05e8 ' + txt); // "הסר"
+      chip.addEventListener('keydown', function (ev) {
+        if (ev.key === 'Enter' || ev.key === ' ') {
+          ev.preventDefault();
+          ev.stopPropagation();
+          chip.click();
+        }
+      });
+    });
+    return chips.length;
+  }
+
+  function install() {
+    // Initial retrofit
+    var initialCount = retrofitChips();
+
+    // MutationObserver — catch dynamically-created chips
+    if (!window.__v53_observer) {
+      window.__v53_observer = new MutationObserver(function (mutations) {
+        var needsRetrofit = false;
+        for (var i = 0; i < mutations.length; i++) {
+          var m = mutations[i];
+          for (var j = 0; j < m.addedNodes.length; j++) {
+            var n = m.addedNodes[j];
+            if (n.nodeType === 1 && (
+                n.classList && n.classList.contains('sel-chip') ||
+                n.querySelector && n.querySelector('.sel-chip:not(.v53-retrofitted)'))) {
+              needsRetrofit = true;
+              break;
+            }
+          }
+          if (needsRetrofit) break;
+        }
+        if (needsRetrofit) retrofitChips();
+      });
+      var chipsWrap = document.querySelector('.chips-wrap') || document.body;
+      window.__v53_observer.observe(chipsWrap, { childList: true, subtree: true });
+    }
+
+    // Wrap updateChips if exists, to retrofit after every re-render
+    if (typeof window.updateChips === 'function' && !window.__v53_updateChips_wrapped) {
+      window.__v53_updateChips_wrapped = true;
+      var origUpdate = window.updateChips;
+      window.updateChips = function () {
+        var r = origUpdate.apply(this, arguments);
+        // Microtask delay for DOM settle
+        Promise.resolve().then(retrofitChips);
+        return r;
+      };
+    }
+
+    window.__v53_installed = true;
+    console.log('\u2705 Palette AI Release Fix v5.3 installed (initial chips retrofitted: ' + initialCount + ')');
+  }
+
+  // Wait for v5.2 + DOM
+  function waitInstall() {
+    var tries = 0;
+    (function retry() {
+      if (window.__v52_renderHist || tries++ >= 40) {
+        install();
+        // Re-run after extra delay for late-rendered chips
+        setTimeout(retrofitChips, 1000);
+        setTimeout(retrofitChips, 2500);
+      } else {
+        setTimeout(retry, 150);
+      }
+    })();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', waitInstall);
+  } else {
+    waitInstall();
+  }
+})();
+</script>
   </body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>
