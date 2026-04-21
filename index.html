@@ -2821,297 +2821,21 @@ if (document.readyState === 'loading') {
   else init();
 })();
 </script>
-  </main>
+<style id="pae-v6-styles">
+/* =====================================================================
+ * Palette AI Enhancements v6.0 (consolidated)
+ * Consolidates: v5.1 (share timing) + v5.2 (ESC+SW+a11y+muted)
+ *             + v5.3 (chips+contrast+modal-theme)
+ * Plus fixes:  HPE modal button contrast, duplicate log guard,
+ *              soft-reload hint for lang switch.
+ * ===================================================================== */
 
-<script>
-// ============================================================
-// Palette AI — Release Candidate Fix v5.1 — TIMING FIXED
-// Previous v5 ran too early — was clobbered by v3/v4's DOMContentLoaded
-// v5.1 waits for v3/v4 to complete, THEN applies fixes last
-// ============================================================
-(function () {
-  'use strict';
-
-  if (!window.__hpeErrHandler) {
-    window.addEventListener('unhandledrejection', function (ev) {
-      console.warn('[HPE] Unhandled promise rejection:', ev.reason);
-    });
-    window.__hpeErrHandler = true;
-  }
-
-  function isIOS() {
-    var ua = navigator.userAgent || '';
-    return /iPad|iPhone|iPod/.test(ua) ||
-      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-  }
-  function isWebview() {
-    var ua = navigator.userAgent || '';
-    return /\bFBAN\/|FBAV\/|WhatsApp\b|Instagram|Line\b/i.test(ua) || /; wv\)/.test(ua);
-  }
-  function getEnhancedText() {
-    var el = document.getElementById('finalPrompt');
-    if (!el) return '';
-    var t = el.textContent || '';
-    if (!t || t.indexOf('\u2728') !== -1 || t.length < 5) {
-      if (typeof window.generate === 'function') window.generate();
-      t = el.textContent || '';
-    }
-    return (!t || t.indexOf('\u2728') !== -1 || t.length < 5) ? '' : t;
-  }
-
-  // ==== Capture beforeinstallprompt with our own handler ====
-  var myBip = null;
-  window.addEventListener('beforeinstallprompt', function (e) {
-    myBip = e;
-  }, true);
-  window.addEventListener('appinstalled', function () { myBip = null; });
-
-  // ==== FIX #9: sharePrompt replacement ====
-  function fixSharePrompt() {
-    window.sharePrompt = function () {
-      var text = getEnhancedText();
-      if (!text) return;
-      var shareData = {
-        title: 'Palette AI Prompt',
-        text: text,
-        url: 'https://t1ptip.github.io/palette-ai/'
-      };
-      if (typeof navigator.share === 'function') {
-        try {
-          var p = navigator.share(shareData);
-          if (p && typeof p.catch === 'function') {
-            p.catch(function (err) {
-              if (err && err.name !== 'AbortError') {
-                if (typeof window.copyPrompt === 'function') window.copyPrompt();
-              }
-            });
-          }
-        } catch (err) {
-          console.warn('[HPE v5.1] share threw sync:', err);
-          if (typeof window.copyPrompt === 'function') window.copyPrompt();
-        }
-      } else {
-        if (typeof window.copyPrompt === 'function') window.copyPrompt();
-      }
-    };
-  }
-
-  // ==== FIX #10: doInstall with try/catch ====
-  function fixDoInstall() {
-    window.doInstall = function () {
-      var isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
-      if (isStandalone) return;
-      if (myBip && typeof myBip.prompt === 'function') {
-        try {
-          myBip.prompt();
-          if (myBip.userChoice && myBip.userChoice.then) {
-            myBip.userChoice.then(function (choice) {
-              myBip = null;
-              var banner = document.getElementById('installBanner');
-              if (banner && choice && choice.outcome === 'accepted') {
-                banner.classList.remove('show');
-              }
-            }).catch(function (e) { console.warn('[HPE v5.1] userChoice rejected:', e); });
-          }
-          return;
-        } catch (err) {
-          console.warn('[HPE v5.1] prompt() failed:', err.message);
-          myBip = null;
-          // fall through to guides
-        }
-      }
-      // No bip — show platform guide (duplicate from v4 for safety)
-      // We don't have access to v4's guides directly, but they're on window.doInstall only
-      // (v4 replaced doInstall). Since we replaced it again, use simple native alert fallback
-      var msg;
-      if (isIOS()) msg = '\u05dc\u05d4\u05ea\u05e7\u05e0\u05d4 \u05d1-iPhone: \u05dc\u05d7\u05e5 \u05e2\u05dc \u05db\u05e4\u05ea\u05d5\u05e8 \u05d4\u05e9\u05d9\u05ea\u05d5\u05e3 \u05d1-Safari \u2192 "\u05d4\u05d5\u05e1\u05e3 \u05dc\u05de\u05e1\u05da \u05d4\u05d1\u05d9\u05ea".';
-      else if (isWebview()) msg = '\u05d4\u05d3\u05e4\u05d3\u05e4\u05df \u05d4\u05e0\u05d5\u05db\u05d7\u05d9 \u05d0\u05d9\u05e0\u05d5 \u05ea\u05d5\u05de\u05da \u05d1\u05d4\u05ea\u05e7\u05e0\u05d4. \u05e4\u05ea\u05d7 \u05d0\u05ea \u05d4\u05d3\u05e3 \u05d1-Chrome \u05d3\u05e8\u05da ⁝ → "\u05e4\u05ea\u05d7 \u05d1\u05d3\u05e4\u05d3\u05e4\u05df".';
-      else msg = '\u05dc\u05d4\u05ea\u05e7\u05e0\u05d4: ⁝ (3 \u05e0\u05e7\u05d5\u05d3\u05d5\u05ea) \u2192 "\u05d4\u05ea\u05e7\u05df \u05d0\u05e4\u05dc\u05d9\u05e7\u05e6\u05d9\u05d4".';
-      alert(msg);
-    };
-  }
-
-  // ==== TIMING FIX: wait for DOMContentLoaded PLUS delay for v3/v4 to complete ====
-  function runInstall() {
-    // Wait an extra moment for v3/v4 to finish their DOMContentLoaded handlers
-    setTimeout(function () {
-      // ALSO wait for __hpeInstalled (v3) flag
-      var tries = 0;
-      (function wait() {
-        if (!window.__hpeInstalled && tries++ < 30) {
-          return setTimeout(wait, 100);
-        }
-        fixSharePrompt();
-        fixDoInstall();
-        console.log('\u2705 Palette AI Release Fix v5.1 installed');
-        // Re-apply periodically to guard against other code over-wrapping
-        setTimeout(function () { fixSharePrompt(); fixDoInstall(); }, 500);
-        setTimeout(function () { fixSharePrompt(); fixDoInstall(); }, 1500);
-      })();
-    }, 300);
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', runInstall);
-  } else {
-    runInstall();
-  }
-})();
-</script>
-<script>
-// ============================================================
-// Palette AI — Release Candidate Fix v5.2
-// Fixes:
-//   #2  renderHistory defensive (handle items missing 'p')
-//   #5  ESC closes tag panel
-//   #6  ESC closes confirm/conflict modals
-//   #8  SW update notification (controllerchange listener)
-// ============================================================
-(function () {
-  'use strict';
-
-  function runV52() {
-    // === FIX #2: renderHistory defensive wrap ===
-    if (typeof window.renderHistory === 'function' && !window.__v52_renderHist) {
-      var origRender = window.renderHistory;
-      window.renderHistory = function () {
-        // Sanitize history items before rendering
-        try {
-          var raw = localStorage.getItem('sbp_hist');
-          if (raw) {
-            var items = JSON.parse(raw);
-            if (Array.isArray(items)) {
-              var sanitized = items
-                .filter(function (it) { return it && typeof it === 'object'; })
-                .map(function (it) {
-                  // Ensure p exists
-                  if (typeof it.p !== 'string' || !it.p) {
-                    it.p = it.text || it.prompt || '';
-                  }
-                  // Ensure tags is array
-                  if (!Array.isArray(it.tags)) it.tags = [];
-                  // Ensure ts is number
-                  if (typeof it.ts !== 'number') it.ts = Date.now();
-                  return it;
-                });
-              // Only rewrite LS if changes were needed
-              if (sanitized.length !== items.length ||
-                  sanitized.some(function (it, i) { return it.p !== items[i].p; })) {
-                localStorage.setItem('sbp_hist', JSON.stringify(sanitized));
-              }
-            }
-          }
-        } catch (e) {
-          console.warn('[HPE v5.2] history sanitize failed:', e.message);
-          // If totally corrupt, reset
-          try { localStorage.removeItem('sbp_hist'); } catch (_) {}
-        }
-        // Call original
-        return origRender.apply(this, arguments);
-      };
-      window.__v52_renderHist = true;
-    }
-
-    // === FIX #5 + #6: ESC key closes panels and modals ===
-    if (!window.__v52_esc) {
-      document.addEventListener('keydown', function (ev) {
-        if (ev.key !== 'Escape') return;
-
-        // Priority 1: Close conflict/clear modal
-        var modals = document.querySelectorAll('.cm-overlay, .clr-overlay');
-        for (var i = modals.length - 1; i >= 0; i--) {
-          var m = modals[i];
-          if (getComputedStyle(m).display === 'none') continue;
-          var cancel = m.querySelector('.cm-no, .clr-cancel');
-          if (cancel) {
-            cancel.click();
-            ev.preventDefault();
-            return;
-          }
-          // If no cancel button, hide
-          m.style.display = 'none';
-          ev.preventDefault();
-          return;
-        }
-
-        // Priority 2: Close tag panel
-        var tp = document.getElementById('tagPanel');
-        if (tp && getComputedStyle(tp).display !== 'none') {
-          var close = tp.querySelector('.tag-panel-close, .tp-close');
-          if (close) { close.click(); ev.preventDefault(); return; }
-        }
-
-        // Priority 3: Close history panel
-        var hp = document.getElementById('histPanel');
-        if (hp && getComputedStyle(hp).display !== 'none' && typeof window.toggleHistPanel === 'function') {
-          window.toggleHistPanel();
-          ev.preventDefault();
-          return;
-        }
-      });
-      window.__v52_esc = true;
-    }
-
-    // === FIX #8: SW update notification ===
-    if ('serviceWorker' in navigator && !window.__v52_sw_notify) {
-      navigator.serviceWorker.addEventListener('controllerchange', function () {
-        // New SW took control → new version ready. Prompt user.
-        if (window.__hpe_sw_reload_shown) return;
-        window.__hpe_sw_reload_shown = true;
-
-        var bar = document.createElement('div');
-        bar.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:#007aff;color:#fff;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;font-family:system-ui,sans-serif;font-size:14px;box-shadow:0 2px 8px rgba(0,0,0,0.2);direction:rtl';
-        bar.innerHTML = '<span>\u05d2\u05d9\u05e8\u05e1\u05d4 \u05d7\u05d3\u05e9\u05d4 \u05d6\u05de\u05d9\u05e0\u05d4</span>';
-        var btn = document.createElement('button');
-        btn.textContent = '\u05e8\u05e2\u05e0\u05df';
-        btn.style.cssText = 'background:#fff;color:#007aff;border:none;padding:8px 18px;border-radius:6px;font-weight:600;cursor:pointer;min-height:44px;min-width:80px';
-        btn.onclick = function () { window.location.reload(); };
-        bar.appendChild(btn);
-        var close = document.createElement('button');
-        close.textContent = '\u2715';
-        close.setAttribute('aria-label', '\u05e1\u05d2\u05d5\u05e8');
-        close.style.cssText = 'background:transparent;color:#fff;border:1px solid rgba(255,255,255,0.5);padding:0;width:44px;height:44px;border-radius:8px;cursor:pointer;margin-right:8px';
-        close.onclick = function () { bar.remove(); };
-        bar.appendChild(close);
-        document.body.appendChild(bar);
-      });
-      window.__v52_sw_notify = true;
-    }
-    
-    console.log('\u2705 Palette AI Release Fix v5.2 installed');
-  }
-
-  // Wait for v5.1 to complete, then install
-  function waitV51() {
-    var tries = 0;
-    (function retry() {
-      var shareSrc = window.sharePrompt?.toString() || '';
-      if (shareSrc.includes('shareData') || tries++ >= 40) {
-        runV52();
-        // Re-apply defensive wrap if needed
-        setTimeout(runV52, 1000);
-      } else {
-        setTimeout(retry, 150);
-      }
-    })();
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', waitV51);
-  } else {
-    waitV51();
-  }
-})();
-</script>
-<style id="v53-styles">
-/* ============================================================
- * Palette AI — Release Candidate Fix v5.3
- * G#8 chip a11y, G#9 HPE modals theme, #11-14 contrast
- * ============================================================ */
-
-/* #11-14: Button contrast — introduce --accent-ink for AA text-on-bg */
 :root {
-  --accent-ink: #0056b3; /* 7:1 vs #fff (AA+) */
+  --accent-ink: #0056b3;
+  --muted-v6: #a0a0b8;
+}
+[data-theme="light"] {
+  --muted-v6: #505070;
 }
 
 .btn-copy,
@@ -3120,16 +2844,14 @@ if (document.readyState === 'loading') {
   background: var(--accent-ink) !important;
 }
 
-/* Generated prompt readability — change from teal to readable text color */
 #finalPrompt {
   color: var(--text) !important;
 }
-/* Keep teal accent only for the READY label or other small markers */
 
-/* G#8: sel-chip keyboard focus ring */
+:root { --muted: var(--muted-v6); }
+
 .sel-chip {
-  /* Improve color contrast: #a8c8ff on transparent/a2 bg */
-  color: #c8d8ff !important; /* lighter, better contrast */
+  color: #c8d8ff !important;
 }
 .sel-chip:focus-visible,
 .sel-chip-x:focus-visible {
@@ -3137,14 +2859,9 @@ if (document.readyState === 'loading') {
   outline-offset: 2px !important;
   border-radius: 99px !important;
 }
-.sel-chip:hover {
-  filter: brightness(1.1);
-}
+.sel-chip:hover { filter: brightness(1.1); }
 
-/* G#9: HPE manual copy modal — theme-aware overrides */
-#__hpe_manual_copy {
-  background: rgba(0, 0, 0, 0.7) !important;
-}
+#__hpe_manual_copy { background: rgba(0, 0, 0, 0.7) !important; }
 #__hpe_manual_copy > div,
 #__hpe_manual_copy > div > div {
   background: var(--surface, #0f0f1a) !important;
@@ -3157,110 +2874,337 @@ if (document.readyState === 'loading') {
   border: 1px solid var(--border, rgba(255,255,255,0.15)) !important;
 }
 #__hpe_manual_copy button {
+  background: var(--accent-ink, #0056b3) !important;
   color: #fff !important;
 }
-#__hpe_manual_copy button[style*="007aff"],
-#__hpe_manual_copy button[style*="accent"] {
-  background: var(--accent-ink, #0056b3) !important;
+#__hpe_manual_copy button[class*="cancel"],
+#__hpe_manual_copy button[class*="close"] {
+  background: transparent !important;
+  color: var(--text) !important;
+  border: 1px solid var(--border) !important;
 }
-
-/* Install guide modals (iOS, Chrome, Webview from v4) */
 [id^="__pwa_install_"] > div,
 [id^="__install_guide_"] > div {
   background: var(--surface, #0f0f1a) !important;
   color: var(--text, #e8e8f0) !important;
 }
+
+.pae-sw-banner {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 99999;
+  background: var(--accent-ink, #0056b3);
+  color: #fff;
+  padding: 12px 16px;
+  display: flex; align-items: center; justify-content: space-between;
+  font-family: system-ui, sans-serif;
+  font-size: 14px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  direction: rtl;
+  gap: 8px;
+}
+.pae-sw-banner button {
+  min-height: 44px;
+  min-width: 80px;
+  padding: 8px 18px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+}
+.pae-sw-banner .pae-btn-refresh {
+  background: #fff;
+  color: var(--accent-ink, #0056b3);
+}
+.pae-sw-banner .pae-btn-close {
+  background: transparent;
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.5);
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  padding: 0;
+}
+
+.pae-lang-toast {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  z-index: 999;
+  animation: paeToastIn 0.2s ease;
+}
+@keyframes paeToastIn {
+  from { opacity: 0; transform: translate(-50%, 10px); }
+  to   { opacity: 1; transform: translate(-50%, 0); }
+}
+.pae-lang-toast button {
+  background: var(--accent-ink, #0056b3);
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  min-height: 36px;
+  font-weight: 600;
+}
 </style>
 <script>
-// ============================================================
-// Palette AI — Release Candidate Fix v5.3
-// G#8 chip a11y, G#9 modal theme, #11-14 contrast
-// ============================================================
+/*!
+ * Palette AI Enhancements v6.0 — consolidated release candidate
+ */
 (function () {
   'use strict';
 
-  function retrofitChips() {
-    var chips = document.querySelectorAll('.sel-chip:not(.v53-retrofitted)');
-    chips.forEach(function (chip) {
-      chip.classList.add('v53-retrofitted');
+  if (window.__paeV6Installed) return;
+  window.__paeV6Installed = true;
+
+  var SIGNAL = '\u2705 Palette AI Enhancements v6.0 installed';
+
+  function safeCall(fn, label) {
+    try { return fn(); } catch (e) { console.warn('[PAE v6]', label, e && e.message); }
+  }
+  function isVisible(el) {
+    if (!el || !el.ownerDocument) return false;
+    var s = getComputedStyle(el);
+    return s && s.display !== 'none' && s.visibility !== 'hidden';
+  }
+
+  function installSharePrompt() {
+    var origShare = typeof window.sharePrompt === 'function' ? window.sharePrompt : null;
+    window.sharePrompt = function () {
+      var promptText = '';
+      var el = document.getElementById('finalPrompt');
+      if (el) promptText = el.textContent || '';
+      if (!promptText) {
+        if (origShare) try { return origShare.apply(this, arguments); } catch (_) {}
+        return;
+      }
+      var shareData = { title: 'Palette AI Prompt', text: promptText };
+      if (typeof navigator.share === 'function') {
+        try {
+          return navigator.share(shareData).catch(function () {});
+        } catch (_) {}
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(promptText).then(function () {
+          var toast = document.createElement('div');
+          toast.className = 'pae-lang-toast';
+          toast.textContent = '\u05d4\u05d4\u05e2\u05ea\u05e7 \u05dc\u05dc\u05d5\u05d7 (\u05e9\u05d9\u05ea\u05d5\u05e3 \u05dc\u05d0 \u05d6\u05de\u05d9\u05df)';
+          document.body.appendChild(toast);
+          setTimeout(function () { toast.remove(); }, 2500);
+        }).catch(function () {});
+      }
+    };
+    window.__paeV6_share = true;
+  }
+
+  function installEscHandler() {
+    document.addEventListener('keydown', function (ev) {
+      if (ev.key !== 'Escape') return;
+      var modals = document.querySelectorAll('.cm-overlay, .clr-overlay');
+      for (var i = modals.length - 1; i >= 0; i--) {
+        var m = modals[i];
+        if (!isVisible(m)) continue;
+        var cancel = m.querySelector('.cm-no, .clr-cancel');
+        if (cancel) { cancel.click(); ev.preventDefault(); return; }
+        m.style.display = 'none';
+        ev.preventDefault();
+        return;
+      }
+      var tp = document.getElementById('tagPanel');
+      if (tp && isVisible(tp)) {
+        var close = tp.querySelector('.tag-panel-close, .tp-close');
+        if (close) { close.click(); ev.preventDefault(); return; }
+      }
+      var hp = document.getElementById('histPanel');
+      if (hp && isVisible(hp) && typeof window.toggleHistPanel === 'function') {
+        window.toggleHistPanel();
+        ev.preventDefault();
+        return;
+      }
+    });
+    window.__paeV6_esc = true;
+  }
+
+  function installRenderHistoryGuard() {
+    if (typeof window.renderHistory !== 'function') return;
+    var origRender = window.renderHistory;
+    window.renderHistory = function () {
+      safeCall(function () {
+        var raw = localStorage.getItem('sbp_hist');
+        if (!raw) return;
+        var items = JSON.parse(raw);
+        if (!Array.isArray(items)) { localStorage.removeItem('sbp_hist'); return; }
+        var sanitized = items
+          .filter(function (it) { return it && typeof it === 'object'; })
+          .map(function (it) {
+            if (typeof it.p !== 'string' || !it.p) it.p = it.text || it.prompt || '';
+            if (!Array.isArray(it.tags)) it.tags = [];
+            if (typeof it.ts !== 'number') it.ts = Date.now();
+            return it;
+          });
+        var changed = sanitized.length !== items.length ||
+          sanitized.some(function (it, i) { return it.p !== items[i].p; });
+        if (changed) localStorage.setItem('sbp_hist', JSON.stringify(sanitized));
+      }, 'renderHistory sanitize');
+      return origRender.apply(this, arguments);
+    };
+    window.__paeV6_renderHist = true;
+  }
+
+  function installSwUpdateBanner() {
+    if (!('serviceWorker' in navigator)) return;
+    navigator.serviceWorker.addEventListener('controllerchange', function () {
+      if (window.__paeV6_swBannerShown) return;
+      window.__paeV6_swBannerShown = true;
+      var bar = document.createElement('div');
+      bar.className = 'pae-sw-banner';
+      bar.setAttribute('role', 'status');
+      bar.setAttribute('aria-live', 'polite');
+      var msg = document.createElement('span');
+      msg.textContent = '\u05d2\u05d9\u05e8\u05e1\u05d4 \u05d7\u05d3\u05e9\u05d4 \u05d6\u05de\u05d9\u05e0\u05d4';
+      bar.appendChild(msg);
+      var refresh = document.createElement('button');
+      refresh.className = 'pae-btn-refresh';
+      refresh.textContent = '\u05e8\u05e2\u05e0\u05df';
+      refresh.onclick = function () { window.location.reload(); };
+      bar.appendChild(refresh);
+      var close = document.createElement('button');
+      close.className = 'pae-btn-close';
+      close.setAttribute('aria-label', '\u05e1\u05d2\u05d5\u05e8');
+      close.textContent = '\u2715';
+      close.onclick = function () { bar.remove(); };
+      bar.appendChild(close);
+      document.body.appendChild(bar);
+    });
+    window.__paeV6_swNotify = true;
+  }
+
+  function retrofitChips(root) {
+    var scope = root || document;
+    var chips = scope.querySelectorAll('.sel-chip:not(.pae-v6-chip)');
+    for (var i = 0; i < chips.length; i++) {
+      var chip = chips[i];
+      chip.classList.add('pae-v6-chip');
       chip.setAttribute('role', 'button');
       chip.setAttribute('tabindex', '0');
       var txt = chip.textContent.replace(/\u2715/g, '').replace(/\u00d7/g, '').trim();
-      chip.setAttribute('aria-label', '\u05d4\u05e1\u05e8 ' + txt); // "הסר"
-      chip.addEventListener('keydown', function (ev) {
-        if (ev.key === 'Enter' || ev.key === ' ') {
-          ev.preventDefault();
-          ev.stopPropagation();
-          chip.click();
-        }
-      });
-    });
+      chip.setAttribute('aria-label', '\u05d4\u05e1\u05e8 ' + txt);
+      (function (c) {
+        c.addEventListener('keydown', function (ev) {
+          if (ev.key === 'Enter' || ev.key === ' ') {
+            ev.preventDefault();
+            ev.stopPropagation();
+            c.click();
+          }
+        });
+      })(chip);
+    }
     return chips.length;
   }
 
-  function install() {
-    // Initial retrofit
-    var initialCount = retrofitChips();
-
-    // MutationObserver — catch dynamically-created chips
-    if (!window.__v53_observer) {
-      window.__v53_observer = new MutationObserver(function (mutations) {
-        var needsRetrofit = false;
+  function installChipA11y() {
+    retrofitChips();
+    if (!window.__paeV6_chipObserver) {
+      var observer = new MutationObserver(function (mutations) {
+        var needs = false;
         for (var i = 0; i < mutations.length; i++) {
           var m = mutations[i];
           for (var j = 0; j < m.addedNodes.length; j++) {
             var n = m.addedNodes[j];
             if (n.nodeType === 1 && (
-                n.classList && n.classList.contains('sel-chip') ||
-                n.querySelector && n.querySelector('.sel-chip:not(.v53-retrofitted)'))) {
-              needsRetrofit = true;
-              break;
-            }
+              (n.classList && n.classList.contains('sel-chip') && !n.classList.contains('pae-v6-chip')) ||
+              (n.querySelector && n.querySelector('.sel-chip:not(.pae-v6-chip)'))
+            )) { needs = true; break; }
           }
-          if (needsRetrofit) break;
+          if (needs) break;
         }
-        if (needsRetrofit) retrofitChips();
+        if (needs) retrofitChips();
       });
-      var chipsWrap = document.querySelector('.chips-wrap') || document.body;
-      window.__v53_observer.observe(chipsWrap, { childList: true, subtree: true });
+      var target = document.querySelector('.chips-wrap') || document.body;
+      observer.observe(target, { childList: true, subtree: true });
+      window.__paeV6_chipObserver = observer;
     }
-
-    // Wrap updateChips if exists, to retrofit after every re-render
-    if (typeof window.updateChips === 'function' && !window.__v53_updateChips_wrapped) {
-      window.__v53_updateChips_wrapped = true;
+    if (typeof window.updateChips === 'function' && !window.__paeV6_updateChipsWrapped) {
+      window.__paeV6_updateChipsWrapped = true;
       var origUpdate = window.updateChips;
       window.updateChips = function () {
         var r = origUpdate.apply(this, arguments);
-        // Microtask delay for DOM settle
-        Promise.resolve().then(retrofitChips);
+        Promise.resolve().then(function () { retrofitChips(); });
         return r;
       };
     }
-
-    window.__v53_installed = true;
-    console.log('\u2705 Palette AI Release Fix v5.3 installed (initial chips retrofitted: ' + initialCount + ')');
+    window.__paeV6_chipA11y = true;
   }
 
-  // Wait for v5.2 + DOM
-  function waitInstall() {
-    var tries = 0;
-    (function retry() {
-      if (window.__v52_renderHist || tries++ >= 40) {
-        install();
-        // Re-run after extra delay for late-rendered chips
-        setTimeout(retrofitChips, 1000);
-        setTimeout(retrofitChips, 2500);
-      } else {
-        setTimeout(retry, 150);
-      }
-    })();
+  function installLangReloadHint() {
+    if (typeof window.setLang !== 'function') return;
+    if (window.__paeV6_setLangWrapped) return;
+    window.__paeV6_setLangWrapped = true;
+    var origSetLang = window.setLang;
+    window.setLang = function (newLang) {
+      var prevLang = localStorage.getItem('sbp_lang');
+      var result = origSetLang.apply(this, arguments);
+      if (!newLang || newLang === prevLang) return result;
+      try {
+        var existing = document.querySelector('.pae-lang-toast');
+        if (existing) existing.remove();
+        var toast = document.createElement('div');
+        toast.className = 'pae-lang-toast';
+        toast.setAttribute('role', 'status');
+        var msg = document.createElement('span');
+        msg.textContent = newLang === 'en'
+          ? '\u05e8\u05e2\u05e0\u05df \u05d4\u05d3\u05e3 \u05dc\u05de\u05de\u05e9\u05e7 \u05d0\u05e0\u05d2\u05dc\u05d9\u05ea \u05de\u05dc\u05d0'
+          : '\u05e8\u05e2\u05e0\u05df \u05d4\u05d3\u05e3 \u05dc\u05de\u05de\u05e9\u05e7 \u05e2\u05d1\u05e8\u05d9\u05ea \u05de\u05dc\u05d0\u05d4';
+        toast.appendChild(msg);
+        var btn = document.createElement('button');
+        btn.textContent = newLang === 'en' ? 'Reload' : '\u05e8\u05e2\u05e0\u05df';
+        btn.onclick = function () { window.location.reload(); };
+        toast.appendChild(btn);
+        var close = document.createElement('button');
+        close.textContent = '\u2715';
+        close.setAttribute('aria-label', '\u05e1\u05d2\u05d5\u05e8');
+        close.style.cssText = 'background:transparent;color:var(--text);border:1px solid var(--border);padding:4px 10px;min-width:36px';
+        close.onclick = function () { toast.remove(); };
+        toast.appendChild(close);
+        document.body.appendChild(toast);
+        setTimeout(function () { if (toast.parentNode) toast.remove(); }, 8000);
+      } catch (_) {}
+      return result;
+    };
+    window.__paeV6_langHint = true;
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', waitInstall);
-  } else {
-    waitInstall();
+  function install() {
+    safeCall(installSharePrompt,       'sharePrompt');
+    safeCall(installEscHandler,        'ESC handler');
+    safeCall(installRenderHistoryGuard,'renderHistory guard');
+    safeCall(installSwUpdateBanner,    'SW update banner');
+    safeCall(installChipA11y,          'chip a11y');
+    safeCall(installLangReloadHint,    'lang reload hint');
+    console.log(SIGNAL);
   }
+
+  function start() {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', install, { once: true });
+    } else {
+      Promise.resolve().then(install);
+    }
+  }
+  start();
 })();
 </script>
-  </body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>
+  </main>
+
+
