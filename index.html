@@ -2968,7 +2968,7 @@ if (document.readyState === 'loading') {
   if (window.__paeV6Installed) return;
   window.__paeV6Installed = true;
 
-  var SIGNAL = '\u2705 Palette AI Enhancements v7.4 installed (universal layout fix)';
+  var SIGNAL = '\u2705 Palette AI Enhancements v7.5 installed (textInput header repositioned)';
 
   function safeCall(fn, label) {
     try { return fn(); } catch (e) { console.warn('[PAE v6]', label, e && e.message); }
@@ -3206,6 +3206,55 @@ if (document.readyState === 'loading') {
 })();
 </script>
   </main>
+<script>/*! Palette AI v7.5 - move textInput header below toolbar */
+  (function() {
+    if (window.__paeV75Installed) { return; }
+    window.__paeV75Installed = true;
+    var _log = function(m) { try { console.log('[pae-v75]', m); } catch(e){} };
+    
+    function moveTextInputHeader() {
+      var hdr = document.getElementById('paeHdrTextInput');
+      var taWrap = document.querySelector('.textarea-wrap');
+      var tbToolbar = document.querySelector('.tb-toolbar');
+      if (!hdr || !taWrap || !tbToolbar) return false;
+      
+      // Verify they share the same parent
+      if (hdr.parentElement !== taWrap.parentElement) return false;
+      if (tbToolbar.parentElement !== taWrap.parentElement) return false;
+      
+      // Check if already in correct position (immediately before textarea-wrap, after toolbar)
+      if (hdr.previousElementSibling === tbToolbar && hdr.nextElementSibling === taWrap) {
+        _log('already in correct position');
+        return true;
+      }
+      
+      // Move: insert hdr BEFORE taWrap (this also removes it from current position)
+      taWrap.parentElement.insertBefore(hdr, taWrap);
+      _log('hdrTextInput moved to after tb-toolbar, before textarea-wrap');
+      return true;
+    }
+    
+    var attempts = 0;
+    function tryMove() {
+      attempts++;
+      var ok = moveTextInputHeader();
+      if (!ok && attempts < 33) {
+        setTimeout(tryMove, 300);
+      } else {
+        _log('v7.5 done attempt=' + attempts);
+        // Retry a few more times in case v7.2 re-inserts
+        if (attempts < 6) setTimeout(tryMove, 500);
+      }
+    }
+    
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', tryMove);
+    } else {
+      tryMove();
+    }
+  })();
+</script>
+
 <script>/*! Palette AI v7.4 - universal layout fix */
   (function() {
     if (window.__paeV74Installed) { return; }
