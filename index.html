@@ -2968,7 +2968,7 @@ if (document.readyState === 'loading') {
   if (window.__paeV6Installed) return;
   window.__paeV6Installed = true;
 
-  var SIGNAL = '\u2705 Palette AI Enhancements v7.6 installed (guide + categories)';
+  var SIGNAL = '\u2705 Palette AI Enhancements v7.7 installed (desktop spacing fix)';
 
   function safeCall(fn, label) {
     try { return fn(); } catch (e) { console.warn('[PAE v6]', label, e && e.message); }
@@ -3206,6 +3206,39 @@ if (document.readyState === 'loading') {
 })();
 </script>
   </main>
+<script>/*! Palette AI v7.7 - fix horizontal scroll + spacing + center format */
+  (function() {
+    if (window.__paeV77Installed) { return; }
+    window.__paeV77Installed = true;
+    var _log = function(m) { try { console.log('[pae-v77]', m); } catch(e){} };
+    
+    function injectStyles() {
+      if (document.getElementById('__pae_v77_styles')) return;
+      var st = document.createElement('style');
+      st.id = '__pae_v77_styles';
+      var css = '';
+      // FIX 1: Remove horizontal scroll from .left-col and .right-col
+      css += '.app > .left-col, .app > .right-col { overflow-x: hidden !important; }';
+      // FIX 2: Add spacing above #paeHdrDisplay and .format-row (separation from categories)
+      css += '.app > #paeHdrDisplay { margin-top: 20px !important; margin-bottom: 6px !important; }';
+      css += '.app > .format-row { margin-bottom: 16px !important; }';
+      // FIX 3: Center format-row buttons
+      css += '.app > .format-row { justify-content: center !important; display: flex !important; flex-wrap: wrap !important; gap: 8px !important; }';
+      // FIX 4: Safety — ensure headers themselves do not cause overflow
+      css += '.pae-section-header { max-width: 100%; overflow: hidden; }';
+      st.textContent = css;
+      document.head.appendChild(st);
+      _log('v7.7 styles injected');
+    }
+    
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', injectStyles);
+    } else {
+      injectStyles();
+    }
+  })();
+</script>
+
 <script>/*! Palette AI v7.6 - help button + guide + categories rename */
   (function() {
     if (window.__paeV76Installed) { return; }
