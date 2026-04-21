@@ -2968,7 +2968,7 @@ if (document.readyState === 'loading') {
   if (window.__paeV6Installed) return;
   window.__paeV6Installed = true;
 
-  var SIGNAL = '\u2705 Palette AI Enhancements v7.7 installed (desktop spacing fix)';
+  var SIGNAL = '\u2705 Palette AI Enhancements v7.8 installed (desktop layout overhaul)';
 
   function safeCall(fn, label) {
     try { return fn(); } catch (e) { console.warn('[PAE v6]', label, e && e.message); }
@@ -3206,6 +3206,56 @@ if (document.readyState === 'loading') {
 })();
 </script>
   </main>
+<script>/*! Palette AI v7.8 - desktop flex column layout (fix sticky overlap) */
+  (function() {
+    if (window.__paeV78Installed) { return; }
+    window.__paeV78Installed = true;
+    var _log = function(m) { try { console.log('[pae-v78]', m); } catch(e){} };
+    
+    function injectStyles() {
+      if (document.getElementById('__pae_v78_styles')) return;
+      var st = document.createElement('style');
+      st.id = '__pae_v78_styles';
+      var css = '';
+      // FIX v7.8: Desktop layout overhaul — convert .app from grid to flex column
+      // Root cause: .left-col had position:sticky + fixed max-height,
+      // causing content (expanded categories + tag panel) to overflow VISUALLY
+      // into the hdrDisplay row sibling below. Flex column with position:static
+      // + height:auto on cols makes siblings respect each other's real height.
+      css += '@media (min-width: 768px) {';
+      css += '  .app {';
+      css += '    display: flex !important;';
+      css += '    flex-direction: column !important;';
+      css += '    max-width: 900px !important;';
+      css += '    margin: 0 auto !important;';
+      css += '  }';
+      css += '  .app > .left-col, .app > .right-col {';
+      css += '    position: static !important;';
+      css += '    height: auto !important;';
+      css += '    max-height: none !important;';
+      css += '    width: 100% !important;';
+      css += '    max-width: 100% !important;';
+      css += '    overflow: visible !important;';
+      css += '  }';
+      css += '  .app > .left-col { order: 1 !important; }';
+      css += '  .app > #paeHdrDisplay { order: 2 !important; }';
+      css += '  .app > .format-row { order: 3 !important; }';
+      css += '  .app > .random-divider { order: 4 !important; }';
+      css += '  .app > .right-col { order: 5 !important; }';
+      css += '}';
+      st.textContent = css;
+      document.head.appendChild(st);
+      _log('v7.8 desktop flex-column layout applied');
+    }
+    
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', injectStyles);
+    } else {
+      injectStyles();
+    }
+  })();
+</script>
+
 <script>/*! Palette AI v7.7 - fix horizontal scroll + spacing + center format */
   (function() {
     if (window.__paeV77Installed) { return; }
