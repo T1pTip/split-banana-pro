@@ -2823,7 +2823,7 @@ if (document.readyState === 'loading') {
 </script>
 <style id="pae-v6-styles">
 /* =====================================================================
- * Palette AI Enhancements v6.2 (hotfix)
+ * Palette AI Enhancements v7.0 (toggles + share)
  * Consolidates: v5.1 (share timing) + v5.2 (ESC+SW+a11y+muted)
  *             + v5.3 (chips+contrast+modal-theme)
  * Plus fixes:  HPE modal button contrast, duplicate log guard,
@@ -2968,7 +2968,7 @@ if (document.readyState === 'loading') {
   if (window.__paeV6Installed) return;
   window.__paeV6Installed = true;
 
-  var SIGNAL = '\u2705 Palette AI Enhancements v6.2 installed (hotfix)';
+  var SIGNAL = '\u2705 Palette AI Enhancements v7.0 installed (toggles + share)';
 
   function safeCall(fn, label) {
     try { return fn(); } catch (e) { console.warn('[PAE v6]', label, e && e.message); }
@@ -3206,6 +3206,228 @@ if (document.readyState === 'loading') {
 })();
 </script>
   </main>
+<script>
+  /*! Palette AI v7.0 — Toggle spacing + Share-with-context (Nano Banana first) */
+  (function() {
+    if (window.__paeV70Installed) { return; }
+    window.__paeV70Installed = true;
+    
+    var _log = function(msg) { try { console.log('[pae-v7]', msg); } catch(e){} };
+    
+    // =============================================
+    // FIX 1: Header toggle spacing
+    // =============================================
+    function installToggleSpacing() {
+      if (document.getElementById('__pae_v70_styles')) return;
+      var st = document.createElement('style');
+      st.id = '__pae_v70_styles';
+      st.textContent = [
+        '/* v7.0: visual separation between lang toggle and theme toggle */',
+        '#themeToggleBtn {',
+        '  margin-inline-start: 14px !important;',
+        '  position: relative;',
+        '}',
+        '#themeToggleBtn::before {',
+        '  content: "";',
+        '  position: absolute;',
+        '  inset-inline-start: -8px;',
+        '  top: 20%;',
+        '  bottom: 20%;',
+        '  width: 1px;',
+        '  background: rgba(255, 255, 255, 0.12);',
+        '  pointer-events: none;',
+        '}',
+        'body.light-mode #themeToggleBtn::before,',
+        '[data-theme="light"] #themeToggleBtn::before {',
+        '  background: rgba(0, 0, 0, 0.15);',
+        '}'
+      ].join('\n');
+      document.head.appendChild(st);
+      _log('toggle spacing installed');
+    }
+    
+    // =============================================
+    // FIX 2: Share-with-context (Nano Banana first, with headers)
+    // =============================================
+    function buildShareMessage(promptText, lang) {
+      var isEN = lang === 'en';
+      var DIVIDER = '━━━━━━━━━━━━━━━━━';
+      
+      if (isEN) {
+        return [
+          DIVIDER,
+          '🎨 *I created a prompt with Palette AI*',
+          DIVIDER,
+          '',
+          '*📖 What is Palette AI?*',
+          '',
+          'A free Hebrew app that helps build professional prompts for AI image generators (like Nano Banana, Midjourney, or ChatGPT).',
+          '',
+          '*✨ How does it work?*',
+          '',
+          'You write in plain Hebrew like "a cat drinking coffee",',
+          'and the app converts it into a professional English prompt',
+          'with all the keywords and styles that actually work.',
+          '',
+          DIVIDER,
+          '*👇 My prompt:*',
+          DIVIDER,
+          '',
+          promptText,
+          '',
+          DIVIDER,
+          '*💡 Want to try?*',
+          DIVIDER,
+          '',
+          '1. Open the link',
+          '2. Write an idea + pick a style',
+          '3. Copy the result to your AI tool',
+          '',
+          '🔗 https://t1ptip.github.io/palette-ai',
+          '_(no signup, works on mobile too)_'
+        ].join('\n');
+      } else {
+        return [
+          DIVIDER,
+          '🎨 *יצרתי פרומפט עם Palette AI*',
+          DIVIDER,
+          '',
+          '*📖 מה זה Palette AI?*',
+          '',
+          'אפליקציה חינמית בעברית שעוזרת לבנות פרומפטים מקצועיים למחוללי תמונות AI (כמו Nano Banana, Midjourney או ChatGPT).',
+          '',
+          '*✨ איך זה עובד?*',
+          '',
+          'כותבים בעברית פשוטה "חתול שותה קפה",',
+          'והאפליקציה מתרגמת לפרומפט מקצועי באנגלית',
+          'עם כל הטריקים והסגנונות שבאמת עובדים.',
+          '',
+          DIVIDER,
+          '*👇 הפרומפט שיצרתי:*',
+          DIVIDER,
+          '',
+          promptText,
+          '',
+          DIVIDER,
+          '*💡 רוצים לנסות?*',
+          DIVIDER,
+          '',
+          '1. פותחים את הקישור',
+          '2. כותבים רעיון + בוחרים סגנון',
+          '3. מעתיקים את התוצאה לכלי ה-AI',
+          '',
+          '🔗 https://t1ptip.github.io/palette-ai',
+          '_(לא צריך להירשם, עובד גם בנייד)_'
+        ].join('\n');
+      }
+    }
+    
+    function installShareContext() {
+      if (typeof window.sharePrompt !== 'function') {
+        setTimeout(installShareContext, 500);
+        return;
+      }
+      if (window.__paeV70_shareWrapped) return;
+      window.__paeV70_shareWrapped = true;
+      
+      window.sharePrompt = function() {
+        try {
+          var finalEl = document.getElementById('finalPrompt');
+          var promptText = finalEl ? finalEl.textContent.trim() : '';
+          
+          if (!promptText || promptText.length < 5) {
+            // Empty prompt — fall back to showing a warning
+            var lang = document.documentElement.getAttribute('lang') || 'he';
+            var emptyMsg = lang === 'en' ? 'Nothing to share yet! Generate a prompt first.' : 'אין מה לשתף עדין! צרו פרומפט קודם.';
+            try { alert(emptyMsg); } catch(e){}
+            return;
+          }
+          
+          var currentLang = document.documentElement.getAttribute('lang') === 'en' ? 'en' : 'he';
+          var message = buildShareMessage(promptText, currentLang);
+          
+          // Use Web Share API if available, else fallback to copy+notify
+          if (navigator.share) {
+            navigator.share({
+              title: 'Palette AI',
+              text: message
+            }).catch(function(err) {
+              // User cancelled or error — fallback to copy
+              _log('share API failed: ' + err.message);
+              fallbackCopy(message, currentLang);
+            });
+          } else {
+            fallbackCopy(message, currentLang);
+          }
+        } catch(e) {
+          _log('sharePrompt error: ' + e.message);
+        }
+      };
+      _log('sharePrompt wrapped with context (Nano Banana first)');
+    }
+    
+    function fallbackCopy(message, lang) {
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(message).then(function() {
+            showShareToast(lang);
+          }).catch(function() {
+            legacyFallback(message, lang);
+          });
+        } else {
+          legacyFallback(message, lang);
+        }
+      } catch(e) {
+        legacyFallback(message, lang);
+      }
+    }
+    
+    function legacyFallback(message, lang) {
+      try {
+        var ta = document.createElement('textarea');
+        ta.value = message;
+        ta.style.cssText = 'position:fixed;left:-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch(e){}
+        document.body.removeChild(ta);
+        showShareToast(lang);
+      } catch(e) {
+        _log('legacyFallback error: ' + e.message);
+      }
+    }
+    
+    function showShareToast(lang) {
+      var msg = lang === 'en' ? '✓ Copied! Ready to share' : '✓ הועתק! מוכן לשיתוף';
+      var existing = document.getElementById('__v70_share_toast');
+      if (existing) existing.remove();
+      var toast = document.createElement('div');
+      toast.id = '__v70_share_toast';
+      toast.setAttribute('role', 'status');
+      toast.setAttribute('aria-live', 'polite');
+      toast.textContent = msg;
+      toast.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#10b981;color:#fff;padding:12px 24px;border-radius:24px;font-size:14px;font-weight:600;z-index:100000;box-shadow:0 4px 20px rgba(16,185,129,0.4);font-family:inherit';
+      document.body.appendChild(toast);
+      setTimeout(function() { toast.remove(); }, 2500);
+    }
+    
+    // =============================================
+    // BOOT
+    // =============================================
+    function boot() {
+      installToggleSpacing();
+      installShareContext();
+      _log('v7.0 installed (toggle spacing + share with context)');
+    }
+    
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', boot);
+    } else {
+      boot();
+    }
+  })();
+</script>
+
 <script>
   /*! Palette AI Enhancements v6.2 — Hot patch */
   (function() {
