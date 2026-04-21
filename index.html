@@ -2968,7 +2968,7 @@ if (document.readyState === 'loading') {
   if (window.__paeV6Installed) return;
   window.__paeV6Installed = true;
 
-  var SIGNAL = '\u2705 Palette AI Enhancements v7.3 installed (camera icon)';
+  var SIGNAL = '\u2705 Palette AI Enhancements v7.4 installed (universal layout fix)';
 
   function safeCall(fn, label) {
     try { return fn(); } catch (e) { console.warn('[PAE v6]', label, e && e.message); }
@@ -3206,6 +3206,80 @@ if (document.readyState === 'loading') {
 })();
 </script>
   </main>
+<script>/*! Palette AI v7.4 - universal layout fix */
+  (function() {
+    if (window.__paeV74Installed) { return; }
+    window.__paeV74Installed = true;
+    
+    var _log = function(m) { try { console.log('[pae-v74]', m); } catch(e){} };
+    
+    function injectStyles() {
+      if (document.getElementById('__pae_v74_styles')) return;
+      var st = document.createElement('style');
+      st.id = '__pae_v74_styles';
+      st.textContent = 
+        '.app > #paeHdrDisplay,' +
+        '.app > .format-row,' +
+        '.app > .random-divider {' +
+        '  order: 2 !important;' +
+        '}' +
+        '@media (min-width: 768px) {' +
+        '  .app > #paeHdrDisplay,' +
+        '  .app > .format-row,' +
+        '  .app > .random-divider {' +
+        '    grid-column: 1 / -1 !important;' +
+        '  }' +
+        '}' +
+        '.pae-section-header {' +
+        '  width: 100%;' +
+        '  box-sizing: border-box;' +
+        '}';
+      document.head.appendChild(st);
+      _log('v7.4 styles');
+    }
+    
+    function reorderDOM() {
+      var app = document.querySelector('.app');
+      if (!app) return false;
+      var leftCol = app.querySelector(':scope > .left-col');
+      var rightCol = app.querySelector(':scope > .right-col');
+      var hdrDisplay = document.getElementById('paeHdrDisplay');
+      var formatRow = app.querySelector(':scope > .format-row');
+      var randomDivider = app.querySelector(':scope > .random-divider');
+      if (!leftCol || !rightCol || !hdrDisplay || !formatRow) return false;
+      var desired = [leftCol, hdrDisplay, formatRow];
+      if (randomDivider) desired.push(randomDivider);
+      desired.push(rightCol);
+      var children = Array.from(app.children);
+      var correct = desired.every(function(el, i) { return children[i] === el; });
+      if (!correct) {
+        desired.forEach(function(el) { app.appendChild(el); });
+        _log('DOM reordered');
+      }
+      return true;
+    }
+    
+    var attempts = 0;
+    function tryFix() {
+      attempts++;
+      injectStyles();
+      var ok = reorderDOM();
+      if (!ok && attempts < 33) {
+        setTimeout(tryFix, 300);
+      } else {
+        _log('v7.4 ok attempt=' + attempts);
+        if (attempts < 6) setTimeout(tryFix, 500);
+      }
+    }
+    
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', tryFix);
+    } else {
+      tryFix();
+    }
+  })();
+</script>
+
 <script>
   /*! Palette AI v7.2 — Section headers for UI clarity */
   (function() {
