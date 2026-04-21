@@ -1,5 +1,5 @@
 // Palette AI — Service Worker v12
-// גרסה: v12 | Release v7.2 — section headers for UI clarity
+// גרסה: v12 | Release v7.3 — camera category icon swap (📐→🎬)
 const CACHE = 'palette-ai-v12';
 const ASSETS = [
   '/palette-ai/',
