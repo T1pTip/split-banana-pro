@@ -31,10 +31,6 @@
   --r: 12px;
   --r-sm: 8px;
 }
-.cat-pill-more { opacity: 0.85; border-style: dashed !important; }
-.cat-pill-more:hover { opacity: 1; }
-.cat-pill-more .cat-emoji { font-size: 0.9em; opacity: 0.7; }
-.cat-pill-more .cat-name { font-style: italic; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { overflow-x: hidden !important; max-width: 100vw !important; }
 /* S17: Prevent 2px overflow on app children */
@@ -586,26 +582,10 @@ body {
       <button class="lang-btn" id="btnEN" onclick="setLang('en')">English</button>
     </div>
   </div>
-  <div class="header-bottom">
-    <div class="search-wrap">
-      <input type="search" id="search" autocomplete="off" oninput="filterTags()" placeholder="חפש/י תגיות, קטגוריות..." aria-label="חיפוש תגיות וקטגוריות">
-      <span class="search-icon-emoji" aria-hidden="true">🔍</span>
-    </div>
-  </div>
 </header>
 
 <div class="app">
   <div class="right-col">
-    <div class="tb-toolbar" id="inputToolbar">
-          <button id="histBtn" class="tb-btn" onclick="toggleHistPanel()" title="היסטוריה" aria-label="היסטוריה">🕐</button>
-          <button id="settingsBtn" class="tb-btn" onclick="openSettings()" title="הגדרות" aria-label="הגדרות">⚙️</button>
-          
-        </div>
-        <div class="textarea-wrap">
-          <button class="ta-clear-btn" id="taClearBtn" onclick="clearUserInput()" title="נקה טקסט" aria-label="נקה טקסט" type="button">✕</button>
-          <textarea id="userInput" rows="4" placeholder="תאר/י את התמונה שאת/ה רוצה/ה ליצור...
-או פשוט תלחצ/י על כפתור ההפתעה :)" aria-label="תאר את התמונה שאתה רוצה ליצור"></textarea>
-        </div>
     <div class="chips-wrap" id="selectedBar"><div class="sel-chip"><span class="sel-chip-x">✕</span>צבעי מים</div><div class="sel-chip"><span class="sel-chip-x">✕</span>צבעים חמים</div><div class="sel-chip"><span class="sel-chip-x">✕</span>פיקסל</div><div class="sel-chip"><span class="sel-chip-x">✕</span>חיוך</div></div>
     <div class="result-box">
       <div class="result-top">
@@ -697,12 +677,33 @@ body {
       <div class="left-col">
     <div class="onboarding show" id="onboarding">
       <div class="ob-steps">
-        <div class="ob-step"><div class="ob-num">1</div><span id="ob1">בחר/י קטגוריה</span></div>
-        <div class="ob-step"><div class="ob-num">2</div><span id="ob2">בחר/י תגיות</span></div>
-        <div class="ob-step"><div class="ob-num">3</div><span id="ob3">תאר/י וצור/י</span></div>
+        <div class="ob-step"><div class="ob-num">1</div><span id="ob1">תאר/י את התמונה שלך</span></div>
+        <div class="ob-step"><div class="ob-num">2</div><span id="ob2">בחר/י קטגוריות</span></div>
+        <div class="ob-step"><div class="ob-num">3</div><span id="ob3">בחר/י סוג תצוגה</span></div>
+        <div class="ob-step"><div class="ob-num">4</div><span id="ob4">בחר/י כפתור ייצוא</span></div>
       </div>
       <button class="ob-close" onclick="dismissOnboarding()" aria-label="סגור" title="סגור">✕</button>
     </div>
+
+    <!-- v11.1: Subject input moved here (was in .right-col); v11.4: duplicate h3 removed (runtime _bootV75 injects the heading) -->
+    <div class="subject-input-block">
+      <div class="tb-toolbar" id="inputToolbar">
+        <button id="histBtn" class="tb-btn" onclick="toggleHistPanel()" title="היסטוריה" aria-label="היסטוריה">🕐</button>
+        <button id="settingsBtn" class="tb-btn" onclick="openSettings()" title="הגדרות" aria-label="הגדרות">⚙️</button>
+      </div>
+      <div class="textarea-wrap">
+        <button class="ta-clear-btn" id="taClearBtn" onclick="clearUserInput()" title="נקה טקסט" aria-label="נקה טקסט" type="button">✕</button>
+        <textarea id="userInput" rows="4" placeholder="תאר/י את התמונה שאת/ה רוצה/ה ליצור...
+או פשוט תלחצ/י על כפתור ההפתעה :)" aria-label="תאר את התמונה שאתה רוצה ליצור"></textarea>
+      </div>
+    </div>
+
+    <!-- v11.2: search bar moved here from header -->
+    <div class="search-wrap search-wrap-inline" id="searchWrapInline">
+      <input type="search" id="search" autocomplete="off" oninput="filterTags()" placeholder="חפש/י תגיות, קטגוריות..." aria-label="חיפוש תגיות וקטגוריות">
+      <span class="search-icon-emoji" aria-hidden="true">🔍</span>
+    </div>
+
     <div class="cat-grid" id="catGrid"><button class="cat-pill" data-ci="0"><span class="cat-badge" id="badge-0">0</span><span class="cat-emoji">📸</span><span class="cat-name" style="display: none;">סגנון צילום</span></button><button class="cat-pill" data-ci="1"><span class="cat-badge on" id="badge-1">2</span><span class="cat-emoji">🎨</span><span class="cat-name">סגנון אמנות</span></button><button class="cat-pill" data-ci="2"><span class="cat-badge" id="badge-2">0</span><span class="cat-emoji">🎬</span><span class="cat-name" style="display: none;">ז׳אנר</span></button><button class="cat-pill" data-ci="3"><span class="cat-badge" id="badge-3">0</span><span class="cat-emoji">💡</span><span class="cat-name">תאורה</span></button><button class="cat-pill" data-ci="4"><span class="cat-badge" id="badge-4">0</span><span class="cat-emoji">⚙️</span><span class="cat-name">איכות</span></button><button class="cat-pill" data-ci="5"><span class="cat-badge" id="badge-5">0</span><span class="cat-emoji">🎭</span><span class="cat-name">דמויות</span></button><button class="cat-pill" data-ci="6"><span class="cat-badge" id="badge-6">0</span><span class="cat-emoji">🎬</span><span class="cat-name">מצלמה</span></button><button class="cat-pill" data-ci="7"><span class="cat-badge" id="badge-7">0</span><span class="cat-emoji">👗</span><span class="cat-name" style="display: none;">אופנה</span></button><button class="cat-pill" data-ci="8"><span class="cat-badge" id="badge-8">0</span><span class="cat-emoji">🌍</span><span class="cat-name" style="display: none;">מראה</span></button><button class="cat-pill" data-ci="9"><span class="cat-badge" id="badge-9">0</span><span class="cat-emoji">💇</span><span class="cat-name" style="display: none;">גוף</span></button><button class="cat-pill" data-ci="10"><span class="cat-badge" id="badge-10">0</span><span class="cat-emoji">🌆</span><span class="cat-name">סביבה</span></button><button class="cat-pill" data-ci="11"><span class="cat-badge" id="badge-11">0</span><span class="cat-emoji">🔮</span><span class="cat-name">אסתטיקה</span></button><button class="cat-pill" data-ci="12"><span class="cat-badge on" id="badge-12">1</span><span class="cat-emoji">😊</span><span class="cat-name" style="display: none;">הבעה</span></button><button class="cat-pill" data-ci="13"><span class="cat-badge" id="badge-13">0</span><span class="cat-emoji">🧍</span><span class="cat-name" style="display: none;">פוזה</span></button><button class="cat-pill" data-ci="14"><span class="cat-badge on" id="badge-14">1</span><span class="cat-emoji">🖌️</span><span class="cat-name" style="display: none;">צבעים</span></button><button class="cat-pill" data-ci="15"><span class="cat-badge" id="badge-15">0</span><span class="cat-emoji">🧸</span><span class="cat-name" style="display: none;">צעצועים</span></button><button class="cat-pill" data-ci="16"><span class="cat-badge" id="badge-16">0</span><span class="cat-emoji">📷</span><span class="cat-name" style="display: none;">סגנון ישן ורג…</span></button><button class="cat-pill" data-ci="17"><span class="cat-badge" id="badge-17">0</span><span class="cat-emoji">🃏</span><span class="cat-name" style="display: none;">קריקטורה</span></button><button class="cat-pill" data-ci="18"><span class="cat-badge" id="badge-18">0</span><span class="cat-emoji">🐾</span><span class="cat-name" style="display: none;">חיות</span></button><button class="cat-pill" data-ci="19"><span class="cat-badge" id="badge-19">0</span><span class="cat-emoji">✨</span><span class="cat-name" style="display: none;">אפקטים</span></button><button class="cat-pill" data-ci="20"><span class="cat-badge" id="badge-20">0</span><span class="cat-emoji">🎞️</span><span class="cat-name" style="display: none;">סגנון סרטים</span></button><button class="cat-pill" data-ci="21"><span class="cat-badge" id="badge-21">0</span><span class="cat-emoji">🧱</span><span class="cat-name" style="display: none;">חומרים</span></button><button class="cat-pill" data-ci="22"><span class="cat-badge" id="badge-22">0</span><span class="cat-emoji">🏙️</span><span class="cat-name" style="display: none;">בניינים וחדרים</span></button><button class="cat-pill" data-ci="23"><span class="cat-badge" id="badge-23">0</span><span class="cat-emoji">🌿</span><span class="cat-name" style="display: none;">טבע מקרוב</span></button><button class="cat-pill" data-ci="24"><span class="cat-badge" id="badge-24">0</span><span class="cat-emoji">🌊</span><span class="cat-name" style="display: none;">מזג אוויר</span></button><button class="cat-pill" data-ci="25"><span class="cat-badge" id="badge-25">0</span><span class="cat-emoji">📱</span><span class="cat-name" style="display: none;">טרנדים</span></button><button class="cat-pill" data-ci="26"><span class="cat-badge" id="badge-26">0</span><span class="cat-emoji">🎮</span><span class="cat-name" style="display: none;">משחקים</span></button><button class="cat-pill" data-ci="27"><span class="cat-badge" id="badge-27">0</span><span class="cat-emoji">🖼️</span><span class="cat-name" style="display: none;">פוסטרים</span></button><button class="cat-pill" data-ci="28"><span class="cat-badge" id="badge-28">0</span><span class="cat-emoji">🤗</span><span class="cat-name" style="display: none;">נוסטלגיה</span></button><button class="cat-pill" data-ci="29"><span class="cat-badge" id="badge-29">0</span><span class="cat-emoji">🌱</span><span class="cat-name" style="display: none;">עתיד ירוק</span></button><button class="cat-pill" data-ci="30"><span class="cat-badge" id="badge-30">0</span><span class="cat-emoji">🏆</span><span class="cat-name" style="display: none;">פרופיל מקצועי</span></button><button class="cat-pill" data-ci="31"><span class="cat-badge" id="badge-31">0</span><span class="cat-emoji">🍃</span><span class="cat-name" style="display: none;">עונות השנה</span></button></div>
     <div class="tag-panel" id="tagPanel">
       <div class="tag-panel-header">
@@ -1711,7 +1712,7 @@ const T = {
     kidsBtnTitle: 'כפתור לילדים', kidsBtnSub: 'מצב קסום',
     adultsBtnTitle: 'מצב מבוגרים', adultsBtnSub: 'כל הקטגוריות',
     histTitle: 'היסטוריה', histClear: 'נקה',
-    ob1: 'בחר/י קטגוריה', ob2: 'בחר/י תגיות', ob3: 'תאר/י וצור/י',
+    ob1: 'תאר/י את התמונה שלך', ob2: 'בחר/י קטגוריות', ob3: 'בחר/י סוג תצוגה', ob4: 'בחר/י כפתור ייצוא',
     conflictTitle: '⚠️ זיהינו סתירה אפשרית',
     conflictMsg: 'הטקסט שלך מכיל ביטויים שעשויים לבלבל את ה-AI יחד עם התגיות הבאות:',
     conflictYes: 'כן, הסר/י תגיות', conflictNo: 'לא, שמור פרומפט', conflictWith: 'מתנגש עם:',
@@ -1741,7 +1742,7 @@ const T = {
     kidsBtnTitle: 'Kids Button', kidsBtnSub: 'Magic mode',
     adultsBtnTitle: 'Adult Mode', adultsBtnSub: 'All categories',
     histTitle: 'History', histClear: 'Clear',
-    ob1: 'Choose category', ob2: 'Select tags', ob3: 'Describe & build',
+    ob1: 'Describe your image', ob2: 'Pick categories', ob3: 'Choose aspect ratio', ob4: 'Pick export model',
     conflictTitle: '⚠️ Possible Conflict Detected',
     conflictMsg: 'Your text may confuse the AI together with these tags:',
     conflictYes: 'Yes, remove tags', conflictNo: 'No, keep prompt', conflictWith: 'conflicts with:',
@@ -2259,14 +2260,46 @@ function buildPromptData() {
 }
 
 function formatForNanoBanana(d) {
-  var parts = [];
-  if (d.subject) parts.push(d.subject);
-  if (d.viralEnforces && d.viralEnforces.length) parts.push.apply(parts, d.viralEnforces);
-  if (d.tagParts && d.tagParts.length) parts.push.apply(parts, d.tagParts);
-  var out = parts.join(', ');
-  if (d.arSuffix) out += ' ' + d.arSuffix;
-  if (d.negative) out += ' ' + d.negative;
-  return out;
+  // v11.0: Natural-language prose for Nano Banana / Gemini 2.5 Flash Image.
+  // Source: Google Cloud Blog "Ultimate prompting guide for Nano Banana" (2026)
+  // "Stop typing keywords and start directing the scene" — studio-quality controls.
+  if (!d.subject) return '';
+  var sentences = [];
+
+  // Opening: subject + AR hint (composition language Nano Banana understands)
+  var arText = '';
+  if (d.arSuffix === '--ar 9:16')      arText = ', vertical 9:16 composition';
+  else if (d.arSuffix === '--ar 16:9') arText = ', widescreen 16:9 composition';
+  else if (d.arSuffix === '--ar 1:1')  arText = ', square 1:1 composition';
+  sentences.push(d.subject + arText + '.');
+
+  // Style sentence — prefer English label (same logic as ChatGPT v10.4)
+  if (d.viralEnforces && d.viralEnforces.length) {
+    var styleLabel = 'artistic';
+    try {
+      if (d.viralStyleId && typeof VIRAL_STYLES !== 'undefined') {
+        var vs = VIRAL_STYLES.find(function(s){ return s.id === d.viralStyleId; });
+        if (vs && vs.label && vs.label.en) styleLabel = vs.label.en;
+        else if (d.viralStyleName) styleLabel = d.viralStyleName;
+      } else if (d.viralStyleName) {
+        styleLabel = d.viralStyleName;
+      }
+    } catch(e) { styleLabel = d.viralStyleName || 'artistic'; }
+    sentences.push('Rendered in ' + styleLabel + ' style with ' + d.viralEnforces.join(', ') + '.');
+  }
+
+  // Setting sentence
+  if (d.tagParts && d.tagParts.length) {
+    sentences.push('Setting: ' + d.tagParts.join(', ') + '.');
+  }
+
+  // Negatives as natural directive (no --no; Nano has no such flag)
+  if (d.negative) {
+    var neg = d.negative.replace(/^--no\s*/, '');
+    sentences.push('Avoid ' + neg + '.');
+  }
+
+  return sentences.join(' ');
 }
 
 function formatForChatGPT(d) {
@@ -2278,7 +2311,17 @@ function formatForChatGPT(d) {
   var lines = [];
   lines.push('Create an image' + arLine + ' of ' + d.subject + '.');
   if (d.viralEnforces && d.viralEnforces.length) {
-    var styleLabel = d.viralStyleName || 'artistic';
+    // v10.4: prefer English label for Latin-script prompts sent to ChatGPT
+    var styleLabel = 'artistic';
+    try {
+      if (d.viralStyleId && typeof VIRAL_STYLES !== 'undefined') {
+        var vs = VIRAL_STYLES.find(function(s){ return s.id === d.viralStyleId; });
+        if (vs && vs.label && vs.label.en) styleLabel = vs.label.en;
+        else if (d.viralStyleName) styleLabel = d.viralStyleName;
+      } else if (d.viralStyleName) {
+        styleLabel = d.viralStyleName;
+      }
+    } catch(e) { styleLabel = d.viralStyleName || 'artistic'; }
     lines.push('Render it in ' + styleLabel + ' style \u2014 ' + d.viralEnforces.join(', ') + '.');
   }
   if (d.tagParts && d.tagParts.length) {
@@ -2299,23 +2342,49 @@ function formatForChatGPT(d) {
 }
 
 function formatForMidjourney(d) {
+  // v11.0: MJ v7 modernization per 2026 best practices.
+  // - --s lowered from 250 to 180 (optimal photoreal range is 150-200 per K2Think 2026)
+  // - --style raw added for photorealistic viral styles (per MJ v7 docs)
+  // - --no shortened to 3 items (MJ v7 prefers short negatives; less is more)
   var parts = [];
   if (d.viralEnforces && d.viralEnforces.length) parts.push.apply(parts, d.viralEnforces.slice(0, 3));
   if (d.subject) parts.push(d.subject);
   if (d.tagParts && d.tagParts.length) parts.push.apply(parts, d.tagParts.slice(0, 5));
   var ar = d.arSuffix || '--ar 1:1';
-  var out = parts.join(', ') + ' ' + ar + ' --s 250 --v 7';
-  if (d.negative) out += ' ' + d.negative;
+
+  // Photorealistic styles benefit from --style raw (disables MJ's default beautification)
+  var PHOTOREAL_STYLES = { hyperreal: 1, retro35mm: 1, cinematic: 1, filmnoir: 1 };
+  var styleRaw = (d.viralStyleId && PHOTOREAL_STYLES[d.viralStyleId]) ? ' --style raw' : '';
+
+  var out = parts.join(', ') + ' ' + ar + ' --s 180 --v 7' + styleRaw;
+
+  if (d.negative) {
+    var neg = d.negative.replace(/^--no\s*/, '');
+    // Take first 3 negative items (MJ v7 best practice — short --no list)
+    var negItems = neg.split(',').slice(0, 3)
+                       .map(function(s){ return s.trim(); })
+                       .filter(Boolean);
+    if (negItems.length) out += ' --no ' + negItems.join(', ');
+  }
   return out;
 }
 
 function formatForSD(d) {
+  // v11.0: SD3.5 doesn't tokenize Hebrew, so weight-wrapping (Hebrew:1.2)
+  // is equivalent to plain `Hebrew`. Unwrap for cleaner output.
   var positive = [];
   if (d.viralEnforces && d.viralEnforces.length) {
     positive.push('(' + d.viralEnforces[0] + ':1.3)');
     positive.push.apply(positive, d.viralEnforces.slice(1));
   }
-  if (d.subject) positive.push('(' + d.subject + ':1.2)');
+  if (d.subject) {
+    if (/[\u0590-\u05FF]/.test(d.subject)) {
+      // Hebrew subject — no weight wrap (SD can't weight unparsed tokens)
+      positive.push(d.subject);
+    } else {
+      positive.push('(' + d.subject + ':1.2)');
+    }
+  }
   if (d.tagParts && d.tagParts.length) positive.push.apply(positive, d.tagParts.slice(0, 8));
   var out = positive.join(', ');
   if (d.negative) {
@@ -2507,6 +2576,7 @@ function setLang(lang) {
   if (t.ob1) setText('ob1', t.ob1);
   if (t.ob2) setText('ob2', t.ob2);
   if (t.ob3) setText('ob3', t.ob3);
+  if (t.ob4) setText('ob4', t.ob4);
   if (t.randomBtn)      setText('randomBtnLabel', t.randomBtn);
   if (t.kidsBtnTitle)   setText('kidsBtnTitle',   t.kidsBtnTitle);
   if (t.kidsBtnSub)     setText('kidsBtnSub',     t.kidsBtnSub);
@@ -3764,27 +3834,7 @@ body.light-mode .pae-section-header,
 
 
 /* ─── Sprint 1 Quick Win: Viral Chip Strip UI (v8.1) ─────────────────────── */
-.viral-chips-strip {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-items: center;
-  padding: 10px 12px;
-  margin: 10px 0 14px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, rgba(0,122,255,0.08), rgba(0,229,204,0.06));
-  border: 1px solid rgba(255,255,255,0.06);
-}
-.viral-chip-prompt {
-  font-size: 12px;
-  color: var(--muted);
-  font-weight: 500;
-  opacity: 0.85;
-  margin-inline-end: 4px;
-  user-select: none;
-}
-.viral-chip,
-.viral-random-btn {
+.viral-chip {
   padding: 8px 14px;
   border-radius: 99px;
   font-size: 12px;
@@ -3807,8 +3857,7 @@ body.light-mode .pae-section-header,
   background: rgba(255,255,255,0.08);
   border-color: rgba(255,255,255,0.2);
 }
-.viral-chip:focus-visible,
-.viral-random-btn:focus-visible {
+.viral-chip:focus-visible {
   outline: 2px solid #5eaaff;
   outline-offset: 2px;
 }
@@ -3819,24 +3868,13 @@ body.light-mode .pae-section-header,
   box-shadow: 0 0 16px rgba(212,175,55,0.45);
   font-weight: 700;
 }
-.viral-random-btn {
-  border: 1px solid rgba(0,229,204,0.3);
-  background: rgba(0,229,204,0.12);
-  color: var(--teal);
-  font-weight: 600;
-  margin-inline-start: auto;
-}
-.viral-random-btn:hover {
-  background: rgba(0,229,204,0.22);
-  transform: scale(1.04);
-}
 [data-theme="light"] .viral-chips-strip {
   background: linear-gradient(135deg, rgba(0,122,255,0.06), rgba(0,229,204,0.04));
   border-color: rgba(0,0,0,0.08);
 }
 @media (max-width: 480px) {
   .viral-chips-strip { padding: 8px 10px; gap: 6px; }
-  .viral-chip, .viral-random-btn { font-size: 11px; padding: 7px 11px; }
+  .viral-chip { font-size: 11px; padding: 7px 11px; }
 }
 
 
@@ -3915,7 +3953,7 @@ body.light-mode .pae-section-header,
   if (window.__paeV8Installed) return;
   window.__paeV8Installed = true;
 
-  var SIGNAL = '\u2705 Palette AI v9.0 installed (4 AI models + Hebrew Text Inlay + mobile-optimized + guide refreshed)';
+  var SIGNAL = '\u2705 Palette AI v11.6 installed (added closing </body></html> tags)';
 
   function _log(m) { try { console.log('[PAE v8]', m); } catch (e) {} }
 
@@ -4196,14 +4234,18 @@ body.light-mode .pae-section-header,
         { emoji: '\ud83c\udfa8', title: '\u05d1\u05e8\u05d5\u05db\u05d9\u05dd \u05d4\u05d1\u05d0\u05d9\u05dd \u05dc-Palette!', subtitle: '\u05d4\u05de\u05e7\u05d5\u05dd \u05e9\u05d1\u05d5 \u05e8\u05e2\u05d9\u05d5\u05e0\u05d5\u05ea \u05d4\u05d5\u05e4\u05db\u05d9\u05dd \u05dc\u05ea\u05de\u05d5\u05e0\u05d5\u05ea \u05de\u05d0\u05d9\u05d9\u05d3 AI', body: '\u05d9\u05e6\u05e8\u05ea\u05d9 \u05d0\u05ea \u05d4\u05db\u05dc\u05d9 \u05d4\u05d6\u05d4 \u05db\u05d3\u05d9 \u05e9\u05db\u05dc \u05d0\u05d7\u05d3 \u05d9\u05d5\u05db\u05dc \u05dc\u05db\u05ea\u05d5\u05d1 \u05d4\u05d5\u05e8\u05d0\u05d5\u05ea \u05de\u05e7\u05e6\u05d5\u05e2\u05d9\u05d5\u05ea \u05dc-AI \u05d1\u05e2\u05d1\u05e8\u05d9\u05ea \u05e4\u05e9\u05d5\u05d8\u05d4. \u05d1\u05dc\u05d9 \u05de\u05d5\u05e0\u05d7\u05d9\u05dd \u05de\u05e1\u05d5\u05d1\u05db\u05d9\u05dd. \u05e4\u05e9\u05d5\u05d8, \u05de\u05d4\u05d9\u05e8, \u05d5\u05e7\u05e6\u05ea \u05db\u05d9\u05e3 \ud83d\ude09' },
         { emoji: '\u2728', title: '\u05e2\u05d1\u05e8\u05d9\u05ea \u05e4\u05e9\u05d5\u05d8\u05d4 \u2192 \u05ea\u05d5\u05e6\u05d0\u05d5\u05ea \u05de\u05e7\u05e6\u05d5\u05e2\u05d9\u05d5\u05ea', subtitle: '\u05de\u05d4 \u05d4\u05d0\u05e4\u05dc\u05d9\u05e7\u05e6\u05d9\u05d4 \u05e2\u05d5\u05e9\u05d4 \u05d1\u05e4\u05d5\u05e2\u05dc?', body: 'מחוללי התמונות (Nano Banana, ChatGPT, Midjourney, Stable Diffusion) דורשים פרומפטים מדויקים באנגלית עם מונחים מקצועיים. האפליקציה מכירה את המילים והטריקים שבאמת עובדים — ומתרגמת את הרעיון שלך לפורמט הנכון לכל מודל.' },
         { emoji: '\ud83d\udcdd', title: '3 \u05e6\u05e2\u05d3\u05d9\u05dd \u05e4\u05e9\u05d5\u05d8\u05d9\u05dd', subtitle: '\u05d6\u05d4 \u05d1\u05d0\u05de\u05ea \u05d4\u05db\u05dc', isSteps: true },
-        { emoji: '\ud83e\uddea', title: '\u05db\u05de\u05d4 \u05d3\u05d1\u05e8\u05d9\u05dd \u05e9\u05db\u05d3\u05d0\u05d9 \u05dc\u05d4\u05db\u05d9\u05e8', subtitle: '\u05e9\u05d5\u05d5\u05d4 \u05dc\u05d3\u05e2\u05ea \u05e9\u05d9\u05e9', isFeatures: true },
+        { emoji: '\ud83c\udfa8', title: '\u05d0\u05d9\u05da \u05d9\u05d5\u05e6\u05e8\u05d9\u05dd \u05de\u05d4\u05e8?', subtitle: '\u05e7\u05d9\u05e6\u05d5\u05e8\u05d9 \u05d3\u05e8\u05da \u05dc\u05ea\u05d5\u05e6\u05d0\u05d4 \u05de\u05d4\u05d9\u05e8\u05d4', isFeatures: 'create' },
+        { emoji: '\u270d\ufe0f', title: '\u05d9\u05e6\u05d5\u05d0 \u05d7\u05db\u05dd \u05dc-AI', subtitle: '\u05ea\u05d5\u05e6\u05d0\u05d5\u05ea \u05de\u05d5\u05e9\u05dc\u05de\u05d5\u05ea \u05dc\u05db\u05dc \u05de\u05d5\u05d3\u05dc', isFeatures: 'export' },
+        { emoji: '\ud83d\udcda', title: '\u05e9\u05d5\u05de\u05e8 \u05d4\u05db\u05dc \u05d1\u05e9\u05d1\u05d9\u05dc\u05da', subtitle: '\u05d4\u05d9\u05e1\u05d8\u05d5\u05e8\u05d9\u05d4 \u05d5\u05e9\u05d9\u05ea\u05d5\u05e3', isFeatures: 'manage' },
         { emoji: '\ud83d\ude80', title: '\u05d9\u05d0\u05dc\u05dc\u05d4, \u05d1\u05d5\u05d0 \u05e0\u05ea\u05d7\u05d9\u05dc!', subtitle: '', body: '\u05dc\u05d0 \u05e6\u05e8\u05d9\u05da \u05dc\u05d4\u05d9\u05e8\u05e9\u05dd. \u05d4\u05db\u05dc \u05d7\u05d9\u05e0\u05dd. \u05d2\u05dd \u05d1\u05e2\u05d1\u05e8\u05d9\u05ea.<br><br>\u05e8\u05d5\u05e6\u05d4 \u05dc\u05e8\u05d0\u05d5\u05ea \u05d0\u05ea \u05d4\u05de\u05d3\u05e8\u05d9\u05da \u05e9\u05d5\u05d1? \u05d9\u05e9 \u05db\u05e4\u05ea\u05d5\u05e8 <b>?</b> \u05d1\u05e8\u05d0\u05e9 \u05d4\u05e2\u05de\u05d5\u05d3 \u05e9\u05d9\u05d7\u05d6\u05d9\u05e8 \u05d0\u05d5\u05ea\u05da \u05dc\u05db\u05d0\u05df \u05d1\u05db\u05dc \u05e8\u05d2\u05e2.' }
       ],
       en: [
         { emoji: '\ud83c\udfa8', title: 'Welcome to Palette!', subtitle: 'Where ideas become stunning AI images', body: 'I built this so anyone can write pro-level AI prompts in plain words. No jargon. Just fun and fast \ud83d\ude09' },
         { emoji: '\u2728', title: 'Simple words \u2192 pro results', subtitle: 'What does the app actually do?', body: 'AI image generators (Nano Banana, ChatGPT, Midjourney, Stable Diffusion) need precise prompts in English with professional terms. The app knows the keywords and tricks that really work — and translates your idea into the right format for each model.' },
         { emoji: '\ud83d\udcdd', title: '3 simple steps', subtitle: "That's really all", isSteps: true },
-        { emoji: '\ud83e\uddea', title: 'A few cool things to know', subtitle: 'Worth knowing these exist', isFeatures: true },
+        { emoji: '\ud83c\udfa8', title: 'Create faster', subtitle: 'Shortcuts to instant results', isFeatures: 'create' },
+        { emoji: '\u270d\ufe0f', title: 'Smart AI export', subtitle: 'Perfect output for every model', isFeatures: 'export' },
+        { emoji: '\ud83d\udcda', title: 'We save it all for you', subtitle: 'History & sharing', isFeatures: 'manage' },
         { emoji: '\ud83d\ude80', title: "Alright, let's go!", subtitle: '', body: 'No registration. Free. Hebrew too.<br><br>Want to see this guide again? Click the <b>?</b> button at the top anytime.' }
       ]
     };
@@ -4222,22 +4264,34 @@ body.light-mode .pae-section-header,
     };
     
     var GUIDE_FEATURES = {
-      he: [
-        { emoji: '🎨', title: '4 מודלי AI', desc: 'פורמט מותאם ל-Nano Banana, ChatGPT, Midjourney ו-Stable Diffusion' },
-        { emoji: '🔤', title: 'טקסט עברי בתמונה', desc: 'שדה "טקסט לשילוב בתמונה" — עובד הכי טוב ב-ChatGPT / gpt-image-2' },
-        { emoji: '✨', title: 'מצב ילדים', desc: 'תמונות בטוחות + סגנונות ויראליים מתאימים לילדים' },
-        { emoji: '🎁', title: 'כפתור הפתעה', desc: 'רעיון רנדומלי + סגנון ויראלי אוטומטי' },
-        { emoji: '📚', title: 'היסטוריה', desc: 'כל הפרומפטים שיצרת נשמרים אוטומטית' },
-        { emoji: '📤', title: 'שיתוף חכם', desc: 'שליחה לחברים עם הסבר על האפליקציה וקישור' }
-      ],
-      en: [
-        { emoji: '🎨', title: '4 AI models', desc: 'Tailored formats for Nano Banana, ChatGPT, Midjourney and Stable Diffusion' },
-        { emoji: '🔤', title: 'Hebrew text in image', desc: '"Text to embed in image" field — works best with ChatGPT / gpt-image-2' },
-        { emoji: '✨', title: 'Kids mode', desc: 'Safe tags + matching viral styles for children' },
-        { emoji: '🎁', title: 'Surprise button', desc: 'Random idea + automatic viral style' },
-        { emoji: '📚', title: 'History', desc: 'Every prompt you create is auto-saved' },
-        { emoji: '📤', title: 'Smart share', desc: 'Send to friends with app info and link' }
-      ]
+      he: {
+        create: [
+          { emoji: '🎁', title: 'כפתור הפתעה', desc: 'רעיון רנדומלי + סגנון ויראלי אוטומטי' },
+          { emoji: '✨', title: 'מצב ילדים', desc: 'תמונות בטוחות + סגנונות מתאימים לילדים' }
+        ],
+        export: [
+          { emoji: '🎨', title: '4 מודלי AI', desc: 'פורמט מותאם ל-Nano Banana, ChatGPT, Midjourney ו-SD' },
+          { emoji: '🔤', title: 'טקסט עברי בתמונה', desc: '"טקסט לשילוב" — הכי טוב ב-ChatGPT / gpt-image-2' }
+        ],
+        manage: [
+          { emoji: '📚', title: 'היסטוריה', desc: 'כל הפרומפטים שיצרת נשמרים אוטומטית' },
+          { emoji: '📤', title: 'שיתוף חכם', desc: 'שליחה לחברים עם הסבר על האפליקציה וקישור' }
+        ]
+      },
+      en: {
+        create: [
+          { emoji: '🎁', title: 'Surprise button', desc: 'Random idea + automatic viral style' },
+          { emoji: '✨', title: 'Kids mode', desc: 'Safe tags + matching viral styles for kids' }
+        ],
+        export: [
+          { emoji: '🎨', title: '4 AI models', desc: 'Tailored formats for Nano Banana, ChatGPT, MJ and SD' },
+          { emoji: '🔤', title: 'Hebrew text in image', desc: '"Embed text" field — best in ChatGPT / gpt-image-2' }
+        ],
+        manage: [
+          { emoji: '📚', title: 'History', desc: 'Every prompt you create is auto-saved' },
+          { emoji: '📤', title: 'Smart share', desc: 'Send to friends with app info and link' }
+        ]
+      }
     };
     
     var GUIDE_T = {
@@ -4307,7 +4361,9 @@ body.light-mode .pae-section-header,
       if(slide.isSteps){
         bodyHTML='<div class="pae-guide-step-list">'+GUIDE_STEPS[lang].map(function(s){return '<div><span class="num">'+s.num+'</span><div><div class="title">'+s.title+'</div><div class="desc">'+s.desc+'</div></div></div>';}).join('')+'</div>';
       }else if(slide.isFeatures){
-        bodyHTML='<div class="pae-guide-feat-list">'+GUIDE_FEATURES[lang].map(function(f){return '<div>'+f.emoji+' <b>'+f.title+'</b> \u2014 '+f.desc+'</div>';}).join('')+'</div>';
+        var featGroup=(typeof slide.isFeatures==='string')?slide.isFeatures:'create';
+        var featList=(GUIDE_FEATURES[lang]&&GUIDE_FEATURES[lang][featGroup])||[];
+        bodyHTML='<div class="pae-guide-feat-list pae-guide-feat-compact">'+featList.map(function(f){return '<div class="pae-guide-feat-item"><span class="pae-guide-feat-emoji">'+f.emoji+'</span><div class="pae-guide-feat-text"><b>'+f.title+'</b><span>'+f.desc+'</span></div></div>';}).join('')+'</div>';
       }else{bodyHTML=slide.body;}
       var leftBtnHTML=guideSlide===0?'<button class="pae-guide-btn-text" onclick="__paeCloseGuide()">'+GUIDE_T.skip[lang]+'</button>':'<button class="pae-guide-btn-secondary" onclick="__paeGoSlide('+(guideSlide-1)+')">'+GUIDE_T.back[lang]+'</button>';
       var rightBtnHTML=guideSlide===total-1?'<button class="pae-guide-btn-primary" onclick="__paeCloseGuide()">'+GUIDE_T.start[lang]+'</button>':'<button class="pae-guide-btn-primary" onclick="__paeGoSlide('+(guideSlide+1)+')">'+GUIDE_T.next[lang]+'</button>';
@@ -4900,6 +4956,173 @@ var FLAGS = { paybox: false, langReload: false };
       _log('v6.2 hot patch installed (PayBox desktop + Lang auto-reload)');
     }
 
+    // ─── Layer: v10.0 (Unified Chip Design Language) ────────────────────
+    function _bootV10() {
+      if (document.getElementById('pae-v10-chip-css')) {
+        _log('v10.0 already installed');
+        return;
+      }
+      var VIRAL_EMOJI = {
+        ghibli:      '\uD83C\uDFA8', pixar3d:     '\uD83E\uDDF8',
+        animeaction: '\u26A1',         indiecomic:  '\uD83D\uDCA5',
+        pixelart:    '\uD83C\uDFAE', retro35mm:   '\uD83D\uDCFD',
+        cinematic:   '\uD83C\uDFAC', cuteanimal:  '\uD83D\uDC3E',
+        claymation:  '\uD83C\uDFFA', filmnoir:    '\uD83C\uDFA9',
+        dystopian:   '\uD83C\uDF0C', vintage:     '\uD83D\uDCFB',
+        magazine:    '\uD83D\uDCF0'
+      };
+      var css = [
+        '.cat-pill, .viral-chip {',
+        '  display: inline-flex !important; flex-direction: row !important;',
+        '  align-items: center !important; justify-content: center !important;',
+        '  gap: 6px !important; padding: 7px 13px !important;',
+        '  min-height: 36px !important; background: var(--surface2) !important;',
+        '  border: 1px solid var(--border) !important; border-radius: 99px !important;',
+        '  color: var(--text) !important; font-family: inherit !important;',
+        '  font-size: 12.5px !important; font-weight: 500 !important;',
+        '  cursor: pointer !important; transition: all 0.15s ease !important;',
+        '  white-space: nowrap !important; line-height: 1.2 !important;',
+        '  text-align: center !important; user-select: none !important;',
+        '  position: relative !important; box-shadow: none !important;',
+        '}',
+        '.cat-pill .cat-emoji, .chip-emoji {',
+        '  font-size: 15px !important; line-height: 1 !important;',
+        '  flex-shrink: 0 !important; display: inline !important; margin: 0 !important;',
+        '}',
+        '.cat-pill .cat-name {',
+        '  font-size: 12.5px !important; color: inherit !important;',
+        '  font-weight: 500 !important; line-height: 1.2 !important;',
+        '  word-break: normal !important; hyphens: none !important;',
+        '}',
+        '.cat-pill:hover, .viral-chip:hover {',
+        '  border-color: var(--a4) !important; transform: translateY(-1px) !important;',
+        '}',
+        '.cat-pill.active, .viral-chip.viral-chip-active {',
+        '  background: var(--a3) !important; border-color: var(--accent) !important;',
+        '  color: #fff !important; box-shadow: 0 0 8px var(--a2) !important;',
+        '}',
+        '.cat-pill.active .cat-name { color: #fff !important; }',
+        '.cat-pill.search-match {',
+        '  border-color: rgba(0,229,204,0.45) !important;',
+        '  background: rgba(0,229,204,0.07) !important;',
+        '}',
+        '.cat-pill.search-match .cat-name { color: var(--teal) !important; }',
+        '.cat-badge {',
+        '  position: static !important; top: auto !important; left: auto !important;',
+        '  background: var(--accent) !important; color: #fff !important;',
+        '  font-size: 10px !important; font-weight: 700 !important;',
+        '  border-radius: 99px !important; padding: 1px 6px !important;',
+        '  margin-inline-start: 3px !important; min-width: 16px !important;',
+        '  display: none !important; line-height: 1.3 !important;',
+        '}',
+        '.cat-badge.on { display: inline-block !important; }',
+        '.cat-grid {',
+        '  display: flex !important; flex-wrap: wrap !important;',
+        '  gap: 6px !important; grid-template-columns: none !important;',
+        '  align-items: center !important;',
+        '}',
+        '.viral-chips-strip {',
+        '  background: transparent !important; border: none !important;',
+        '  padding: 6px 0 4px !important; margin: 4px 0 !important;',
+        '  gap: 6px !important;',
+        '}',
+        '.viral-chip-active {',
+        '  background: linear-gradient(135deg, #d4af37, #f5cf4f) !important;',
+        '  color: #1a1a2e !important; border-color: #d4af37 !important;',
+        '  box-shadow: 0 0 16px rgba(212,175,55,0.45) !important;',
+        '  font-weight: 700 !important;',
+        '}',
+        '.tag-list {',
+        '  display: flex !important; flex-wrap: wrap !important;',
+        '  gap: 6px !important; grid-template-columns: none !important;',
+        '  padding: 12px !important; align-items: center !important;',
+        '}',
+        '.tag-btn {',
+        '  display: inline-flex !important; flex-direction: row !important;',
+        '  align-items: center !important; justify-content: center !important;',
+        '  gap: 4px !important; padding: 7px 13px !important;',
+        '  min-height: 36px !important; background: var(--surface2) !important;',
+        '  border: 1px solid var(--border) !important; border-radius: 99px !important;',
+        '  color: var(--text) !important; font-size: 12.5px !important;',
+        '  font-weight: 500 !important; white-space: nowrap !important;',
+        '  line-height: 1.2 !important; text-align: center !important;',
+        '  box-shadow: none !important;',
+        '}',
+        '.tag-btn-sub { display: none !important; }',
+        '.tag-btn:hover {',
+        '  border-color: var(--a4) !important; transform: translateY(-1px) !important;',
+        '}',
+        '.tag-btn.active {',
+        '  background: var(--a3) !important; border-color: var(--accent) !important;',
+        '  color: #fff !important; box-shadow: 0 0 8px var(--a2) !important;',
+        '}',
+        '[data-theme="light"] .cat-pill,',
+        '[data-theme="light"] .viral-chip,',
+        '[data-theme="light"] .tag-btn { background: var(--surface2) !important; color: var(--text) !important; }',
+        '[data-theme="light"] .cat-pill.active,',
+        '[data-theme="light"] .viral-chip.viral-chip-active,',
+        '[data-theme="light"] .tag-btn.active { background: var(--accent) !important; color: #fff !important; }',
+        '@media (max-width: 480px) {',
+        '  .cat-pill, .viral-chip, .tag-btn { font-size: 12px !important; padding: 6px 11px !important; min-height: 34px !important; }',
+        '  .cat-pill .cat-emoji, .chip-emoji { font-size: 14px !important; }',
+        '}',
+        '/* v10.1+v10.3: hide viral random dice button + viral strip label */',
+        '#viralRandomBtn, .viral-random-btn { display: none !important; }',
+        '.viral-chip-prompt { display: none !important; }',
+        '/* v11.1: subject-input-block styling when moved into .left-col */',
+        '.subject-input-block {',
+        '  margin: 8px 0 12px 0;',
+        '  padding: 0;',
+        '}',
+        '.subject-input-block .tb-toolbar {',
+        '  display: flex; gap: 8px; margin-bottom: 8px;',
+        '  justify-content: flex-start;',
+        '}',
+        '.subject-input-block .textarea-wrap {',
+        '  position: relative;',
+        '  margin-bottom: 12px;',
+        '}',
+        '.subject-input-block #userInput {',
+        '  width: 100%;',
+        '  box-sizing: border-box;',
+        '}',
+        '@media (max-width: 480px) {',
+        '  /* v11.4: subject-heading mobile rules removed with the element */',
+        '}'
+      ].join('\n');
+      var styleEl = document.createElement('style');
+      styleEl.id = 'pae-v10-chip-css';
+      styleEl.textContent = css;
+      document.head.appendChild(styleEl);
+
+      function addViralEmojis() {
+        var chips = document.querySelectorAll('.viral-chip[data-style-id]');
+        chips.forEach(function(chip) {
+          if (chip.dataset.v10emojified === '1') return;
+          var sid = chip.dataset.styleId;
+          var emoji = VIRAL_EMOJI[sid];
+          if (!emoji) return;
+          var origText = chip.textContent.trim();
+          if (origText.charCodeAt(0) > 0x2000) return;
+          chip.textContent = '';
+          var emojiSpan = document.createElement('span');
+          emojiSpan.className = 'chip-emoji';
+          emojiSpan.textContent = emoji;
+          emojiSpan.setAttribute('aria-hidden', 'true');
+          chip.appendChild(emojiSpan);
+          chip.appendChild(document.createTextNode(' ' + origText));
+          chip.dataset.v10emojified = '1';
+        });
+      }
+      addViralEmojis();
+      var strip = document.getElementById('viralChipsStrip');
+      if (strip) {
+        var obs = new MutationObserver(function() { addViralEmojis(); });
+        obs.observe(strip, { childList: true });
+      }
+      _log('v10.0 unified chip design installed');
+    }
+
   // ═══════════════════════════════════════════════════════════════════════
   // Master boot — runs each layer's installer in the original load order.
   // ═══════════════════════════════════════════════════════════════════════
@@ -4912,6 +5135,7 @@ var FLAGS = { paybox: false, langReload: false };
     safeCall(_bootV72, 'v7.2 section headers');
     safeCall(_bootV71, 'v7.1 share override');
     safeCall(_bootV62, 'v6.2 PayBox + lang reload');
+    safeCall(_bootV10, 'v10.0 unified chip design');
     console.log(SIGNAL);
   }
 
@@ -4923,5 +5147,34 @@ var FLAGS = { paybox: false, langReload: false };
 })();
 </script>
 
+<style id="pae-v11-3-guide-compact">
+/* v11.3: compact feature list (used inside guide modal) */
+.pae-guide-feat-list.pae-guide-feat-compact {
+  display: flex; flex-direction: column; gap: 10px;
+  padding: 4px 0;
+}
+.pae-guide-feat-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.pae-guide-feat-emoji { font-size: 20px; line-height: 1.2; flex-shrink: 0; }
+.pae-guide-feat-text { display: flex; flex-direction: column; gap: 2px; font-size: 13px; line-height: 1.35; }
+.pae-guide-feat-text b { font-weight: 600; font-size: 13.5px; }
+.pae-guide-feat-text span { opacity: 0.82; font-size: 12.5px; }
+[data-theme="light"] .pae-guide-feat-item {
+  background: rgba(0,0,0,0.03); border-color: rgba(0,0,0,0.08);
+}
+@media (max-width: 480px) {
+  .pae-guide-feat-item { padding: 7px 9px; gap: 8px; }
+  .pae-guide-feat-emoji { font-size: 18px; }
+  .pae-guide-feat-text { font-size: 12.5px; }
+  .pae-guide-feat-text b { font-size: 13px; }
+  .pae-guide-feat-text span { font-size: 12px; }
+}
+</style>
 
-
+</body>
+</html>
