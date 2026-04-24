@@ -489,6 +489,29 @@ body {
 [data-theme="light"] .btn-share { background: linear-gradient(135deg, #1ebe5a, #159846) !important; box-shadow: 0 2px 10px rgba(30,190,90,0.35) !important; }
 [data-theme="light"] .btn-share:hover { background: linear-gradient(135deg, #25d366, #159846) !important; box-shadow: 0 4px 14px rgba(30,190,90,0.5) !important; }
 
+/* ── v8.9: Viral chip strip layout (moved below .cat-grid) ── */
+.viral-chips-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  padding: 6px 0 4px;
+  margin: 2px 0 6px;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+.viral-chip-prompt {
+  font-size: 11.5px;
+  color: var(--muted);
+  font-weight: 600;
+  margin-inline-end: 2px;
+}
+/* v8.9 defensive: ensure .btn-split-wrap can wrap if anything ever tries to insert into it */
+.btn-split-wrap { flex-wrap: wrap; }
+@media (max-width: 480px) {
+  .btn-split-wrap { gap: 0; }
+}
 </style>
 
   <!-- SEO & Social Meta (v5) -->
@@ -1549,15 +1572,26 @@ function renderViralChips() {
 
 function insertViralChipsStrip() {
   if (document.getElementById('viralChipsStrip')) { renderViralChips(); return true; }
+  // v8.9 CRITICAL FIX: insert BELOW .cat-grid instead of INSIDE .btn-split-wrap
+  // Old location caused Kids/Adults buttons to be pushed off mobile viewport
+  // because .btn-split-wrap is flex-row with no flex-wrap and overflow:hidden.
+  var catGrid = document.getElementById('catGrid');
   var randomBtn = document.getElementById('randomBtn');
-  if (!randomBtn || !randomBtn.parentElement) return false;
+  var parentOK = (catGrid && catGrid.parentElement) || (randomBtn && randomBtn.parentElement);
+  if (!parentOK) return false;
   var strip = document.createElement('div');
   strip.id = 'viralChipsStrip';
   strip.className = 'viral-chips-strip';
   strip.setAttribute('role', 'group');
   strip.setAttribute('aria-label', (typeof currentLang !== 'undefined' && currentLang === 'en')
-    ? 'Viral style picker' : '\u05d1\u05d5\u05d7\u05e8 \u05e1\u05d2\u05e0\u05d5\u05df \u05d5\u05d9\u05e8\u05d0\u05dc\u05d9');
-  randomBtn.parentElement.insertBefore(strip, randomBtn);
+    ? 'Viral style picker' : '\u05d1\u05d7\u05e8 \u05e1\u05d2\u05e0\u05d5\u05df \u05d5\u05d9\u05e8\u05d0\u05dc\u05d9');
+  if (catGrid && catGrid.parentElement) {
+    // Insert AFTER .cat-grid, BEFORE .tag-panel — within .left-col (vertical flex column)
+    catGrid.parentElement.insertBefore(strip, catGrid.nextSibling);
+  } else {
+    // Fallback: old inline position (only if cat-grid is missing)
+    randomBtn.parentElement.insertBefore(strip, randomBtn);
+  }
   renderViralChips();
   return true;
 }
@@ -3854,7 +3888,7 @@ body.light-mode .pae-section-header,
   if (window.__paeV8Installed) return;
   window.__paeV8Installed = true;
 
-  var SIGNAL = '\u2705 Palette AI v8.8 installed (v8.7 + refactor: null-guards, QR URL constants, provenance comments)';
+  var SIGNAL = '\u2705 Palette AI v8.9 installed (v8.8 + critical mobile fix: viral strip moved below categories, no longer crushes Kids/Adults buttons)';
 
   function _log(m) { try { console.log('[PAE v8]', m); } catch (e) {} }
 
