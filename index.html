@@ -507,10 +507,37 @@ body {
   font-weight: 600;
   margin-inline-end: 2px;
 }
-/* v8.9 defensive: ensure .btn-split-wrap can wrap if anything ever tries to insert into it */
-.btn-split-wrap { flex-wrap: wrap; }
+/* v9.0: flex-wrap removed — was causing 2-row layout on narrow mobile. Buttons shrink instead. */
+.btn-split-wrap { flex-wrap: nowrap; max-width: 100%; }
+/* v9.0: mobile-tight sizing for split buttons — single row on all widths */
 @media (max-width: 480px) {
   .btn-split-wrap { gap: 0; }
+  .btn-split-kids,
+  .btn-split-adults {
+    padding: 8px 10px !important;
+    min-width: 0 !important;
+    flex: 0 1 auto;
+  }
+  .btn-split-kids .kids-title,
+  .btn-split-adults .adults-title { font-size: 10px !important; }
+  .btn-split-kids .kids-sub,
+  .btn-split-adults .adults-sub { font-size: 8.5px !important; }
+  .btn-split-kids .kids-icon { font-size: 20px !important; }
+  .btn-split-adults .adults-icon { font-size: 18px !important; }
+  .btn-rnd-main {
+    padding: 8px 10px !important;
+    font-size: 13px !important;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  #randomBtnLabel { white-space: nowrap; }
+  #randomHint { display: none !important; }
+}
+@media (max-width: 360px) {
+  .btn-split-kids .kids-sub,
+  .btn-split-adults .adults-sub { display: none !important; }
+  .btn-split-kids,
+  .btn-split-adults { padding: 8px 6px !important; }
 }
 </style>
 
@@ -561,7 +588,7 @@ body {
   </div>
   <div class="header-bottom">
     <div class="search-wrap">
-      <input type="search" id="search" autocomplete="off" oninput="filterTags()" placeholder="חפש/י תגיות, סגנונות..." aria-label="חיפוש תגיות וסגנונות">
+      <input type="search" id="search" autocomplete="off" oninput="filterTags()" placeholder="חפש/י תגיות, קטגוריות..." aria-label="חיפוש תגיות וקטגוריות">
       <span class="search-icon-emoji" aria-hidden="true">🔍</span>
     </div>
   </div>
@@ -1671,7 +1698,7 @@ const T = {
   he: {
     dir: 'rtl', lang: 'he',
     placeholder: "תאר/י את התמונה שאת/ה רוצה/ה ליצור...\nאו פשוט תלחצ/י על כפתור ההפתעה :)",
-    searchPlaceholder: "חפש/י תגיות, סגנונות...",
+    searchPlaceholder: "חפש/י תגיות, קטגוריות...",
     emptyPrompt: '✨ הפרומפט יופיע כאן — לחץ/י על 📋 העתק/י פרומפט ופתח/י את מנוע ה-AI שלך.',
     charCount: function(n) { return n + ' תווים'; },
     payboxTitle: 'אהבתם? פנקו אותי בבירה',
@@ -1705,7 +1732,7 @@ const T = {
   en: {
     dir: 'ltr', lang: 'en',
     placeholder: "Describe the image you want to create...",
-    searchPlaceholder: 'Search tags, styles...',
+    searchPlaceholder: 'Search tags, categories...',
     emptyPrompt: '✨ Your prompt will appear here — tap 📋 Copy Prompt and open your AI tool.',
     charCount: function(n) { return n + ' chars'; },
     clearBtn: 'Clear', payboxTitle: 'Liked it? Buy me a beer 🍺',
@@ -3888,7 +3915,7 @@ body.light-mode .pae-section-header,
   if (window.__paeV8Installed) return;
   window.__paeV8Installed = true;
 
-  var SIGNAL = '\u2705 Palette AI v8.9 installed (v8.8 + critical mobile fix: viral strip moved below categories, no longer crushes Kids/Adults buttons)';
+  var SIGNAL = '\u2705 Palette AI v9.0 installed (4 AI models + Hebrew Text Inlay + mobile-optimized + guide refreshed)';
 
   function _log(m) { try { console.log('[PAE v8]', m); } catch (e) {} }
 
@@ -4167,14 +4194,14 @@ body.light-mode .pae-section-header,
     var GUIDE_SLIDES = {
       he: [
         { emoji: '\ud83c\udfa8', title: '\u05d1\u05e8\u05d5\u05db\u05d9\u05dd \u05d4\u05d1\u05d0\u05d9\u05dd \u05dc-Palette!', subtitle: '\u05d4\u05de\u05e7\u05d5\u05dd \u05e9\u05d1\u05d5 \u05e8\u05e2\u05d9\u05d5\u05e0\u05d5\u05ea \u05d4\u05d5\u05e4\u05db\u05d9\u05dd \u05dc\u05ea\u05de\u05d5\u05e0\u05d5\u05ea \u05de\u05d0\u05d9\u05d9\u05d3 AI', body: '\u05d9\u05e6\u05e8\u05ea\u05d9 \u05d0\u05ea \u05d4\u05db\u05dc\u05d9 \u05d4\u05d6\u05d4 \u05db\u05d3\u05d9 \u05e9\u05db\u05dc \u05d0\u05d7\u05d3 \u05d9\u05d5\u05db\u05dc \u05dc\u05db\u05ea\u05d5\u05d1 \u05d4\u05d5\u05e8\u05d0\u05d5\u05ea \u05de\u05e7\u05e6\u05d5\u05e2\u05d9\u05d5\u05ea \u05dc-AI \u05d1\u05e2\u05d1\u05e8\u05d9\u05ea \u05e4\u05e9\u05d5\u05d8\u05d4. \u05d1\u05dc\u05d9 \u05de\u05d5\u05e0\u05d7\u05d9\u05dd \u05de\u05e1\u05d5\u05d1\u05db\u05d9\u05dd. \u05e4\u05e9\u05d5\u05d8, \u05de\u05d4\u05d9\u05e8, \u05d5\u05e7\u05e6\u05ea \u05db\u05d9\u05e3 \ud83d\ude09' },
-        { emoji: '\u2728', title: '\u05e2\u05d1\u05e8\u05d9\u05ea \u05e4\u05e9\u05d5\u05d8\u05d4 \u2192 \u05ea\u05d5\u05e6\u05d0\u05d5\u05ea \u05de\u05e7\u05e6\u05d5\u05e2\u05d9\u05d5\u05ea', subtitle: '\u05de\u05d4 \u05d4\u05d0\u05e4\u05dc\u05d9\u05e7\u05e6\u05d9\u05d4 \u05e2\u05d5\u05e9\u05d4 \u05d1\u05e4\u05d5\u05e2\u05dc?', body: '\u05de\u05d7\u05d5\u05dc\u05dc\u05d9 \u05d4\u05ea\u05de\u05d5\u05e0\u05d5\u05ea (Midjourney, Nano Banana) \u05d3\u05d5\u05e8\u05e9\u05d9\u05dd \u05e4\u05e8\u05d5\u05de\u05e4\u05d8\u05d9\u05dd \u05de\u05d3\u05d5\u05d9\u05e7\u05d9\u05dd \u05d1\u05d0\u05e0\u05d2\u05dc\u05d9\u05ea \u05e2\u05dd \u05de\u05d5\u05e0\u05d7\u05d9\u05dd \u05de\u05e7\u05e6\u05d5\u05e2\u05d9\u05d9\u05dd. \u05d4\u05d0\u05e4\u05dc\u05d9\u05e7\u05e6\u05d9\u05d4 \u05de\u05db\u05d9\u05e8\u05d4 \u05d0\u05ea \u05d4\u05de\u05d9\u05dc\u05d9\u05dd \u05d5\u05d4\u05d8\u05e8\u05d9\u05e7\u05d9\u05dd \u05e9\u05d1\u05d0\u05de\u05ea \u05e2\u05d5\u05d1\u05d3\u05d9\u05dd \u2014 \u05d5\u05de\u05ea\u05e8\u05d2\u05de\u05ea \u05d0\u05ea \u05d4\u05e8\u05e2\u05d9\u05d5\u05df \u05e9\u05dc\u05da \u05dc\u05e4\u05e8\u05d5\u05de\u05e4\u05d8 \u05de\u05e7\u05e6\u05d5\u05e2\u05d9 \u05d1\u05d0\u05e0\u05d2\u05dc\u05d9\u05ea.' },
+        { emoji: '\u2728', title: '\u05e2\u05d1\u05e8\u05d9\u05ea \u05e4\u05e9\u05d5\u05d8\u05d4 \u2192 \u05ea\u05d5\u05e6\u05d0\u05d5\u05ea \u05de\u05e7\u05e6\u05d5\u05e2\u05d9\u05d5\u05ea', subtitle: '\u05de\u05d4 \u05d4\u05d0\u05e4\u05dc\u05d9\u05e7\u05e6\u05d9\u05d4 \u05e2\u05d5\u05e9\u05d4 \u05d1\u05e4\u05d5\u05e2\u05dc?', body: 'מחוללי התמונות (Nano Banana, ChatGPT, Midjourney, Stable Diffusion) דורשים פרומפטים מדויקים באנגלית עם מונחים מקצועיים. האפליקציה מכירה את המילים והטריקים שבאמת עובדים — ומתרגמת את הרעיון שלך לפורמט הנכון לכל מודל.' },
         { emoji: '\ud83d\udcdd', title: '3 \u05e6\u05e2\u05d3\u05d9\u05dd \u05e4\u05e9\u05d5\u05d8\u05d9\u05dd', subtitle: '\u05d6\u05d4 \u05d1\u05d0\u05de\u05ea \u05d4\u05db\u05dc', isSteps: true },
         { emoji: '\ud83e\uddea', title: '\u05db\u05de\u05d4 \u05d3\u05d1\u05e8\u05d9\u05dd \u05e9\u05db\u05d3\u05d0\u05d9 \u05dc\u05d4\u05db\u05d9\u05e8', subtitle: '\u05e9\u05d5\u05d5\u05d4 \u05dc\u05d3\u05e2\u05ea \u05e9\u05d9\u05e9', isFeatures: true },
         { emoji: '\ud83d\ude80', title: '\u05d9\u05d0\u05dc\u05dc\u05d4, \u05d1\u05d5\u05d0 \u05e0\u05ea\u05d7\u05d9\u05dc!', subtitle: '', body: '\u05dc\u05d0 \u05e6\u05e8\u05d9\u05da \u05dc\u05d4\u05d9\u05e8\u05e9\u05dd. \u05d4\u05db\u05dc \u05d7\u05d9\u05e0\u05dd. \u05d2\u05dd \u05d1\u05e2\u05d1\u05e8\u05d9\u05ea.<br><br>\u05e8\u05d5\u05e6\u05d4 \u05dc\u05e8\u05d0\u05d5\u05ea \u05d0\u05ea \u05d4\u05de\u05d3\u05e8\u05d9\u05da \u05e9\u05d5\u05d1? \u05d9\u05e9 \u05db\u05e4\u05ea\u05d5\u05e8 <b>?</b> \u05d1\u05e8\u05d0\u05e9 \u05d4\u05e2\u05de\u05d5\u05d3 \u05e9\u05d9\u05d7\u05d6\u05d9\u05e8 \u05d0\u05d5\u05ea\u05da \u05dc\u05db\u05d0\u05df \u05d1\u05db\u05dc \u05e8\u05d2\u05e2.' }
       ],
       en: [
         { emoji: '\ud83c\udfa8', title: 'Welcome to Palette!', subtitle: 'Where ideas become stunning AI images', body: 'I built this so anyone can write pro-level AI prompts in plain words. No jargon. Just fun and fast \ud83d\ude09' },
-        { emoji: '\u2728', title: 'Simple words \u2192 pro results', subtitle: 'What does the app actually do?', body: 'AI image generators (Midjourney, Nano Banana) need precise prompts in English with professional terms. The app knows the keywords and tricks that really work \u2014 and it translates your idea into a professional English prompt.' },
+        { emoji: '\u2728', title: 'Simple words \u2192 pro results', subtitle: 'What does the app actually do?', body: 'AI image generators (Nano Banana, ChatGPT, Midjourney, Stable Diffusion) need precise prompts in English with professional terms. The app knows the keywords and tricks that really work — and translates your idea into the right format for each model.' },
         { emoji: '\ud83d\udcdd', title: '3 simple steps', subtitle: "That's really all", isSteps: true },
         { emoji: '\ud83e\uddea', title: 'A few cool things to know', subtitle: 'Worth knowing these exist', isFeatures: true },
         { emoji: '\ud83d\ude80', title: "Alright, let's go!", subtitle: '', body: 'No registration. Free. Hebrew too.<br><br>Want to see this guide again? Click the <b>?</b> button at the top anytime.' }
@@ -4185,27 +4212,31 @@ body.light-mode .pae-section-header,
       he: [
         { num: '1\ufe0f\u20e3', title: '\u05d1\u05d7\u05e8\u05d5 \u05e1\u05d2\u05e0\u05d5\u05df', desc: '\u05e6\u05d9\u05d5\u05e8? \u05de\u05e6\u05d9\u05d0\u05d5\u05ea\u05d9? \u05d0\u05e0\u05d9\u05de\u05e6\u05d9\u05d4?' },
         { num: '2\ufe0f\u20e3', title: '\u05db\u05ea\u05d1\u05d5 \u05e8\u05e2\u05d9\u05d5\u05df', desc: '\u05dc\u05de\u05e9\u05dc: "\u05d7\u05ea\u05d5\u05dc \u05e7\u05d8\u05df \u05e9\u05d5\u05ea\u05d4 \u05e7\u05e4\u05d4"' },
-        { num: '3\ufe0f\u20e3', title: '\u05dc\u05d7\u05e6\u05d5 "\u05e6\u05d5\u05e8"', desc: '\u05d5\u05d4\u05e2\u05ea\u05d9\u05e7\u05d5 \u05d0\u05ea \u05d4\u05ea\u05d5\u05e6\u05d0\u05d4' }
+        { num: '3\ufe0f\u20e3', title: 'בחר/י מודל AI', desc: '🍌 Nano / 💬 ChatGPT / 🎨 MJ / 🌱 SD — לחץ/י על כפתור ההעתקה המתאים' }
       ],
       en: [
         { num: '1\ufe0f\u20e3', title: 'Pick a style', desc: 'Drawing? Realistic? Animation?' },
         { num: '2\ufe0f\u20e3', title: 'Type an idea', desc: 'e.g., "a small cat drinking coffee"' },
-        { num: '3\ufe0f\u20e3', title: 'Hit "Generate"', desc: 'And copy the result' }
+        { num: '3\ufe0f\u20e3', title: 'Pick your AI model', desc: '🍌 Nano / 💬 ChatGPT / 🎨 MJ / 🌱 SD — tap the matching copy button' }
       ]
     };
     
     var GUIDE_FEATURES = {
       he: [
-        { emoji: '\u2728', title: '\u05de\u05e6\u05d1 \u05d9\u05dc\u05d3\u05d9\u05dd', desc: '\u05dc\u05d9\u05e6\u05d9\u05e8\u05ea \u05ea\u05de\u05d5\u05e0\u05d5\u05ea \u05d1\u05d8\u05d5\u05d7\u05d5\u05ea' },
-        { emoji: '\ud83c\udfb2', title: '\u05d4\u05e4\u05ea\u05d9\u05e2\u05d5 \u05d0\u05d5\u05ea\u05d9', desc: '\u05dc\u05e8\u05e2\u05d9\u05d5\u05e0\u05d5\u05ea \u05e1\u05e4\u05d5\u05e0\u05d8\u05e0\u05d9\u05d9\u05dd' },
-        { emoji: '\ud83d\udcda', title: '\u05d4\u05d9\u05e1\u05d8\u05d5\u05e8\u05d9\u05d4', desc: '\u05db\u05dc \u05d4\u05e4\u05e8\u05d5\u05de\u05e4\u05d8\u05d9\u05dd \u05d4\u05e7\u05d5\u05d3\u05de\u05d9\u05dd' },
-        { emoji: '\ud83d\udce4', title: '\u05e9\u05d9\u05ea\u05d5\u05e3 \u05d7\u05db\u05dd', desc: '\u05e9\u05dc\u05d9\u05d7\u05ea \u05d4\u05e4\u05e8\u05d5\u05de\u05e4\u05d8 \u05dc\u05d7\u05d1\u05e8\u05d9\u05dd \u05d9\u05d7\u05d3 \u05e2\u05dd \u05d4\u05e1\u05d1\u05e8 \u05e2\u05dc \u05d4\u05d0\u05e4\u05dc\u05d9\u05e7\u05e6\u05d9\u05d4 \u05d5\u05e7\u05d9\u05e9\u05d5\u05e8' }
+        { emoji: '🎨', title: '4 מודלי AI', desc: 'פורמט מותאם ל-Nano Banana, ChatGPT, Midjourney ו-Stable Diffusion' },
+        { emoji: '🔤', title: 'טקסט עברי בתמונה', desc: 'שדה "טקסט לשילוב בתמונה" — עובד הכי טוב ב-ChatGPT / gpt-image-2' },
+        { emoji: '✨', title: 'מצב ילדים', desc: 'תמונות בטוחות + סגנונות ויראליים מתאימים לילדים' },
+        { emoji: '🎁', title: 'כפתור הפתעה', desc: 'רעיון רנדומלי + סגנון ויראלי אוטומטי' },
+        { emoji: '📚', title: 'היסטוריה', desc: 'כל הפרומפטים שיצרת נשמרים אוטומטית' },
+        { emoji: '📤', title: 'שיתוף חכם', desc: 'שליחה לחברים עם הסבר על האפליקציה וקישור' }
       ],
       en: [
-        { emoji: '\u2728', title: 'Kids mode', desc: 'Safe images for children' },
-        { emoji: '\ud83c\udfb2', title: 'Surprise me', desc: 'For spontaneous ideas' },
-        { emoji: '\ud83d\udcda', title: 'History', desc: 'All your past prompts' },
-        { emoji: '\ud83d\udce4', title: 'Smart share', desc: 'Share your prompt with friends, including app info and link' }
+        { emoji: '🎨', title: '4 AI models', desc: 'Tailored formats for Nano Banana, ChatGPT, Midjourney and Stable Diffusion' },
+        { emoji: '🔤', title: 'Hebrew text in image', desc: '"Text to embed in image" field — works best with ChatGPT / gpt-image-2' },
+        { emoji: '✨', title: 'Kids mode', desc: 'Safe tags + matching viral styles for children' },
+        { emoji: '🎁', title: 'Surprise button', desc: 'Random idea + automatic viral style' },
+        { emoji: '📚', title: 'History', desc: 'Every prompt you create is auto-saved' },
+        { emoji: '📤', title: 'Smart share', desc: 'Send to friends with app info and link' }
       ]
     };
     
@@ -4404,7 +4435,7 @@ function moveTextInputHeader() {
   // ═══════════════════════════════════════════════════════════════════════
 // Translations
     var T = {
-      styles: { he: 'סגנונות', en: 'Styles' },
+      styles: { he: 'קטגוריות', en: 'Categories' },
       display: { he: 'סוגי תצוגה', en: 'Display types' },
       textInput: { he: 'הכנס/י כאן את הטקסט שלך בשביל התמונה', en: 'Enter the text for your image here' }
     };
