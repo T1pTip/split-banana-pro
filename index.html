@@ -535,6 +535,33 @@ body {
   .btn-split-kids,
   .btn-split-adults { padding: 8px 6px !important; }
 }
+
+/* FIX: History panel as fixed bottom sheet on mobile */
+@media (max-width: 767px) {
+  .hist-panel.open {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-height: 60vh;
+    overflow-y: auto;
+    border-radius: 12px 12px 0 0;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+    margin-top: 0;
+    z-index: 500;
+    box-shadow: 0 -4px 24px rgba(0,0,0,0.5);
+  }
+  .hist-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 499;
+  }
+  .hist-backdrop.show { display: block; }
+}
 </style>
 
   <!-- SEO & Social Meta (v5) -->
@@ -2816,7 +2843,23 @@ function toggleHistPanel() {
   if (!p) return;
   const opening = !p.classList.contains('open');
   p.classList.toggle('open');
-  if (opening) renderHistory();
+  if (opening) {
+    renderHistory();
+    if (window.innerWidth < 768) {
+      let bd = document.getElementById('histBackdrop');
+      if (!bd) {
+        bd = document.createElement('div');
+        bd.id = 'histBackdrop';
+        bd.className = 'hist-backdrop';
+        bd.onclick = toggleHistPanel;
+        document.body.appendChild(bd);
+      }
+      bd.classList.add('show');
+    }
+  } else {
+    const bd = document.getElementById('histBackdrop');
+    if (bd) bd.classList.remove('show');
+  }
 }
 function clearHistory() {
   try { localStorage.removeItem('sbp_hist'); } catch(e) { console.warn('[SBP]', e); }
