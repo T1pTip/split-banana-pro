@@ -676,7 +676,7 @@ body {
   <div class="format-row">
     <button class="fmt-btn" data-ar="--ar 9:16" onclick="setAR('--ar 9:16')">📱 <span id="fmtStory">סטורי</span></button>
     <button class="fmt-btn" data-ar="--ar 1:1" onclick="setAR('--ar 1:1')">⬜ <span id="fmtSquare">ריבוע</span></button>
-    <button class="fmt-btn" data-ar="--ar 16:9" onclick="setAR('--ar 16:9')">🖼️ <span id="fmtWide">רחב</span></button>
+    <button class="fmt-btn active" data-ar="--ar 16:9" onclick="setAR('--ar 16:9')">🖼️ <span id="fmtWide">רחב</span></button>
   </div>
   <div class="random-divider">
     <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
@@ -720,7 +720,7 @@ body {
       </div>
       <div class="textarea-wrap">
         <button class="ta-clear-btn" id="taClearBtn" onclick="clearUserInput()" title="נקה טקסט" aria-label="נקה טקסט" type="button">✕</button>
-        <textarea id="userInput" rows="4" placeholder="תאר/י את התמונה שאת/ה רוצה/ה ליצור...
+        <textarea id="userInput" rows="4" maxlength="3000" aria-label="תאר/י את התמונה שאת/ה רוצה/ה ליצור" placeholder="תאר/י את התמונה שאת/ה רוצה/ה ליצור...
 או פשוט תלחצ/י על כפתור ההפתעה :)" aria-label="תאר את התמונה שאתה רוצה ליצור"></textarea>
       </div>
     </div>
@@ -3071,6 +3071,7 @@ function trackInstall() {
 
 // ── FIX #5 + FIX #7: startApp — restore saved language before init ──
 function startApp() {
+  setAR('--ar 16:9');
       // S16: Keyboard shortcuts
       try {
         document.addEventListener('keydown', handleGlobalShortcuts);
