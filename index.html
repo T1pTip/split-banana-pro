@@ -31,6 +31,10 @@
   --r: 12px;
   --r-sm: 8px;
 }
+.cat-pill-more { opacity: 0.85; border-style: dashed !important; }
+.cat-pill-more:hover { opacity: 1; }
+.cat-pill-more .cat-emoji { font-size: 0.9em; opacity: 0.7; }
+.cat-pill-more .cat-name { font-style: italic; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { overflow-x: hidden !important; max-width: 100vw !important; }
 /* S17: Prevent 2px overflow on app children */
@@ -210,7 +214,7 @@ body {
 /* ── Random Divider ── */
 .random-divider{order:2;display:flex;align-items:center;justify-content:center;padding:6px 14px 24px;gap:10px;position:relative}
 #randomHint { font-size: 11px; opacity: 0.85; font-weight: normal; display: block; margin-top: 2px; }
-#randomBtn { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
+#randomBtn { display: flex; flex-direction: column; align-items: center; gap: 2px; }
 .random-divider { padding-bottom: 4px !important; }
 .random-divider::before,.random-divider::after{content:'';flex:1;height:1px;background:var(--border)}
 
@@ -309,9 +313,6 @@ body {
 .theme-btn:active { transform: scale(0.95); }
 .lang-toggle .theme-btn { border-radius: 7px; min-height: 44px; min-width: 44px; padding: 4px; font-size: 16px; }
 .lang-toggle .lang-btn { border-radius: 7px; min-height: 44px; }
-/* Sprint 3 (v8.3) Task 2: Pin header toggle bar — never flips sides on lang change */
-.header-top { direction: ltr !important; }
-.header-top .header-title { unicode-bidi: plaintext; }
 
 .textarea-wrap { position: relative; }
 .ta-clear-btn {
@@ -485,83 +486,6 @@ body {
 [data-theme="light"] .btn-share { background: linear-gradient(135deg, #1ebe5a, #159846) !important; box-shadow: 0 2px 10px rgba(30,190,90,0.35) !important; }
 [data-theme="light"] .btn-share:hover { background: linear-gradient(135deg, #25d366, #159846) !important; box-shadow: 0 4px 14px rgba(30,190,90,0.5) !important; }
 
-/* ── v8.9: Viral chip strip layout (moved below .cat-grid) ── */
-.viral-chips-strip {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  align-items: center;
-  padding: 6px 0 4px;
-  margin: 2px 0 6px;
-  width: 100%;
-  min-width: 0;
-  box-sizing: border-box;
-}
-.viral-chip-prompt {
-  font-size: 11.5px;
-  color: var(--muted);
-  font-weight: 600;
-  margin-inline-end: 2px;
-}
-/* v9.0: flex-wrap removed — was causing 2-row layout on narrow mobile. Buttons shrink instead. */
-.btn-split-wrap { flex-wrap: nowrap; max-width: 100%; }
-/* v9.0: mobile-tight sizing for split buttons — single row on all widths */
-@media (max-width: 480px) {
-  .btn-split-wrap { gap: 0; }
-  .btn-split-kids,
-  .btn-split-adults {
-    padding: 8px 10px !important;
-    min-width: 0 !important;
-    flex: 0 1 auto;
-  }
-  .btn-split-kids .kids-title,
-  .btn-split-adults .adults-title { font-size: 10px !important; }
-  .btn-split-kids .kids-sub,
-  .btn-split-adults .adults-sub { font-size: 8.5px !important; }
-  .btn-split-kids .kids-icon { font-size: 20px !important; }
-  .btn-split-adults .adults-icon { font-size: 18px !important; }
-  .btn-rnd-main {
-    padding: 8px 10px !important;
-    font-size: 13px !important;
-    flex: 1 1 auto;
-    min-width: 0;
-  }
-  #randomBtnLabel { white-space: nowrap; }
-  #randomHint { display: none !important; }
-}
-@media (max-width: 360px) {
-  .btn-split-kids .kids-sub,
-  .btn-split-adults .adults-sub { display: none !important; }
-  .btn-split-kids,
-  .btn-split-adults { padding: 8px 6px !important; }
-}
-
-/* FIX: History panel as fixed bottom sheet on mobile */
-@media (max-width: 767px) {
-  .hist-panel.open {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    max-height: 60vh;
-    overflow-y: auto;
-    border-radius: 12px 12px 0 0;
-    border-left: none;
-    border-right: none;
-    border-bottom: none;
-    margin-top: 0;
-    z-index: 500;
-    box-shadow: 0 -4px 24px rgba(0,0,0,0.5);
-  }
-  .hist-backdrop {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.5);
-    z-index: 499;
-  }
-  .hist-backdrop.show { display: block; }
-}
 </style>
 
   <!-- SEO & Social Meta (v5) -->
@@ -609,10 +533,26 @@ body {
       <button class="lang-btn" id="btnEN" onclick="setLang('en')">English</button>
     </div>
   </div>
+  <div class="header-bottom">
+    <div class="search-wrap">
+      <input type="search" id="search" autocomplete="off" oninput="filterTags()" placeholder="חפש/י תגיות, סגנונות..." aria-label="חיפוש תגיות וסגנונות">
+      <span class="search-icon-emoji" aria-hidden="true">🔍</span>
+    </div>
+  </div>
 </header>
 
 <div class="app">
   <div class="right-col">
+    <div class="tb-toolbar" id="inputToolbar">
+          <button class="tb-btn" onclick="toggleHistPanel()" title="היסטוריה" aria-label="היסטוריה">🕐</button>
+          <button class="tb-btn" onclick="openSettings()" title="הגדרות" aria-label="הגדרות">⚙️</button>
+          
+        </div>
+        <div class="textarea-wrap">
+          <button class="ta-clear-btn" id="taClearBtn" onclick="clearUserInput()" title="נקה טקסט" aria-label="נקה טקסט" type="button">✕</button>
+          <textarea id="userInput" rows="4" placeholder="תאר/י את התמונה שאת/ה רוצה/ה ליצור...
+או פשוט תלחצ/י על כפתור ההפתעה :)" aria-label="תאר את התמונה שאתה רוצה ליצור"></textarea>
+        </div>
     <div class="chips-wrap" id="selectedBar"><div class="sel-chip"><span class="sel-chip-x">✕</span>צבעי מים</div><div class="sel-chip"><span class="sel-chip-x">✕</span>צבעים חמים</div><div class="sel-chip"><span class="sel-chip-x">✕</span>פיקסל</div><div class="sel-chip"><span class="sel-chip-x">✕</span>חיוך</div></div>
     <div class="result-box">
       <div class="result-top">
@@ -632,38 +572,16 @@ body {
       </div>
       <div id="finalPrompt" class="prompt-ready">דרקון חמוד שמנשף בועות סבון, smiling, warm genuine smile, happy expression, joyful face, watercolor painting, soft edges, flowing colors, pixel art, 16-bit, retro game style, warm color palette, amber tones, orange and red hues, warm cozy atmosphere --no bad anatomy, deformed hands, extra fingers, text, watermark, blurry, lowres, ugly, mutation</div>
     </div>
-    <!-- Sprint 6 Task C3: Hebrew Text Inlay (hidden by default) -->
-    <div class="hebrew-inlay-wrap">
-      <button type="button" id="hebrewInlayToggle" class="hebrew-inlay-toggle"
-              onclick="toggleHebrewInlay()" aria-expanded="false" aria-controls="hebrewInlayInput">
-        <span class="hebrew-inlay-icon">➕</span>
-        <span id="hebrewInlayToggleLabel">טקסט לשילוב בתמונה</span>
+    <div class="action-row">
+      <button class="btn-copy" id="copyBtn" onclick="copyPrompt()">
+        <span id="copyIcon">📋</span>
+        <span id="copyText">העתק/י פרומפט</span>
       </button>
-      <div id="hebrewInlayInput" class="hebrew-inlay-input" style="display:none;">
-        <input type="text" id="hebrewTextField" maxlength="100"
-               placeholder="לדוגמה: שלום עולם">
-        <div id="hebrewInlayHint" class="hebrew-inlay-hint">עובד הכי טוב ב-ChatGPT / gpt-image-2</div>
-      </div>
-    </div>
-
-    <!-- v8.7: Unified 6-button compact copy-row (4 model formats + Share + Clear) -->
-    <div class="copy-row" role="group" aria-label="העתק פרומפט לפי מודל AI">
-      <button type="button" id="copyNanoBtn" class="copy-btn copy-btn-primary" onclick="copyFormat('nano')">🍌 Nano Banana</button>
-      <button type="button" id="copyChatGPTBtn" class="copy-btn" onclick="copyFormat('chatgpt')">💬 ChatGPT</button>
-      <button type="button" id="copyMJBtn" class="copy-btn" onclick="copyFormat('mj')">🎨 Midjourney</button>
-      <button type="button" id="copySDBtn" class="copy-btn" onclick="copyFormat('sd')">🌱 SD 3.5</button>
       <button class="btn-share" id="shareBtn" onclick="sharePrompt()">
         <span id="shareIcon">📤</span>
         <span id="shareText">שתף/י</span>
       </button>
       <button class="btn-clear" id="clearBtn" onclick="clearAll()">נקה/י</button>
-    </div>
-    <!-- v8.7: Legacy action-row retained (hidden) for keyboard shortcut compatibility -->
-    <div class="action-row" style="display:none;">
-      <button class="btn-copy" id="copyBtn" onclick="copyPrompt()" style="display:none;" aria-hidden="true">
-        <span id="copyIcon">📋</span>
-        <span id="copyText">העתק/י פרומפט</span>
-      </button>
     </div>
     <button class="pb-float" id="pbFloatBtn" onclick="doPayBox()">
       <div class="pb-float-emoji-wrap"><span class="pb-float-emoji">🍺</span></div>
@@ -676,12 +594,12 @@ body {
   <div class="format-row">
     <button class="fmt-btn" data-ar="--ar 9:16" onclick="setAR('--ar 9:16')">📱 <span id="fmtStory">סטורי</span></button>
     <button class="fmt-btn" data-ar="--ar 1:1" onclick="setAR('--ar 1:1')">⬜ <span id="fmtSquare">ריבוע</span></button>
-    <button class="fmt-btn active" data-ar="--ar 16:9" onclick="setAR('--ar 16:9')">🖼️ <span id="fmtWide">רחב</span></button>
+    <button class="fmt-btn" data-ar="--ar 16:9" onclick="setAR('--ar 16:9')">🖼️ <span id="fmtWide">רחב</span></button>
   </div>
   <div class="random-divider">
     <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
       <div class="btn-split-wrap">
-        <button class="btn-split-kids mode-active" id="kidsBtn" onclick="setKidsMode(true)">
+        <button class="btn-split-kids" id="kidsBtn" onclick="setKidsMode(true)">
           <span class="kids-icon" style="transition: transform 0.3s; transform: scale(1) rotate(0deg);">✨</span>
           <span class="kids-title" id="kidsBtnTitle">כפתור לילדים</span>
           <span class="kids-sub" id="kidsBtnSub">מצב קסום</span>
@@ -690,7 +608,7 @@ body {
           <span id="randomBtnLabel">🎁 הפתעה!</span>
           <span id="randomHint">ריק? נביא לך רעיון ✨</span>
         </button>
-        <button class="btn-split-adults" id="adultsBtn" onclick="setKidsMode(false)">
+        <button class="btn-split-adults mode-active" id="adultsBtn" onclick="setKidsMode(false)">
           <span class="adults-icon">🎨</span>
           <span class="adults-title" id="adultsBtnTitle">מצב מבוגרים</span>
           <span class="adults-sub" id="adultsBtnSub">כל הקטגוריות</span>
@@ -704,33 +622,12 @@ body {
       <div class="left-col">
     <div class="onboarding show" id="onboarding">
       <div class="ob-steps">
-        <div class="ob-step"><div class="ob-num">1</div><span id="ob1">תאר/י את התמונה שלך</span></div>
-        <div class="ob-step"><div class="ob-num">2</div><span id="ob2">בחר/י קטגוריות</span></div>
-        <div class="ob-step"><div class="ob-num">3</div><span id="ob3">בחר/י סוג תצוגה</span></div>
-        <div class="ob-step"><div class="ob-num">4</div><span id="ob4">בחר/י כפתור ייצוא</span></div>
+        <div class="ob-step"><div class="ob-num">1</div><span id="ob1">בחר/י קטגוריה</span></div>
+        <div class="ob-step"><div class="ob-num">2</div><span id="ob2">בחר/י תגיות</span></div>
+        <div class="ob-step"><div class="ob-num">3</div><span id="ob3">תאר/י וצור/י</span></div>
       </div>
       <button class="ob-close" onclick="dismissOnboarding()" aria-label="סגור" title="סגור">✕</button>
     </div>
-
-    <!-- v11.1: Subject input moved here (was in .right-col); v11.4: duplicate h3 removed (runtime _bootV75 injects the heading) -->
-    <div class="subject-input-block">
-      <div class="tb-toolbar" id="inputToolbar">
-        <button id="histBtn" class="tb-btn" onclick="toggleHistPanel()" title="היסטוריה" aria-label="היסטוריה">🕐</button>
-        <button id="settingsBtn" class="tb-btn" onclick="openSettings()" title="הגדרות" aria-label="הגדרות">⚙️</button>
-      </div>
-      <div class="textarea-wrap">
-        <button class="ta-clear-btn" id="taClearBtn" onclick="clearUserInput()" title="נקה טקסט" aria-label="נקה טקסט" type="button">✕</button>
-        <textarea id="userInput" rows="4" maxlength="3000" aria-label="תאר/י את התמונה שאת/ה רוצה/ה ליצור" placeholder="תאר/י את התמונה שאת/ה רוצה/ה ליצור...
-או פשוט תלחצ/י על כפתור ההפתעה :)" aria-label="תאר את התמונה שאתה רוצה ליצור"></textarea>
-      </div>
-    </div>
-
-    <!-- v11.2: search bar moved here from header -->
-    <div class="search-wrap search-wrap-inline" id="searchWrapInline">
-      <input type="search" id="search" autocomplete="off" oninput="filterTags()" placeholder="חפש/י תגיות, קטגוריות..." aria-label="חיפוש תגיות וקטגוריות">
-      <span class="search-icon-emoji" aria-hidden="true">🔍</span>
-    </div>
-
     <div class="cat-grid" id="catGrid"><button class="cat-pill" data-ci="0"><span class="cat-badge" id="badge-0">0</span><span class="cat-emoji">📸</span><span class="cat-name" style="display: none;">סגנון צילום</span></button><button class="cat-pill" data-ci="1"><span class="cat-badge on" id="badge-1">2</span><span class="cat-emoji">🎨</span><span class="cat-name">סגנון אמנות</span></button><button class="cat-pill" data-ci="2"><span class="cat-badge" id="badge-2">0</span><span class="cat-emoji">🎬</span><span class="cat-name" style="display: none;">ז׳אנר</span></button><button class="cat-pill" data-ci="3"><span class="cat-badge" id="badge-3">0</span><span class="cat-emoji">💡</span><span class="cat-name">תאורה</span></button><button class="cat-pill" data-ci="4"><span class="cat-badge" id="badge-4">0</span><span class="cat-emoji">⚙️</span><span class="cat-name">איכות</span></button><button class="cat-pill" data-ci="5"><span class="cat-badge" id="badge-5">0</span><span class="cat-emoji">🎭</span><span class="cat-name">דמויות</span></button><button class="cat-pill" data-ci="6"><span class="cat-badge" id="badge-6">0</span><span class="cat-emoji">🎬</span><span class="cat-name">מצלמה</span></button><button class="cat-pill" data-ci="7"><span class="cat-badge" id="badge-7">0</span><span class="cat-emoji">👗</span><span class="cat-name" style="display: none;">אופנה</span></button><button class="cat-pill" data-ci="8"><span class="cat-badge" id="badge-8">0</span><span class="cat-emoji">🌍</span><span class="cat-name" style="display: none;">מראה</span></button><button class="cat-pill" data-ci="9"><span class="cat-badge" id="badge-9">0</span><span class="cat-emoji">💇</span><span class="cat-name" style="display: none;">גוף</span></button><button class="cat-pill" data-ci="10"><span class="cat-badge" id="badge-10">0</span><span class="cat-emoji">🌆</span><span class="cat-name">סביבה</span></button><button class="cat-pill" data-ci="11"><span class="cat-badge" id="badge-11">0</span><span class="cat-emoji">🔮</span><span class="cat-name">אסתטיקה</span></button><button class="cat-pill" data-ci="12"><span class="cat-badge on" id="badge-12">1</span><span class="cat-emoji">😊</span><span class="cat-name" style="display: none;">הבעה</span></button><button class="cat-pill" data-ci="13"><span class="cat-badge" id="badge-13">0</span><span class="cat-emoji">🧍</span><span class="cat-name" style="display: none;">פוזה</span></button><button class="cat-pill" data-ci="14"><span class="cat-badge on" id="badge-14">1</span><span class="cat-emoji">🖌️</span><span class="cat-name" style="display: none;">צבעים</span></button><button class="cat-pill" data-ci="15"><span class="cat-badge" id="badge-15">0</span><span class="cat-emoji">🧸</span><span class="cat-name" style="display: none;">צעצועים</span></button><button class="cat-pill" data-ci="16"><span class="cat-badge" id="badge-16">0</span><span class="cat-emoji">📷</span><span class="cat-name" style="display: none;">סגנון ישן ורג…</span></button><button class="cat-pill" data-ci="17"><span class="cat-badge" id="badge-17">0</span><span class="cat-emoji">🃏</span><span class="cat-name" style="display: none;">קריקטורה</span></button><button class="cat-pill" data-ci="18"><span class="cat-badge" id="badge-18">0</span><span class="cat-emoji">🐾</span><span class="cat-name" style="display: none;">חיות</span></button><button class="cat-pill" data-ci="19"><span class="cat-badge" id="badge-19">0</span><span class="cat-emoji">✨</span><span class="cat-name" style="display: none;">אפקטים</span></button><button class="cat-pill" data-ci="20"><span class="cat-badge" id="badge-20">0</span><span class="cat-emoji">🎞️</span><span class="cat-name" style="display: none;">סגנון סרטים</span></button><button class="cat-pill" data-ci="21"><span class="cat-badge" id="badge-21">0</span><span class="cat-emoji">🧱</span><span class="cat-name" style="display: none;">חומרים</span></button><button class="cat-pill" data-ci="22"><span class="cat-badge" id="badge-22">0</span><span class="cat-emoji">🏙️</span><span class="cat-name" style="display: none;">בניינים וחדרים</span></button><button class="cat-pill" data-ci="23"><span class="cat-badge" id="badge-23">0</span><span class="cat-emoji">🌿</span><span class="cat-name" style="display: none;">טבע מקרוב</span></button><button class="cat-pill" data-ci="24"><span class="cat-badge" id="badge-24">0</span><span class="cat-emoji">🌊</span><span class="cat-name" style="display: none;">מזג אוויר</span></button><button class="cat-pill" data-ci="25"><span class="cat-badge" id="badge-25">0</span><span class="cat-emoji">📱</span><span class="cat-name" style="display: none;">טרנדים</span></button><button class="cat-pill" data-ci="26"><span class="cat-badge" id="badge-26">0</span><span class="cat-emoji">🎮</span><span class="cat-name" style="display: none;">משחקים</span></button><button class="cat-pill" data-ci="27"><span class="cat-badge" id="badge-27">0</span><span class="cat-emoji">🖼️</span><span class="cat-name" style="display: none;">פוסטרים</span></button><button class="cat-pill" data-ci="28"><span class="cat-badge" id="badge-28">0</span><span class="cat-emoji">🤗</span><span class="cat-name" style="display: none;">נוסטלגיה</span></button><button class="cat-pill" data-ci="29"><span class="cat-badge" id="badge-29">0</span><span class="cat-emoji">🌱</span><span class="cat-name" style="display: none;">עתיד ירוק</span></button><button class="cat-pill" data-ci="30"><span class="cat-badge" id="badge-30">0</span><span class="cat-emoji">🏆</span><span class="cat-name" style="display: none;">פרופיל מקצועי</span></button><button class="cat-pill" data-ci="31"><span class="cat-badge" id="badge-31">0</span><span class="cat-emoji">🍃</span><span class="cat-name" style="display: none;">עונות השנה</span></button></div>
     <div class="tag-panel" id="tagPanel">
       <div class="tag-panel-header">
@@ -1294,12 +1191,7 @@ let currentLang = 'he';
 let selected = new Set();
 let lastPrompt = '';
 let activeCatIdx = -1;
-// Sprint 5: default to Kids mode on first app open; restore saved preference for returning users.
-let kidsMode = true;
-try {
-  const _savedKids = localStorage.getItem('sbp_kids');
-  if (_savedKids === 'false') kidsMode = false;
-} catch(e) {}
+let kidsMode = false;
 
 // ── FIX #6: Categories shown ONLY in kids mode ─────────────────
 const KIDS_ONLY_TITLES = new Set(['🌈 עולם הקסם']);
@@ -1370,363 +1262,11 @@ const KIDS_TITLES = new Set([
 
 const NEG = '--no bad anatomy, deformed hands, extra fingers, text, watermark, blurry, lowres, ugly, mutation';
 
-// ─── Sprint 0: Viral Style Infrastructure (v7.9.2) ──────────────────────────
-// Kids-safe cascade: Kids mode > smart (per style) > default.
-// activeViralStyle tracks which VIRAL_STYLE is currently applied (null = none).
-
-const KIDS_NEGATIVE = '--no scary, violence, gore, weapons, blood, nudity, adult, dark, horror, disturbing, creepy';
-
-const SMART_NEGATIVE_MAP = {
-  ghibli:      '--no photorealistic, hyperreal, gritty, 3d render, cgi, dark horror, low detail',
-  hyperreal:   '--no cartoon, anime, painted, illustration, sketch, flat colors, toy-like',
-  dystopian:   '--no childish, whimsical, candy colors, cozy, cute cartoon',
-  pixar3d:     '--no flat 2d, sketch, dark gritty, photorealistic, rough lines',
-  animeaction: '--no photorealistic, 3d render, muted colors, still life, boring, static',
-  indiecomic:  '--no photorealistic, 3d render, glossy, corporate, generic stock art',
-  pixelart:    '--no smooth gradients, anti-aliasing, photorealistic, 3d render, continuous tone, high detail',
-  retro35mm:   '--no hdr, hyperrealistic, digital perfection, oversaturated, plastic texture, sharp modern',
-  cinematic:   '--no flat lighting, close-up portrait, plain background, boring composition, bright daytime',
-  cuteanimal:  '--no cartoon, anime, stylized, aggressive, adult proportions, scary features, distorted anatomy',
-  claymation:  '--no photorealistic, digital smooth, glossy, anime, pencil sketch, 2d flat, hyperreal skin',
-  gtastyle:    '--no photorealistic, anime, watercolor, pencil sketch, overly smooth, flat cartoon',
-  default:     '--no bad anatomy, deformed hands, extra fingers, text, watermark, blurry, lowres, ugly, mutation'
-};
-
-const VIRAL_STYLES = [
-  // Kids-safe (6) — includes Nano Banana's #1 viral use case (3D toy figurine via pixar3d).
-  { id: 'ghibli',      label: { he: 'ג\'יבלי חלומי',       en: 'Dreamy Ghibli' },        kids_safe: true  },
-  { id: 'pixar3d',     label: { he: 'פיקסאר / צעצוע 3D',    en: 'Pixar / 3D Toy' },       kids_safe: true  },
-  { id: 'animeaction', label: { he: 'אנימה אקשן',           en: 'Anime Action' },         kids_safe: true  },
-  { id: 'indiecomic',  label: { he: 'קומיקס & פופ',          en: 'Comic & Pop' },          kids_safe: true  },
-  { id: 'pixelart',    label: { he: 'פיקסל ארט',             en: 'Pixel Art' },            kids_safe: true  },
-  { id: 'retro35mm',   label: { he: 'פילם רטרו',             en: 'Retro Film' },           kids_safe: true  },
-  // Sprint 3 (v8.3) — discovered from user's 487-image WhatsApp sample:
-  { id: 'cinematic',   label: { he: 'קולנועי אפי',            en: 'Epic Cinematic' },       kids_safe: true  },
-  { id: 'cuteanimal',  label: { he: 'חיה חמודה',              en: 'Cute Animal' },          kids_safe: true  },
-  { id: 'claymation',  label: { he: 'פלסטלינה',                en: 'Claymation' },           kids_safe: true  },
-  // Adult-only (4)
-  { id: 'hyperreal',   label: { he: 'היפר־ריאליסטי',         en: 'Hyperrealistic' },       kids_safe: false },
-  { id: 'dystopian',   label: { he: 'דיסטופי / סייברפאנק',   en: 'Dystopian / Cyberpunk' }, kids_safe: false },
-  { id: 'filmnoir',    label: { he: 'פילם נואר',             en: 'Film Noir' },            kids_safe: false },
-  { id: 'gtastyle',    label: { he: 'סגנון GTA',              en: 'GTA Style' },            kids_safe: false }
-];
-
-const VIRAL_CONFLICTS = {
-  ghibli: {
-    blocks:   ['hyperreal','photorealistic','gritty','3d render','cgi','IMAX','premium cinema quality','massive scale','sweeping landscape','epic wide shot'],
-    enforces: ['studio ghibli style','soft watercolor textures','dreamy painterly atmosphere'],
-    negative_key: 'ghibli'
-  },
-  // pixar3d — Nano Banana's #1 viral use case (3D chibi figurine / toy presentation).
-  pixar3d: {
-    blocks:   ['flat 2d','sketch','dark horror','rough lines','photorealistic','grainy film','35mm analog','gritty texture','film grain','faded vintage'],
-    enforces: ['pixar 3d toy-like style','expressive large eyes','smooth glossy textures','vibrant cinematic lighting','collectible figurine aesthetic'],
-    negative_key: 'pixar3d'
-  },
-  animeaction: {
-    blocks:   ['photorealistic','still life','muted','boring','IMAX','hyperreal','8k detail','premium cinema quality','shallow depth of field','pencil sketch'],
-    enforces: ['anime action style','dynamic motion lines','bold cel shading'],
-    negative_key: 'animeaction'
-  },
-  // indiecomic — absorbs pop art + Keith Haring aesthetic (same halftone/ink DNA).
-  indiecomic: {
-    blocks:   ['photorealistic','glossy','corporate','3d render','IMAX','premium cinema quality','smooth gradient','hyperreal','shallow depth of field','cinematic lighting'],
-    enforces: ['indie comic art','bold halftone colors','thick ink outlines','pop art influence'],
-    negative_key: 'indiecomic'
-  },
-  // pixelart — distinct retro video-game aesthetic.
-  pixelart: {
-    blocks:   ['photorealistic','3d render','smooth gradients','hyperreal','anti-aliased','IMAX','premium cinema quality','massive scale','shallow depth of field','cinematic lighting','glossy'],
-    enforces: ['16-bit pixel art','chunky distinct pixels','limited color palette','retro video game aesthetic'],
-    negative_key: 'pixelart'
-  },
-  // retro35mm — 2026 counter-trend to hyperreal; emphasizes imperfection.
-  retro35mm: {
-    blocks:   ['hyperrealistic','digital perfection','hdr','glossy modern','8k ultra sharp','IMAX','premium cinema quality','pristine','polished surfaces','ultra sharp','vibrant cinematic'],
-    enforces: ['35mm film photography','subtle film grain','warm vintage tones','soft light leaks','sun-faded colors'],
-    negative_key: 'retro35mm'
-  },
-  hyperreal: {
-    blocks:   ['cartoon','anime','painted','illustration','flat colors'],
-    enforces: ['hyperrealistic photography','8k detail','shallow depth of field'],
-    negative_key: 'hyperreal'
-  },
-  // dystopian — absorbs cyberpunk; neon accents allowed in moody palette.
-  dystopian: {
-    blocks:   ['cheerful','bright pastel','childish','whimsical','nature landscape'],
-    enforces: ['dark atmospheric scene','decaying urban environment','moody palette with neon accents','cinematic depth'],
-    negative_key: 'dystopian'
-  },
-  filmnoir: {
-    blocks:   ['bright pastel','cartoon','cheerful','colorful','saturated colors','warm palette','bright daytime','vibrant colors'],
-    enforces: ['film noir style','high contrast black and white','hard shadows'],
-    negative_key: 'default'
-  },
-  cinematic: {
-    blocks:   ['flat lighting','close-up portrait','plain background','boring composition','bright daytime'],
-    enforces: ['epic cinematic composition','dramatic silhouette','warm moody atmospheric lighting','oversized celestial backdrop','atmospheric haze','wide cinematic shot'],
-    negative_key: 'cinematic'
-  },
-  cuteanimal: {
-    blocks:   ['cartoon','anime','stylized illustration','aggressive','adult animal proportions','scary features'],
-    enforces: ['photorealistic baby animal','oversized baby proportions','expressive large eyes','wearing cute human clothing','natural indoor lighting','shallow depth of field','soft fur texture'],
-    negative_key: 'cuteanimal'
-  },
-  claymation: {
-    blocks:   ['photorealistic','digital smooth','glossy skin','anime','pencil sketch','2d flat','IMAX','premium cinema quality','massive scale','sweeping landscape','glossy modern','hyperreal','smooth glossy'],
-    enforces: ['claymation stop-motion style','visible fingerprints in clay texture','exaggerated soft features','warm nostalgic palette','Aardman-inspired characters','tactile handmade look'],
-    negative_key: 'claymation'
-  },
-  gtastyle: {
-    blocks:   ['photorealistic','anime','watercolor','pencil sketch','overly smooth','flat cartoon'],
-    enforces: ['gta v style character render','stylized 3d game character','cel-shaded with realistic textures','vibrant saturated palette','cinematic game cutscene lighting','real-world urban backdrop'],
-    negative_key: 'gtastyle'
-  }
-};
-
-let activeViralStyle = null;
-
-function getEffectiveNegative(styleId) {
-  // Cascade: Kids > smart(style) > default
-  if (typeof kidsMode !== 'undefined' && kidsMode) return KIDS_NEGATIVE;
-  if (styleId && VIRAL_CONFLICTS[styleId]) {
-    var key = VIRAL_CONFLICTS[styleId].negative_key || 'default';
-    return SMART_NEGATIVE_MAP[key] || SMART_NEGATIVE_MAP.default;
-  }
-  return SMART_NEGATIVE_MAP.default;
-}
-
-function applyViralStyle(styleId) {
-  // Atomic: validate, enforce Kids gate, clear conflicts, add enforced tags.
-  if (!styleId) return false;
-  var style = null;
-  for (var i = 0; i < VIRAL_STYLES.length; i++) {
-    if (VIRAL_STYLES[i].id === styleId) { style = VIRAL_STYLES[i]; break; }
-  }
-  if (!style) { console.warn('[Palette AI] applyViralStyle: unknown style:', styleId); return false; }
-  if (typeof kidsMode !== 'undefined' && kidsMode && !style.kids_safe) {
-    console.warn('[Palette AI] applyViralStyle: adult style blocked by Kids mode:', styleId);
-    return false;
-  }
-  var rules = VIRAL_CONFLICTS[styleId];
-  if (!rules) return false;
-  // Clear prior viral style's enforces (idempotent replace)
-  if (activeViralStyle && activeViralStyle !== styleId) {
-    var prior = VIRAL_CONFLICTS[activeViralStyle];
-    if (prior && prior.enforces) {
-      prior.enforces.forEach(function(tag) { try { selected.delete(tag); } catch(e){} });
-    }
-  }
-  // Remove conflicting selections (case-insensitive substring match)
-  try {
-    rules.blocks.forEach(function(blockTag) {
-      var needle = String(blockTag).toLowerCase();
-      Array.from(selected).forEach(function(sel) {
-        if (String(sel).toLowerCase().indexOf(needle) !== -1) selected.delete(sel);
-      });
-    });
-    rules.enforces.forEach(function(tag) { selected.add(tag); });
-  } catch(e) { console.warn('[Palette AI] applyViralStyle error:', e); return false; }
-  activeViralStyle = styleId;
-  try { updateBadges(); updateChips(); generate(); } catch(e){}
-  return true;
-}
-
-function clearViralStyle() {
-  if (!activeViralStyle) return;
-  var rules = VIRAL_CONFLICTS[activeViralStyle];
-  if (rules && rules.enforces) {
-    rules.enforces.forEach(function(tag) { try { selected.delete(tag); } catch(e){} });
-  }
-  activeViralStyle = null;
-  try { updateBadges(); updateChips(); generate(); } catch(e){}
-}
-
-function pickRandomViralStyle() {
-  var pool = VIRAL_STYLES.filter(function(s) {
-    if (typeof kidsMode !== 'undefined' && kidsMode) return !!s.kids_safe;
-    return true;
-  });
-  if (!pool.length) return null;
-  return pool[Math.floor(Math.random() * pool.length)].id;
-}
-// ─── End Sprint 0 Viral Infrastructure ──────────────────────────────────────
-
-// ─── Sprint 1 Quick Win: Viral Chip Strip UI (v8.1) ─────────────────────────
-// Renders a clickable chip strip above #randomBtn for the 7 VIRAL_STYLES.
-// Kids mode filters to kids_safe only. Chips auto-refresh on apply/clear.
-
-const VIRAL_CHIP_T = {
-  he: { prompt: '\u2728 \u05e1\u05d2\u05e0\u05d5\u05df \u05d5\u05d9\u05e8\u05d0\u05dc\u05d9?',
-        viralRandom: '\ud83c\udfb2 \u05d5\u05d9\u05e8\u05d0\u05dc\u05d9!',
-        ariaPick:  '\u05d1\u05d7\u05e8 \u05e1\u05d2\u05e0\u05d5\u05df \u05d5\u05d9\u05e8\u05d0\u05dc\u05d9',
-        ariaClear: '\u05e0\u05e7\u05d4 \u05e1\u05d2\u05e0\u05d5\u05df \u05d5\u05d9\u05e8\u05d0\u05dc\u05d9' },
-  en: { prompt: '\u2728 Viral style?',
-        viralRandom: '\ud83c\udfb2 Viral!',
-        ariaPick:  'Pick viral style',
-        ariaClear: 'Clear viral style' }
-};
-
-function getViralStyleLabel(style) {
-  var lang = (typeof currentLang !== 'undefined' && currentLang === 'en') ? 'en' : 'he';
-  return (style && style.label && style.label[lang]) || (style && style.label && style.label.he) || '';
-}
-
-// Sprint 5 (v8.5): Reverted to FLAT layout for BOTH modes — user feedback said
-// Kids hybrid dropdown was unreadable. All chips are always visible, no dropdown.
-function _makeViralChip(style, t) {
-  var chip = document.createElement('button');
-  chip.type = 'button';
-  var pressed = activeViralStyle === style.id;
-  chip.className = 'viral-chip' + (pressed ? ' viral-chip-active' : '');
-  chip.dataset.styleId = style.id;
-  chip.textContent = getViralStyleLabel(style);
-  chip.setAttribute('aria-pressed', pressed ? 'true' : 'false');
-  chip.setAttribute('aria-label', (pressed ? t.ariaClear : t.ariaPick) + ': ' + getViralStyleLabel(style));
-  chip.addEventListener('click', function() {
-    if (activeViralStyle === style.id) {
-      try { clearViralStyle(); } catch(e) { console.warn('[viral-chip]', e); }
-    } else {
-      try { applyViralStyle(style.id); } catch(e) { console.warn('[viral-chip]', e); }
-    }
-  });
-  return chip;
-}
-
-function renderViralChips() {
-  var container = document.getElementById('viralChipsStrip');
-  if (!container) return;
-  var lang = (typeof currentLang !== 'undefined' && currentLang === 'en') ? 'en' : 'he';
-  var t = VIRAL_CHIP_T[lang];
-  var isKids = (typeof kidsMode !== 'undefined' && kidsMode);
-  var pool = VIRAL_STYLES.filter(function(s) { return isKids ? !!s.kids_safe : true; });
-  container.innerHTML = '';
-
-  var promptLabel = document.createElement('span');
-  promptLabel.className = 'viral-chip-prompt';
-  promptLabel.textContent = t.prompt;
-  container.appendChild(promptLabel);
-
-  pool.forEach(function(style) {
-    container.appendChild(_makeViralChip(style, t));
-  });
-
-  var viralRandBtn = document.createElement('button');
-  viralRandBtn.type = 'button';
-  viralRandBtn.id = 'viralRandomBtn';
-  viralRandBtn.className = 'viral-random-btn';
-  viralRandBtn.textContent = t.viralRandom;
-  viralRandBtn.addEventListener('click', function() {
-    try {
-      if (typeof kidsMode !== 'undefined' && kidsMode) randomizeKids({ mode: 'viral' });
-      else                                              randomize    ({ mode: 'viral' });
-    } catch(e) { console.warn('[viral-random]', e); }
-  });
-  container.appendChild(viralRandBtn);
-}
-
-function insertViralChipsStrip() {
-  if (document.getElementById('viralChipsStrip')) { renderViralChips(); return true; }
-  // v8.9 CRITICAL FIX: insert BELOW .cat-grid instead of INSIDE .btn-split-wrap
-  // Old location caused Kids/Adults buttons to be pushed off mobile viewport
-  // because .btn-split-wrap is flex-row with no flex-wrap and overflow:hidden.
-  var catGrid = document.getElementById('catGrid');
-  var randomBtn = document.getElementById('randomBtn');
-  var parentOK = (catGrid && catGrid.parentElement) || (randomBtn && randomBtn.parentElement);
-  if (!parentOK) return false;
-  var strip = document.createElement('div');
-  strip.id = 'viralChipsStrip';
-  strip.className = 'viral-chips-strip';
-  strip.setAttribute('role', 'group');
-  strip.setAttribute('aria-label', (typeof currentLang !== 'undefined' && currentLang === 'en')
-    ? 'Viral style picker' : '\u05d1\u05d7\u05e8 \u05e1\u05d2\u05e0\u05d5\u05df \u05d5\u05d9\u05e8\u05d0\u05dc\u05d9');
-  if (catGrid && catGrid.parentElement) {
-    // Insert AFTER .cat-grid, BEFORE .tag-panel — within .left-col (vertical flex column)
-    catGrid.parentElement.insertBefore(strip, catGrid.nextSibling);
-  } else {
-    // Fallback: old inline position (only if cat-grid is missing)
-    randomBtn.parentElement.insertBefore(strip, randomBtn);
-  }
-  renderViralChips();
-  return true;
-}
-
-// Wrap applyViralStyle/clearViralStyle so the chip strip auto-refreshes.
-(function _wireViralUIRefresh() {
-  if (window.__paeViralUIWired) return;
-  window.__paeViralUIWired = true;
-  var _origApply = applyViralStyle;
-  var _origClear = clearViralStyle;
-  applyViralStyle = function(id) {
-    var r = _origApply.call(this, id);
-    try { renderViralChips(); } catch(e) {}
-    return r;
-  };
-  clearViralStyle = function() {
-    var r = _origClear.call(this);
-    try { renderViralChips(); } catch(e) {}
-    return r;
-  };
-})();
-
-// Boot: insert strip after DOM ready; hook setKidsMode + observe lang changes.
-(function _bootViralChipStrip() {
-  function wrapSetKidsMode() {
-    if (typeof setKidsMode !== 'function' || window.__paeViralKidsHook) return;
-    window.__paeViralKidsHook = true;
-    var _origSetKids = setKidsMode;
-    setKidsMode = function(isKids) {
-      // If switching to Kids while an adult-only style is active, clear it.
-      if (isKids && activeViralStyle) {
-        var s = null;
-        for (var i = 0; i < VIRAL_STYLES.length; i++) {
-          if (VIRAL_STYLES[i].id === activeViralStyle) { s = VIRAL_STYLES[i]; break; }
-        }
-        if (s && !s.kids_safe) {
-          try { clearViralStyle(); } catch(e) {}
-        }
-      }
-      var r = _origSetKids.apply(this, arguments);
-      setTimeout(renderViralChips, 60);
-      return r;
-    };
-  }
-  function observeLangChange() {
-    try {
-      var obs = new MutationObserver(function(muts) {
-        for (var i = 0; i < muts.length; i++) {
-          if (muts[i].type === 'attributes' && muts[i].attributeName === 'lang') {
-            setTimeout(renderViralChips, 50);
-            return;
-          }
-        }
-      });
-      obs.observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
-    } catch(e) {}
-  }
-  var attempts = 0;
-  function tryBoot() {
-    attempts++;
-    wrapSetKidsMode();
-    var ok = insertViralChipsStrip();
-    if (ok) { observeLangChange(); return; }
-    if (attempts < 33) setTimeout(tryBoot, 300);
-  }
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', tryBoot);
-  } else {
-    tryBoot();
-  }
-})();
-// ─── End Sprint 1 Viral Chip Strip ──────────────────────────────────────────
-
-
-
 const T = {
   he: {
     dir: 'rtl', lang: 'he',
     placeholder: "תאר/י את התמונה שאת/ה רוצה/ה ליצור...\nאו פשוט תלחצ/י על כפתור ההפתעה :)",
-    searchPlaceholder: "חפש/י תגיות, קטגוריות...",
+    searchPlaceholder: "חפש/י תגיות, סגנונות...",
     emptyPrompt: '✨ הפרומפט יופיע כאן — לחץ/י על 📋 העתק/י פרומפט ופתח/י את מנוע ה-AI שלך.',
     charCount: function(n) { return n + ' תווים'; },
     payboxTitle: 'אהבתם? פנקו אותי בבירה',
@@ -1739,28 +1279,17 @@ const T = {
     kidsBtnTitle: 'כפתור לילדים', kidsBtnSub: 'מצב קסום',
     adultsBtnTitle: 'מצב מבוגרים', adultsBtnSub: 'כל הקטגוריות',
     histTitle: 'היסטוריה', histClear: 'נקה',
-    ob1: 'תאר/י את התמונה שלך', ob2: 'בחר/י קטגוריות', ob3: 'בחר/י סוג תצוגה', ob4: 'בחר/י כפתור ייצוא',
+    ob1: 'בחר/י קטגוריה', ob2: 'בחר/י תגיות', ob3: 'תאר/י וצור/י',
     conflictTitle: '⚠️ זיהינו סתירה אפשרית',
     conflictMsg: 'הטקסט שלך מכיל ביטויים שעשויים לבלבל את ה-AI יחד עם התגיות הבאות:',
     conflictYes: 'כן, הסר/י תגיות', conflictNo: 'לא, שמור פרומפט', conflictWith: 'מתנגש עם:',
     clearTitle: 'מה לנקות?', clearAll: 'הכל', clearText: 'טקסט בלבד',
     clearTags: 'תגיות בלבד', clearCancel: 'ביטול', clearPrompt: 'נקה/י פרומפט',
-    // Sprint 3 Task 3 — settings modal + header aria-labels/titles
-    settingsTitle: '⚙️ הגדרות',
-    settingEnhanceLabel: '✨ שיפור אוטומטי לפרומפט',
-    settingEnhanceSub: 'הוספת מפרטי מצלמה, תאורה ופרטי איכות',
-    settingNegativeLabel: '🚫 הוספת Negative Prompt',
-    settingNegativeSub: 'משפר תמונות ב-Stable Diffusion/Midjourney',
-    settingsCancelBtn: 'ביטול', settingsSaveBtn: 'שמור',
-    themeTitle: 'מצב בהיר/כהה',
-    histBtnTitle: 'היסטוריה', settingsBtnTitle: 'הגדרות',
-    clearTextTitle: 'נקה טקסט',
-    textareaLabel: 'תאר/י את התמונה שאת/ה רוצה/ה ליצור',
   },
   en: {
     dir: 'ltr', lang: 'en',
     placeholder: "Describe the image you want to create...",
-    searchPlaceholder: 'Search tags, categories...',
+    searchPlaceholder: 'Search tags, styles...',
     emptyPrompt: '✨ Your prompt will appear here — tap 📋 Copy Prompt and open your AI tool.',
     charCount: function(n) { return n + ' chars'; },
     clearBtn: 'Clear', payboxTitle: 'Liked it? Buy me a beer 🍺',
@@ -1769,7 +1298,7 @@ const T = {
     kidsBtnTitle: 'Kids Button', kidsBtnSub: 'Magic mode',
     adultsBtnTitle: 'Adult Mode', adultsBtnSub: 'All categories',
     histTitle: 'History', histClear: 'Clear',
-    ob1: 'Describe your image', ob2: 'Pick categories', ob3: 'Choose aspect ratio', ob4: 'Pick export model',
+    ob1: 'Choose category', ob2: 'Select tags', ob3: 'Describe & build',
     conflictTitle: '⚠️ Possible Conflict Detected',
     conflictMsg: 'Your text may confuse the AI together with these tags:',
     conflictYes: 'Yes, remove tags', conflictNo: 'No, keep prompt', conflictWith: 'conflicts with:',
@@ -1777,17 +1306,6 @@ const T = {
     clearTitle: 'What to clear?', clearAll: 'Everything', clearText: 'Text only',
     clearTags: 'Tags only', clearCancel: 'Cancel', clearPrompt: 'Clear Prompt',
     resultLabel: 'Prompt ready to copy', subtitle: 'AI Image Prompt Builder', categories: 'Categories',
-    // Sprint 3 Task 3 — settings modal + header aria-labels/titles
-    settingsTitle: '⚙️ Settings',
-    settingEnhanceLabel: '✨ Auto-Enhance Prompt',
-    settingEnhanceSub: 'Adds camera specs, lighting, and quality details',
-    settingNegativeLabel: '🚫 Add Negative Prompt',
-    settingNegativeSub: 'Improves output in Stable Diffusion / Midjourney',
-    settingsCancelBtn: 'Cancel', settingsSaveBtn: 'Save',
-    themeTitle: 'Light / Dark Mode',
-    histBtnTitle: 'History', settingsBtnTitle: 'Settings',
-    clearTextTitle: 'Clear text',
-    textareaLabel: 'Describe the image you want to create',
   }
 };
 
@@ -1795,8 +1313,6 @@ const T = {
 function setKidsMode(isKids) {
       /* Minimal re-render (S8) */ setTimeout(() => { try { updateMinimalToggleBtn(); } catch(e){} }, 50);
   kidsMode = isKids;
-  // Sprint 5: persist user choice
-  try { localStorage.setItem('sbp_kids', isKids ? 'true' : 'false'); } catch(e) {}
   const kb = $('kidsBtn');
   const ab = $('adultsBtn');
   if (kb) kb.classList.toggle('mode-active', isKids);
@@ -1805,9 +1321,6 @@ function setKidsMode(isKids) {
   closePanel();
   if (isKids) {
     try { randomizeKids(); } catch(e) { console.warn('[Palette AI] randomizeKids:', e); }
-  } else {
-    // v8.7: Adults mode now randomizes for consistency (bug fix for stuck button)
-    try { randomize(); } catch(e) { console.warn('[Palette AI] randomize:', e); }
   }
 }
 
@@ -2138,22 +1651,12 @@ function _doGenerate() {
   const t = T[currentLang];
   let txt = $('userInput').value.trim();
   const el = $('finalPrompt');
-  // Sprint 6 Task A: viral enforces come FIRST (after subject), then other selected values.
-  // Research: "Tokens at the beginning have greater weight" (Civitai, MJ V7).
-  // Bug fix: atmospheric category chips were overpowering viral style — identical images across styles.
-  const enforceSet = (activeViralStyle && VIRAL_CONFLICTS[activeViralStyle] && VIRAL_CONFLICTS[activeViralStyle].enforces)
-    ? new Set(VIRAL_CONFLICTS[activeViralStyle].enforces)
-    : new Set();
   const parts = [];
   if (txt) parts.push(txt);
-  // viral enforces — front-loaded for maximum weight
-  enforceSet.forEach(function(v) { if (selected.has(v)) parts.push(v); });
-  // other selected values, sorted by category priority
-  const nonViralSelected = Array.from(selected).filter(function(v) { return !enforceSet.has(v); });
-  const sortedVals = nonViralSelected.sort(function(a,b) { return getValPriority(a) - getValPriority(b); });
+  const sortedVals = Array.from(selected).sort(function(a,b) { return getValPriority(a) - getValPriority(b); });
   sortedVals.forEach(function(v) { parts.push(v); });
   const arSuffix = currentAR ? ' ' + currentAR : '';
-  const prompt = parts.join(', ') + arSuffix + ' ' + getEffectiveNegative(activeViralStyle);
+  const prompt = parts.join(', ') + arSuffix + ' ' + NEG;
   lastPrompt = prompt;
   const sb = $('shareBtn'); if (sb) sb.disabled = false;
   el.className = 'prompt-ready';
@@ -2258,236 +1761,15 @@ function sharePrompt() {
   window.open('https://wa.me/?text=' + encodeURIComponent(lastPrompt), '_blank', 'noopener');
 }
 
-// ─── Sprint 6 Task C2: Multi-model formatters ──────────────────────────
-function buildPromptData() {
-  var txt = (($('userInput') && $('userInput').value) || '').trim();
-  var styleId = activeViralStyle;
-  var styleEntry = styleId ? VIRAL_STYLES.find(function(s){ return s.id === styleId; }) : null;
-  var styleName = styleEntry ? (styleEntry.label[currentLang] || styleEntry.label.en) : '';
-  var enforces = (styleId && VIRAL_CONFLICTS[styleId] && VIRAL_CONFLICTS[styleId].enforces) ? VIRAL_CONFLICTS[styleId].enforces.slice() : [];
-  var enforceSet = new Set(enforces);
-  var tagParts = [];
-  Array.from(selected).forEach(function(v) { if (!enforceSet.has(v)) tagParts.push(v); });
-  tagParts = tagParts.sort(function(a,b){ return getValPriority(a) - getValPriority(b); });
-  var activeEnforces = enforces.filter(function(v){ return selected.has(v); });
-  var hebrewText = '';
-  try { hebrewText = (($('hebrewTextField') && $('hebrewTextField').value) || '').trim(); } catch(e){}
-  return {
-    subject: txt,
-    viralStyleId: styleId,
-    viralStyleName: styleName,
-    viralEnforces: activeEnforces,
-    tagParts: tagParts,
-    negative: getEffectiveNegative(styleId),
-    arSuffix: currentAR || '',
-    hebrewText: hebrewText,
-    kidsMode: (typeof kidsMode !== 'undefined') ? kidsMode : false,
-    lang: currentLang
-  };
-}
-
-function formatForNanoBanana(d) {
-  // v11.0: Natural-language prose for Nano Banana / Gemini 2.5 Flash Image.
-  // Source: Google Cloud Blog "Ultimate prompting guide for Nano Banana" (2026)
-  // "Stop typing keywords and start directing the scene" — studio-quality controls.
-  if (!d.subject) return '';
-  var sentences = [];
-
-  // Opening: subject + AR hint (composition language Nano Banana understands)
-  var arText = '';
-  if (d.arSuffix === '--ar 9:16')      arText = ', vertical 9:16 composition';
-  else if (d.arSuffix === '--ar 16:9') arText = ', widescreen 16:9 composition';
-  else if (d.arSuffix === '--ar 1:1')  arText = ', square 1:1 composition';
-  sentences.push(d.subject + arText + '.');
-
-  // Style sentence — prefer English label (same logic as ChatGPT v10.4)
-  if (d.viralEnforces && d.viralEnforces.length) {
-    var styleLabel = 'artistic';
-    try {
-      if (d.viralStyleId && typeof VIRAL_STYLES !== 'undefined') {
-        var vs = VIRAL_STYLES.find(function(s){ return s.id === d.viralStyleId; });
-        if (vs && vs.label && vs.label.en) styleLabel = vs.label.en;
-        else if (d.viralStyleName) styleLabel = d.viralStyleName;
-      } else if (d.viralStyleName) {
-        styleLabel = d.viralStyleName;
-      }
-    } catch(e) { styleLabel = d.viralStyleName || 'artistic'; }
-    sentences.push('Rendered in ' + styleLabel + ' style with ' + d.viralEnforces.join(', ') + '.');
-  }
-
-  // Setting sentence
-  if (d.tagParts && d.tagParts.length) {
-    sentences.push('Setting: ' + d.tagParts.join(', ') + '.');
-  }
-
-  // Negatives as natural directive (no --no; Nano has no such flag)
-  if (d.negative) {
-    var neg = d.negative.replace(/^--no\s*/, '');
-    sentences.push('Avoid ' + neg + '.');
-  }
-
-  return sentences.join(' ');
-}
-
-function formatForChatGPT(d) {
-  if (!d.subject) return '';
-  var arLine = ' (square 1:1)';
-  if (d.arSuffix === '--ar 9:16') arLine = ' (vertical 9:16)';
-  else if (d.arSuffix === '--ar 16:9') arLine = ' (widescreen 16:9)';
-  else if (d.arSuffix === '--ar 1:1') arLine = ' (square 1:1)';
-  var lines = [];
-  lines.push('Create an image' + arLine + ' of ' + d.subject + '.');
-  if (d.viralEnforces && d.viralEnforces.length) {
-    // v10.4: prefer English label for Latin-script prompts sent to ChatGPT
-    var styleLabel = 'artistic';
-    try {
-      if (d.viralStyleId && typeof VIRAL_STYLES !== 'undefined') {
-        var vs = VIRAL_STYLES.find(function(s){ return s.id === d.viralStyleId; });
-        if (vs && vs.label && vs.label.en) styleLabel = vs.label.en;
-        else if (d.viralStyleName) styleLabel = d.viralStyleName;
-      } else if (d.viralStyleName) {
-        styleLabel = d.viralStyleName;
-      }
-    } catch(e) { styleLabel = d.viralStyleName || 'artistic'; }
-    lines.push('Render it in ' + styleLabel + ' style \u2014 ' + d.viralEnforces.join(', ') + '.');
-  }
-  if (d.tagParts && d.tagParts.length) {
-    lines.push('Setting and atmosphere: ' + d.tagParts.join(', ') + '.');
-  }
-  if (d.hebrewText) {
-    lines.push('');
-    lines.push('The image must include Hebrew text in the composition:');
-    lines.push('- Main text: "' + d.hebrewText + '"');
-    lines.push('- Preserve RTL direction and Hebrew letterforms exactly.');
-  }
-  if (d.negative) {
-    var neg = d.negative.replace(/^--no\s*/, '');
-    lines.push('');
-    lines.push('Avoid: ' + neg + '.');
-  }
-  return lines.join('\n');
-}
-
-function formatForMidjourney(d) {
-  // v11.0: MJ v7 modernization per 2026 best practices.
-  // - --s lowered from 250 to 180 (optimal photoreal range is 150-200 per K2Think 2026)
-  // - --style raw added for photorealistic viral styles (per MJ v7 docs)
-  // - --no shortened to 3 items (MJ v7 prefers short negatives; less is more)
-  var parts = [];
-  if (d.viralEnforces && d.viralEnforces.length) parts.push.apply(parts, d.viralEnforces.slice(0, 3));
-  if (d.subject) parts.push(d.subject);
-  if (d.tagParts && d.tagParts.length) parts.push.apply(parts, d.tagParts.slice(0, 5));
-  var ar = d.arSuffix || '--ar 1:1';
-
-  // Photorealistic styles benefit from --style raw (disables MJ's default beautification)
-  var PHOTOREAL_STYLES = { hyperreal: 1, retro35mm: 1, cinematic: 1, filmnoir: 1 };
-  var styleRaw = (d.viralStyleId && PHOTOREAL_STYLES[d.viralStyleId]) ? ' --style raw' : '';
-
-  var out = parts.join(', ') + ' ' + ar + ' --s 180 --v 7' + styleRaw;
-
-  if (d.negative) {
-    var neg = d.negative.replace(/^--no\s*/, '');
-    // Take first 3 negative items (MJ v7 best practice — short --no list)
-    var negItems = neg.split(',').slice(0, 3)
-                       .map(function(s){ return s.trim(); })
-                       .filter(Boolean);
-    if (negItems.length) out += ' --no ' + negItems.join(', ');
-  }
-  return out;
-}
-
-function formatForSD(d) {
-  // v11.0: SD3.5 doesn't tokenize Hebrew, so weight-wrapping (Hebrew:1.2)
-  // is equivalent to plain `Hebrew`. Unwrap for cleaner output.
-  var positive = [];
-  if (d.viralEnforces && d.viralEnforces.length) {
-    positive.push('(' + d.viralEnforces[0] + ':1.3)');
-    positive.push.apply(positive, d.viralEnforces.slice(1));
-  }
-  if (d.subject) {
-    if (/[\u0590-\u05FF]/.test(d.subject)) {
-      // Hebrew subject — no weight wrap (SD can't weight unparsed tokens)
-      positive.push(d.subject);
-    } else {
-      positive.push('(' + d.subject + ':1.2)');
-    }
-  }
-  if (d.tagParts && d.tagParts.length) positive.push.apply(positive, d.tagParts.slice(0, 8));
-  var out = positive.join(', ');
-  if (d.negative) {
-    var neg = d.negative.replace(/^--no\s*/, '');
-    out += '\nNegative prompt: ' + neg;
-  }
-  return out;
-}
-
-function copyFormat(which) {
-  var d = buildPromptData();
-  if (!d.subject && (!d.tagParts || !d.tagParts.length)) {
-    showToast(currentLang === 'he' ? '\u05d0\u05d9\u05df \u05e4\u05e8\u05d5\u05de\u05e4\u05d8 \u05dc\u05d4\u05e2\u05ea\u05e7\u05d4' : 'Nothing to copy', true);
-    return;
-  }
-  var out = '', label = '';
-  switch (which) {
-    case 'nano':    out = formatForNanoBanana(d);  label = 'Nano Banana'; break;
-    case 'chatgpt': out = formatForChatGPT(d);     label = 'ChatGPT';     break;
-    case 'mj':      out = formatForMidjourney(d);  label = 'Midjourney';  break;
-    case 'sd':      out = formatForSD(d);          label = 'SD 3.5';      break;
-    default: return;
-  }
-  function onOk() {
-    showToast(currentLang === 'he'
-      ? ('\u05d4\u05d5\u05e2\u05ea\u05e7 \u05d1\u05e4\u05d5\u05e8\u05de\u05d8 ' + label + ' \u2713')
-      : ('Copied as ' + label + ' \u2713'));
-  }
-  function fallback() {
-    try {
-      var ta = document.createElement('textarea');
-      ta.value = out; ta.style.cssText = 'position:fixed;top:-9999px;opacity:0;';
-      document.body.appendChild(ta); ta.focus(); ta.select();
-      document.execCommand('copy');
-      document.body.removeChild(ta);
-      onOk();
-    } catch(e) {
-      showToast(currentLang === 'he' ? '\u05d4\u05e2\u05ea\u05e7\u05d4 \u05e0\u05db\u05e9\u05dc\u05d4' : 'Copy failed', true);
-    }
-  }
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(out).then(onOk, fallback);
-  } else {
-    fallback();
-  }
-}
-
-function toggleHebrewInlay() {
-  var box = $('hebrewInlayInput');
-  var btn = $('hebrewInlayToggle');
-  if (!box || !btn) return;
-  var isOpen = box.style.display !== 'none';
-  box.style.display = isOpen ? 'none' : 'block';
-  btn.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
-  var icon = btn.querySelector('.hebrew-inlay-icon');
-  if (icon) icon.textContent = isOpen ? '\u2795' : '\u2715';
-  if (!isOpen) { setTimeout(function(){ var f = $('hebrewTextField'); if (f) f.focus(); }, 50); }
-}
-// ─── End Sprint 6 formatters ───────────────────────────────────────────
-
 function copyPrompt() {
   const t = T[currentLang];
   if (!lastPrompt) return;
   const btn = $('copyBtn');
   const icon = $('copyIcon');
   const label = $('copyText');
-  // v8.8: defensive null-guards — used if HPE v3 wrapper fails to install
   function onOk() {
-    if (btn) btn.classList.add('copied');
-    if (icon) icon.textContent = '✅';
-    if (label) label.textContent = t.copiedBtn;
-    setTimeout(function() {
-      if (btn) btn.classList.remove('copied');
-      if (icon) icon.textContent = '📋';
-      if (label) label.textContent = t.copyBtn;
-    }, 2200);
+    btn.classList.add('copied'); icon.textContent = '✅'; label.textContent = t.copiedBtn;
+    setTimeout(function() { btn.classList.remove('copied'); icon.textContent = '📋'; label.textContent = t.copyBtn; }, 2200);
   }
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(enhancePromptText(lastPrompt)).then(onOk).catch(fallback);
@@ -2575,16 +1857,6 @@ function setLang(lang) {
   setText('headerSubtitle', t.subtitle);
   setText('resultLabel', t.resultLabel);
   setText('copyText', t.copyBtn);
-  // Sprint 6: new i18n bindings for Hebrew Text Inlay
-  (function() {
-    var he = (currentLang === 'he');
-    var lbl = $('hebrewInlayToggleLabel');
-    if (lbl) lbl.textContent = he ? '\u05d8\u05e7\u05e1\u05d8 \u05dc\u05e9\u05d9\u05dc\u05d5\u05d1 \u05d1\u05ea\u05de\u05d5\u05e0\u05d4' : 'Text to embed in image';
-    var hint = $('hebrewInlayHint');
-    if (hint) hint.textContent = he ? '\u05e2\u05d5\u05d1\u05d3 \u05d4\u05db\u05d9 \u05d8\u05d5\u05d1 \u05d1-ChatGPT / gpt-image-2' : 'Works best with ChatGPT / gpt-image-2';
-    var f = $('hebrewTextField');
-    if (f) f.placeholder = he ? '\u05dc\u05d3\u05d5\u05d2\u05de\u05d4: \u05e9\u05dc\u05d5\u05dd \u05e2\u05d5\u05dc\u05dd' : 'e.g., Hello World';
-  })();
   if (t.shareBtn) setText('shareText', t.shareBtn);
   setText('clearBtn', t.clearBtn);
   let prevActive = activeCatIdx;
@@ -2603,7 +1875,6 @@ function setLang(lang) {
   if (t.ob1) setText('ob1', t.ob1);
   if (t.ob2) setText('ob2', t.ob2);
   if (t.ob3) setText('ob3', t.ob3);
-  if (t.ob4) setText('ob4', t.ob4);
   if (t.randomBtn)      setText('randomBtnLabel', t.randomBtn);
   if (t.kidsBtnTitle)   setText('kidsBtnTitle',   t.kidsBtnTitle);
   if (t.kidsBtnSub)     setText('kidsBtnSub',     t.kidsBtnSub);
@@ -2613,26 +1884,6 @@ function setLang(lang) {
   if (t.fmtStory)       setText('fmtStory',  t.fmtStory);
   if (t.fmtSquare)      setText('fmtSquare', t.fmtSquare);
   if (t.fmtWide)        setText('fmtWide',   t.fmtWide);
-  // Sprint 3 Task 3 — settings modal + header aria-labels/titles
-  var _setAttr = function(id, attr, val) { var el = document.getElementById(id); if (el && val != null) el.setAttribute(attr, val); };
-  if (t.settingsTitle)         setText('settingsTitle',         t.settingsTitle);
-  if (t.settingEnhanceLabel)   setText('settingEnhanceLabel',   t.settingEnhanceLabel);
-  if (t.settingEnhanceSub)     setText('settingEnhanceSub',     t.settingEnhanceSub);
-  if (t.settingNegativeLabel)  setText('settingNegativeLabel',  t.settingNegativeLabel);
-  if (t.settingNegativeSub)    setText('settingNegativeSub',    t.settingNegativeSub);
-  if (t.settingsCancelBtn)     setText('settingsCancelBtn',     t.settingsCancelBtn);
-  if (t.settingsSaveBtn)       setText('settingsSaveBtn',       t.settingsSaveBtn);
-  _setAttr('settingEnhance',  'aria-label', t.settingEnhanceLabel);
-  _setAttr('settingNegative', 'aria-label', t.settingNegativeLabel);
-  _setAttr('themeToggleBtn', 'title',       t.themeTitle);
-  _setAttr('themeToggleBtn', 'aria-label',  t.themeTitle);
-  _setAttr('histBtn',        'title',       t.histBtnTitle);
-  _setAttr('histBtn',        'aria-label',  t.histBtnTitle);
-  _setAttr('settingsBtn',    'title',       t.settingsBtnTitle);
-  _setAttr('settingsBtn',    'aria-label',  t.settingsBtnTitle);
-  _setAttr('taClearBtn',     'title',       t.clearTextTitle);
-  _setAttr('taClearBtn',     'aria-label',  t.clearTextTitle);
-  _setAttr('userInput',      'aria-label',  t.textareaLabel);
 }
 
 // ── PWA Install Translations ──────────────────────────────────
@@ -2843,23 +2094,7 @@ function toggleHistPanel() {
   if (!p) return;
   const opening = !p.classList.contains('open');
   p.classList.toggle('open');
-  if (opening) {
-    renderHistory();
-    if (window.innerWidth < 768) {
-      let bd = document.getElementById('histBackdrop');
-      if (!bd) {
-        bd = document.createElement('div');
-        bd.id = 'histBackdrop';
-        bd.className = 'hist-backdrop';
-        bd.onclick = toggleHistPanel;
-        document.body.appendChild(bd);
-      }
-      bd.classList.add('show');
-    }
-  } else {
-    const bd = document.getElementById('histBackdrop');
-    if (bd) bd.classList.remove('show');
-  }
+  if (opening) renderHistory();
 }
 function clearHistory() {
   try { localStorage.removeItem('sbp_hist'); } catch(e) { console.warn('[SBP]', e); }
@@ -2867,9 +2102,7 @@ function clearHistory() {
 }
 
 // ── Randomize ──────────────────────────────────────────────────
-function randomizeKids(opts) {
-  opts = opts || {};
-  var mode = opts.mode || 'both';
+function randomizeKids() {
   const inputEl = $('userInput');
   const kidsSubjects = {
     he: ['חתול אסטרונאוט בחלל הכוכבים','דינוזאור ורוד עם כנפי פרפר צבעוניות','ארמון ממתקים וגלידה',
@@ -2881,25 +2114,6 @@ function randomizeKids(opts) {
   };
   const list = kidsSubjects[currentLang] || kidsSubjects.he;
   inputEl.value = list[Math.floor(Math.random() * list.length)];
-  if (mode === 'viral') {
-    selected.clear();
-    clearViralStyle();
-    var styleId = pickRandomViralStyle();
-    if (styleId) applyViralStyle(styleId);
-    if (activeCatIdx >= 0) openPanel(activeCatIdx);
-    updateBadges(); updateChips(); generate(); updateHintVisibility();
-    var btnV = $('kidsBtn');
-    if (btnV) {
-      var iconV = btnV.querySelector('.kids-icon');
-      if (iconV) {
-        iconV.style.transition = 'transform 0.3s';
-        iconV.style.transform = 'scale(1.4) rotate(20deg)';
-        setTimeout(function() { iconV.style.transform = 'scale(1) rotate(0)'; }, 300);
-      }
-    }
-    return;
-  }
-  clearViralStyle();
   const kidsTags = [
     'anime style, manga art, studio ghibli inspired',
     'Disney animation style, Disney character art, expressive eyes, smooth clean lines, magical Disney aesthetic',
@@ -2916,14 +2130,6 @@ function randomizeKids(opts) {
   const shuffled = [...kidsTags].sort(() => Math.random() - 0.5);
   const count = 4 + Math.floor(Math.random() * 3);
   shuffled.slice(0, count).forEach(function(v) { selected.add(v); });
-  // v8.7: 'both' mode picks a kids-safe viral style on top of the kids tags
-  // (matches randomize() default behavior; bug fix for Kids button + viral)
-  if (mode === 'both') {
-    try {
-      var kidsStyleId = pickRandomViralStyle();
-      if (kidsStyleId) applyViralStyle(kidsStyleId);
-    } catch(e) { console.warn('[Palette AI] kids viral pick:', e); }
-  }
   if (activeCatIdx >= 0) openPanel(activeCatIdx);
   updateBadges(); updateChips(); generate(); updateHintVisibility();
   const btn = $('kidsBtn');
@@ -2947,11 +2153,7 @@ function updateHintVisibility() {
 }
 
 // ── FIX #1: randomize() wrapped in try-catch ─────────────────
-function randomize(opts) {
-  opts = opts || {};
-  // Sprint 4 Task 1b: default mode = 'both' — 🎁 button now picks tags AND viral style together.
-  // 'tags' and 'viral' modes stay as explicit opt-outs.
-  var mode = opts.mode || 'both';
+function randomize() {
   try {
     const inputEl = $('userInput');
     let userInput = inputEl.value.toLowerCase().trim();
@@ -2968,19 +2170,6 @@ function randomize(opts) {
       inputEl.value = list[Math.floor(Math.random() * list.length)];
       userInput = inputEl.value.toLowerCase();
     }
-    if (mode === 'viral') {
-      selected.clear();
-      clearViralStyle();
-      var styleIdR = pickRandomViralStyle();
-      if (styleIdR) applyViralStyle(styleIdR);
-      if (activeCatIdx >= 0) openPanel(activeCatIdx);
-      updateBadges(); updateChips(); generate(); updateHintVisibility();
-      var btnR = $('randomBtn');
-      if (btnR) { btnR.style.transform = 'scale(0.95)'; setTimeout(function(){ btnR.style.transform = 'scale(1)'; }, 150); }
-      return;
-    }
-    // 'tags' mode: clear viral (explicit opt-out). 'both' mode: keep viral, will be re-picked below.
-    if (mode === 'tags') clearViralStyle();
     selected.clear();
     const allTags = [], smartTags = [];
     DATA.forEach(cat => {
@@ -3000,13 +2189,6 @@ function randomize(opts) {
     const count = 4 + Math.floor(Math.random() * 4);
     smartTags.forEach(t => { if (selected.size < count) selected.add(t); });
     for (let i = 0; i < allTags.length && selected.size < count; i++) selected.add(allTags[i]);
-    // Sprint 4 Task 1b: in 'both' mode, also pick a viral style AFTER tag selection
-    // (applyViralStyle will enforce its own tags on top of selected).
-    if (mode === 'both') {
-      clearViralStyle();
-      var styleIdB = pickRandomViralStyle();
-      if (styleIdB) applyViralStyle(styleIdB);
-    }
     if (activeCatIdx >= 0) openPanel(activeCatIdx);
     updateBadges(); updateChips(); generate(); updateHintVisibility();
     const btn = $('randomBtn');
@@ -3071,7 +2253,6 @@ function trackInstall() {
 
 // ── FIX #5 + FIX #7: startApp — restore saved language before init ──
 function startApp() {
-  setAR('--ar 16:9');
       // S16: Keyboard shortcuts
       try {
         document.addEventListener('keydown', handleGlobalShortcuts);
@@ -3101,16 +2282,6 @@ function startApp() {
     const savedLang = localStorage.getItem('sbp_lang');
     if (savedLang === 'he' || savedLang === 'en') currentLang = savedLang;
   } catch(e) {}
-
-  // Sprint 5: sync HTML button states to the kidsMode variable (which was set from localStorage earlier).
-  // If starting in Kids mode, also populate user input with a kids-friendly prompt.
-  try {
-    var _kb = document.getElementById('kidsBtn');
-    var _ab = document.getElementById('adultsBtn');
-    if (_kb) _kb.classList.toggle('mode-active', kidsMode);
-    if (_ab) _ab.classList.toggle('mode-active', !kidsMode);
-    if (kidsMode) { try { randomizeKids(); } catch(e) { console.warn('[Palette AI] randomizeKids on init:', e); } }
-  } catch(e) { console.warn('[Palette AI] init kidsMode sync:', e); }
 
   initInstall();
   trackInstall();
@@ -3203,23 +2374,23 @@ if (document.readyState === 'loading') {
       
       <div class="settings-row">
         <div>
-          <label id="settingEnhanceLabel" for="settingEnhance">✨ שיפור אוטומטי לפרומפט</label>
-          <div id="settingEnhanceSub" class="settings-sub">הוספת מפרטי מצלמה, תאורה ופרטי איכות</div>
+          <label for="settingEnhance">✨ שיפור אוטומטי לפרומפט</label>
+          <div class="settings-sub">הוספת מפרטי מצלמה, תאורה ופרטי איכות</div>
         </div>
         <input type="checkbox" id="settingEnhance" checked aria-label="שיפור אוטומטי לפרומפט">
       </div>
       
       <div class="settings-row">
         <div>
-          <label id="settingNegativeLabel" for="settingNegative">🚫 הוספת Negative Prompt</label>
-          <div id="settingNegativeSub" class="settings-sub">משפר תמונות ב-Stable Diffusion/Midjourney</div>
+          <label for="settingNegative">🚫 הוספת Negative Prompt</label>
+          <div class="settings-sub">משפר תמונות ב-Stable Diffusion/Midjourney</div>
         </div>
         <input type="checkbox" id="settingNegative" checked aria-label="הוספת Negative Prompt">
       </div>
       
       <div class="settings-actions">
-        <button id="settingsCancelBtn" type="button" class="settings-cancel" onclick="closeSettings()">ביטול</button>
-        <button id="settingsSaveBtn" type="button" class="settings-save" onclick="saveSettings()">שמור</button>
+        <button type="button" class="settings-cancel" onclick="closeSettings()">ביטול</button>
+        <button type="button" class="settings-save" onclick="saveSettings()">שמור</button>
       </div>
     </div>
   </div>
@@ -3650,14 +2821,7 @@ if (document.readyState === 'loading') {
   else init();
 })();
 </script>
-<style id="pae-v8-styles">
-/* =============================================================================
- * Palette AI Enhancements v8.0 — consolidated styles
- * Merged from: pae-v6 + v7.2 + v7.4 + v7.7 + v7.8 + v7.9 (signature)
- * Sprint 0.5: 13-layer → 1-layer refactor (2026-04-23)
- * ============================================================================= */
-
-/* ─── from pae-v6 (base) ────────────────────────────────────────────────── */
+<style id="pae-v6-styles">
 /* =====================================================================
  * Palette AI Enhancements v7.2 (section headers)
  * Consolidates: v5.1 (share timing) + v5.2 (ESC+SW+a11y+muted)
@@ -3793,228 +2957,18 @@ if (document.readyState === 'loading') {
   min-height: 36px;
   font-weight: 600;
 }
-
-/* ─── from v7.2 (section headers) ──────────────────────────────────────── */
-.pae-section-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.3px;
-  color: var(--muted, #a0a0b8);
-  text-transform: uppercase;
-  margin: 14px 4px 8px;
-  padding-bottom: 6px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  opacity: 0.85;
-}
-.pae-section-header .pae-section-icon {
-  font-size: 15px;
-  opacity: 0.9;
-}
-/* Light mode */
-body.light-mode .pae-section-header,
-[data-theme="light"] .pae-section-header {
-  border-bottom-color: rgba(0, 0, 0, 0.08);
-  color: rgba(0, 0, 0, 0.55);
-}
-/* First header in container — reduce top margin */
-.right-col > .pae-section-header:first-child,
-.left-col > .pae-section-header:first-child {
-  margin-top: 2px;
-}
-
-/* ─── from v7.4 (universal layout fix) ─────────────────────────────────── */
-.app > #paeHdrDisplay,.app > .format-row,.app > .random-divider {  order: 2 !important;}@media (min-width: 768px) {  .app > #paeHdrDisplay,  .app > .format-row,  .app > .random-divider {    grid-column: 1 / -1 !important;  }}.pae-section-header {  width: 100%;  box-sizing: border-box;}
-
-/* ─── from v7.7 (horizontal scroll + spacing + format center) ──────────── */
-.app > .left-col, .app > .right-col { overflow-x: hidden !important; }
-.app > #paeHdrDisplay { margin-top: 20px !important; margin-bottom: 6px !important; }
-.app > .format-row { margin-bottom: 16px !important; }
-.app > .format-row { justify-content: center !important; display: flex !important; flex-wrap: wrap !important; gap: 8px !important; }
-.pae-section-header { max-width: 100%; overflow: hidden; }
-
-/* ─── from v7.8 (desktop flex column) ──────────────────────────────────── */
-@media (min-width: 768px) {
-  .app {
-    display: flex !important;
-    flex-direction: column !important;
-    max-width: 900px !important;
-    margin: 0 auto !important;
-  }
-  .app > .left-col, .app > .right-col {
-    position: static !important;
-    height: auto !important;
-    max-height: none !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    overflow: visible !important;
-  }
-  .app > .left-col { order: 1 !important; }
-  .app > #paeHdrDisplay { order: 2 !important; }
-  .app > .format-row { order: 3 !important; }
-  .app > .random-divider { order: 4 !important; }
-  .app > .right-col { order: 5 !important; }
-}
-
-/* ─── from v7.9 (signature animations) ─────────────────────────────────── */
-.pae-sig-container { border-top: 1px solid rgba(255,255,255,0.08); margin-top: 8px; padding-top: 16px; display: flex; flex-direction: column; align-items: center; gap: 6px; }
-.pae-sig-label { font-size: 11px; color: rgba(255,255,255,0.45); letter-spacing: 1px; text-transform: uppercase; }
-.pae-sig-svg { width: 160px; height: auto; max-width: 100%; }
-.pae-sig-letter { fill: none; stroke: #d4af37; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 5px rgba(212,175,55,0.8)) drop-shadow(0 0 10px rgba(212,175,55,0.5)); }
-.pae-sig-svg.pae-sig-animate #paeSigM { stroke-dasharray: 400; animation: paeSigDrawM 1s ease-in-out forwards; }
-.pae-sig-svg.pae-sig-animate #paeSigO { stroke-dasharray: 300; animation: paeSigDrawO 0.8s ease-in-out 1.1s forwards; }
-.pae-sig-svg.pae-sig-animate #paeSigR { stroke-dasharray: 250; animation: paeSigDrawR 0.7s ease-in-out 2s forwards; }
-.pae-sig-svg.pae-sig-animate #paeSigA { stroke-dasharray: 300; animation: paeSigDrawA 0.8s ease-in-out 2.8s forwards; }
-.pae-sig-svg.pae-sig-animate #paeSigN { stroke-dasharray: 300; animation: paeSigDrawN 0.8s ease-in-out 3.7s forwards; }
-.pae-sig-svg:not(.pae-sig-animate) .pae-sig-letter { stroke-dashoffset: 400; }
-@keyframes paeSigDrawM { from { stroke-dashoffset: 400; } to { stroke-dashoffset: 0; } }
-@keyframes paeSigDrawO { from { stroke-dashoffset: 300; } to { stroke-dashoffset: 0; } }
-@keyframes paeSigDrawR { from { stroke-dashoffset: 250; } to { stroke-dashoffset: 0; } }
-@keyframes paeSigDrawA { from { stroke-dashoffset: 300; } to { stroke-dashoffset: 0; } }
-@keyframes paeSigDrawN { from { stroke-dashoffset: 300; } to { stroke-dashoffset: 0; } }
-
-
-
-/* ─── Sprint 1 Quick Win: Viral Chip Strip UI (v8.1) ─────────────────────── */
-.viral-chip {
-  padding: 8px 14px;
-  border-radius: 99px;
-  font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
-  min-height: 40px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  white-space: nowrap;
-  font-family: inherit;
-  transition: all 0.15s ease;
-}
-.viral-chip {
-  border: 1px solid rgba(255,255,255,0.12);
-  background: rgba(255,255,255,0.03);
-  color: var(--text);
-}
-.viral-chip:hover {
-  background: rgba(255,255,255,0.08);
-  border-color: rgba(255,255,255,0.2);
-}
-.viral-chip:focus-visible {
-  outline: 2px solid #5eaaff;
-  outline-offset: 2px;
-}
-.viral-chip-active {
-  background: linear-gradient(135deg, #d4af37, #f5cf4f) !important;
-  color: #1a1a2e !important;
-  border-color: #d4af37 !important;
-  box-shadow: 0 0 16px rgba(212,175,55,0.45);
-  font-weight: 700;
-}
-[data-theme="light"] .viral-chips-strip {
-  background: linear-gradient(135deg, rgba(0,122,255,0.06), rgba(0,229,204,0.04));
-  border-color: rgba(0,0,0,0.08);
-}
-@media (max-width: 480px) {
-  .viral-chips-strip { padding: 8px 10px; gap: 6px; }
-  .viral-chip { font-size: 11px; padding: 7px 11px; }
-}
-
-
-/* ─── Sprint 6: Hebrew Text Inlay + 4 Copy Buttons ─── */
-.hebrew-inlay-wrap { margin: 10px 0 4px; }
-.hebrew-inlay-toggle {
-  background: transparent; color: var(--text);
-  border: 1px dashed var(--border); border-radius: 10px;
-  padding: 6px 12px; font-size: 12px; font-weight: 500;
-  cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
-  transition: all 0.15s; opacity: 0.75; font-family: inherit;
-}
-.hebrew-inlay-toggle:hover { opacity: 1; border-color: var(--accent); }
-.hebrew-inlay-toggle[aria-expanded="true"] { border-style: solid; background: var(--surface2); opacity: 1; }
-.hebrew-inlay-icon { font-size: 11px; line-height: 1; }
-.hebrew-inlay-input {
-  margin-top: 8px; padding: 10px; background: var(--surface2);
-  border-radius: 10px; border: 1px solid var(--border);
-}
-.hebrew-inlay-input input {
-  width: 100%; padding: 8px 10px; background: var(--surface); color: var(--text);
-  border: 1px solid var(--border); border-radius: 8px;
-  font-size: 14px; box-sizing: border-box; font-family: inherit;
-}
-.hebrew-inlay-input input:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
-.hebrew-inlay-hint { font-size: 11px; color: var(--muted); margin-top: 6px; }
-.copy-row {
-  display: flex; flex-wrap: wrap; gap: 6px;
-  margin: 10px 0 8px; align-items: stretch;
-}
-.copy-row > button {
-  flex: 1 1 auto; min-width: 68px;
-  padding: 8px 10px; font-size: 12px; font-weight: 600;
-  min-height: 44px; border-radius: 10px; white-space: nowrap;
-  display: inline-flex; align-items: center; justify-content: center; gap: 4px;
-  font-family: inherit; cursor: pointer;
-  touch-action: manipulation; -webkit-tap-highlight-color: transparent;
-  transition: all 0.15s; box-sizing: border-box;
-}
-.copy-btn {
-  background: var(--surface2); color: var(--text);
-  border: 1.5px solid var(--border);
-}
-.copy-btn:hover { background: var(--a2); border-color: var(--accent); transform: translateY(-1px); }
-.copy-btn:active { transform: translateY(0); }
-.copy-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.copy-btn-primary { background: var(--accent) !important; color: #fff !important; border-color: var(--accent) !important; }
-.copy-btn-primary:hover { filter: brightness(1.08); }
-.copy-row .btn-share { background: linear-gradient(135deg,#25d366,#1ea851) !important; color: #fff !important; border: none !important; box-shadow: 0 2px 8px rgba(37,211,102,0.3); }
-.copy-row .btn-share:hover { filter: brightness(1.05); transform: translateY(-1px); }
-.copy-row .btn-clear { background: transparent !important; color: var(--muted) !important; border: 1px solid var(--border) !important; }
-.copy-row .btn-clear:hover { background: rgba(255,255,255,0.05); }
-@media (max-width: 640px) {
-  .copy-row > button { flex: 1 1 calc(33.333% - 4px); min-width: 0; font-size: 11px; padding: 6px 8px; }
-}
-@media (max-width: 400px) {
-  .copy-row > button { flex: 1 1 calc(50% - 3px); font-size: 11px; }
-}
-[data-theme="light"] .copy-btn { background: #f5f5f7; color: #333; }
-[data-theme="light"] .copy-btn:hover { background: #e8e8ec; }
-[data-theme="light"] .hebrew-inlay-input { background: #f8f8fa; }
-[data-theme="light"] .hebrew-inlay-input input { background: #fff; }
-[data-theme="light"] .copy-btn-primary { color: #000; }
-/* ─── End Sprint 6 CSS ─── */
 </style>
 <script>
 /*!
- * Palette AI v8.0 — Sprint 0.5 consolidation
- * Merged layers: pae-v6, v7.9(+v7.9.1), v7.8, v7.7, v7.6, v7.5, v7.4, v7.2, v7.1, v6.2
- * Dropped (dead code): v7.0 (old share), pae-v6 installSharePrompt, pae-v6 installLangReloadHint,
- *                      v7.1 removeThemeDivider, v7.9.1 (signature positions inlined into v7.9 SVG)
+ * Palette AI Enhancements v6.0 — consolidated release candidate
  */
 (function () {
   'use strict';
 
-  if (window.__paeV8Installed) return;
-  window.__paeV8Installed = true;
+  if (window.__paeV6Installed) return;
+  window.__paeV6Installed = true;
 
-  var SIGNAL = '\u2705 Palette AI v11.6 installed (added closing </body></html> tags)';
-
-  function _log(m) { try { console.log('[PAE v8]', m); } catch (e) {} }
-
-  // ─── Shared helpers (from pae-v6) ────────────────────────────────────────
-  function safeCall(fn, label) {
-    try { return fn(); } catch (e) { console.warn('[PAE v8]', label, e && e.message); }
-  }
-  function isVisible(el) {
-    if (!el || !el.ownerDocument) return false;
-    var s = getComputedStyle(el);
-    return s && s.display !== 'none' && s.visibility !== 'hidden';
-  }
-
-  // ═══════════════════════════════════════════════════════════════════════
-  // Layer: pae-v6 (base — ESC, renderHistory guard, SW banner, chip a11y)
-  // Dropped from original: installSharePrompt (→ v7.1), installLangReloadHint (→ v6.2)
-  // ═══════════════════════════════════════════════════════════════════════
+  var SIGNAL = '\u2705 Palette AI Enhancements v7.9.1 installed (M cutoff hotfix)';
 
   function safeCall(fn, label) {
     try { return fn(); } catch (e) { console.warn('[PAE v6]', label, e && e.message); }
@@ -4024,6 +2978,36 @@ body.light-mode .pae-section-header,
     var s = getComputedStyle(el);
     return s && s.display !== 'none' && s.visibility !== 'hidden';
   }
+
+  function installSharePrompt() {
+    var origShare = typeof window.sharePrompt === 'function' ? window.sharePrompt : null;
+    window.sharePrompt = function () {
+      var promptText = '';
+      var el = document.getElementById('finalPrompt');
+      if (el) promptText = el.textContent || '';
+      if (!promptText) {
+        if (origShare) try { return origShare.apply(this, arguments); } catch (_) {}
+        return;
+      }
+      var shareData = { title: 'Palette AI Prompt', text: promptText };
+      if (typeof navigator.share === 'function') {
+        try {
+          return navigator.share(shareData).catch(function () {});
+        } catch (_) {}
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(promptText).then(function () {
+          var toast = document.createElement('div');
+          toast.className = 'pae-lang-toast';
+          toast.textContent = '\u05d4\u05d4\u05e2\u05ea\u05e7 \u05dc\u05dc\u05d5\u05d7 (\u05e9\u05d9\u05ea\u05d5\u05e3 \u05dc\u05d0 \u05d6\u05de\u05d9\u05df)';
+          document.body.appendChild(toast);
+          setTimeout(function () { toast.remove(); }, 2500);
+        }).catch(function () {});
+      }
+    };
+    window.__paeV6_share = true;
+  }
+
   function installEscHandler() {
     document.addEventListener('keydown', function (ev) {
       if (ev.key !== 'Escape') return;
@@ -4162,11 +3146,53 @@ body.light-mode .pae-section-header,
     }
     window.__paeV6_chipA11y = true;
   }
-  function _bootV6() {
+
+  function installLangReloadHint() {
+    if (typeof window.setLang !== 'function') return;
+    if (window.__paeV6_setLangWrapped) return;
+    window.__paeV6_setLangWrapped = true;
+    var origSetLang = window.setLang;
+    window.setLang = function (newLang) {
+      var prevLang = localStorage.getItem('sbp_lang');
+      var result = origSetLang.apply(this, arguments);
+      if (!newLang || newLang === prevLang) return result;
+      try {
+        var existing = document.querySelector('.pae-lang-toast');
+        if (existing) existing.remove();
+        var toast = document.createElement('div');
+        toast.className = 'pae-lang-toast';
+        toast.setAttribute('role', 'status');
+        var msg = document.createElement('span');
+        msg.textContent = newLang === 'en'
+          ? '\u05e8\u05e2\u05e0\u05df \u05d4\u05d3\u05e3 \u05dc\u05de\u05de\u05e9\u05e7 \u05d0\u05e0\u05d2\u05dc\u05d9\u05ea \u05de\u05dc\u05d0'
+          : '\u05e8\u05e2\u05e0\u05df \u05d4\u05d3\u05e3 \u05dc\u05de\u05de\u05e9\u05e7 \u05e2\u05d1\u05e8\u05d9\u05ea \u05de\u05dc\u05d0\u05d4';
+        toast.appendChild(msg);
+        var btn = document.createElement('button');
+        btn.textContent = newLang === 'en' ? 'Reload' : '\u05e8\u05e2\u05e0\u05df';
+        btn.onclick = function () { window.location.reload(); };
+        toast.appendChild(btn);
+        var close = document.createElement('button');
+        close.textContent = '\u2715';
+        close.setAttribute('aria-label', '\u05e1\u05d2\u05d5\u05e8');
+        close.style.cssText = 'background:transparent;color:var(--text);border:1px solid var(--border);padding:4px 10px;min-width:36px';
+        close.onclick = function () { toast.remove(); };
+        toast.appendChild(close);
+        document.body.appendChild(toast);
+        setTimeout(function () { if (toast.parentNode) toast.remove(); }, 8000);
+      } catch (_) {}
+      return result;
+    };
+    window.__paeV6_langHint = true;
+  }
+
+  function install() {
+    safeCall(installSharePrompt,       'sharePrompt');
     safeCall(installEscHandler,        'ESC handler');
     safeCall(installRenderHistoryGuard,'renderHistory guard');
     safeCall(installSwUpdateBanner,    'SW update banner');
     safeCall(installChipA11y,          'chip a11y');
+    safeCall(installLangReloadHint,    'lang reload hint');
+    console.log(SIGNAL);
   }
 
   function start() {
@@ -4176,23 +3202,119 @@ body.light-mode .pae-section-header,
       Promise.resolve().then(install);
     }
   }
+  start();
+})();
+</script>
+  </main>
+<!-- v2: all v6.2-v7.9.1 patches consolidated into pae-v2-module.js -->
+<script src="pae-v2-module.js"></script>
+<!--V2_CONSOLIDATED_START-->
+<script data-pae-removed="true" type="text/plain">/*! REMOVED v7.9.1 */
+  (function() {
+    if (window.__paeV791Installed) { return; }
+    window.__paeV791Installed = true;
+    var _log = function(m) { try { console.log('[pae-v791]', m); } catch(e){} };
+    
+    // v7.9.1 FIX: The signature M letter was being cut off.
+    // Root cause 1: SVG inherited dir=rtl from parent modal, causing text to flip.
+    // Root cause 2: viewBox 0 0 340 110 was too narrow for letters at these x positions.
+    // Fix: Force direction:ltr on SVG + widen viewBox + reposition letters.
+    
+    function fixSignature() {
+      var svgs = document.querySelectorAll('.pae-sig-svg');
+      svgs.forEach(function(svg) {
+        svg.style.direction = 'ltr';
+        svg.setAttribute('viewBox', '0 0 280 100');
+        var positions = {
+          'paeSigM': 10,
+          'paeSigO': 70,
+          'paeSigR': 115,
+          'paeSigA': 148,
+          'paeSigN': 192
+        };
+        Object.keys(positions).forEach(function(id) {
+          var el = svg.querySelector('#' + id);
+          if (el) {
+            el.setAttribute('x', positions[id]);
+            el.setAttribute('y', 70);
+          }
+        });
+      });
+    }
+    
+    // Watch for signature being injected by v7.9 and fix it
+    var obs = new MutationObserver(function(muts) {
+      muts.forEach(function(m) {
+        m.addedNodes.forEach(function(node) {
+          if (node.nodeType === 1) {
+            if (node.classList && node.classList.contains('pae-sig-container')) {
+              setTimeout(fixSignature, 10);
+            } else if (node.querySelector && node.querySelector('.pae-sig-container')) {
+              setTimeout(fixSignature, 10);
+            }
+          }
+        });
+      });
+    });
+    obs.observe(document.body, { childList: true, subtree: true });
+    
+    // Also run immediately in case signature already present
+    fixSignature();
+    _log('v7.9.1 hotfix armed');
+  })();
+</script>
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // Layer: v7.9 (typo fix + Moran signature, v7.9.1 positions inlined)
-  // CSS moved to pae-v8-styles; injectSignatureStyles dropped as redundant.
-  // ═══════════════════════════════════════════════════════════════════════
-
+<script data-pae-removed="true" type="text/plain">/*! REMOVED v7.9 */
+  (function() {
+    if (window.__paeV79Installed) { return; }
+    window.__paeV79Installed = true;
+    var _log = function(m) { try { console.log('[pae-v79]', m); } catch(e){} };
+    
+    // === FIX 1: Typo in slide 1 Hebrew subtitle ===
+    // 'תמונות מאייד AI' -> 'תמונות בעזרת AI'
+    function fixSlide1Typo() {
+      if (!window.GUIDE_SLIDES && !window.__paeGuideSlidesPatched) {
+        // The GUIDE_SLIDES is inside v7.6 closure. Patch it by hooking renderGuide.
+        return false;
+      }
+      return true;
+    }
+    
+    // === FIX 2: Inject signature styles ===
+    function injectSignatureStyles() {
+      if (document.getElementById('__pae_v79_styles')) return;
+      var st = document.createElement('style');
+      st.id = '__pae_v79_styles';
+      var css = '';
+      css += '.pae-sig-container { border-top: 1px solid rgba(255,255,255,0.08); margin-top: 8px; padding-top: 16px; display: flex; flex-direction: column; align-items: center; gap: 6px; }';
+      css += '.pae-sig-label { font-size: 11px; color: rgba(255,255,255,0.45); letter-spacing: 1px; text-transform: uppercase; }';
+      css += '.pae-sig-svg { width: 160px; height: auto; max-width: 100%; }';
+      css += '.pae-sig-letter { fill: none; stroke: #d4af37; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 5px rgba(212,175,55,0.8)) drop-shadow(0 0 10px rgba(212,175,55,0.5)); }';
+      css += '.pae-sig-svg.pae-sig-animate #paeSigM { stroke-dasharray: 400; animation: paeSigDrawM 1s ease-in-out forwards; }';
+      css += '.pae-sig-svg.pae-sig-animate #paeSigO { stroke-dasharray: 300; animation: paeSigDrawO 0.8s ease-in-out 1.1s forwards; }';
+      css += '.pae-sig-svg.pae-sig-animate #paeSigR { stroke-dasharray: 250; animation: paeSigDrawR 0.7s ease-in-out 2s forwards; }';
+      css += '.pae-sig-svg.pae-sig-animate #paeSigA { stroke-dasharray: 300; animation: paeSigDrawA 0.8s ease-in-out 2.8s forwards; }';
+      css += '.pae-sig-svg.pae-sig-animate #paeSigN { stroke-dasharray: 300; animation: paeSigDrawN 0.8s ease-in-out 3.7s forwards; }';
+      css += '.pae-sig-svg:not(.pae-sig-animate) .pae-sig-letter { stroke-dashoffset: 400; }';
+      css += '@keyframes paeSigDrawM { from { stroke-dashoffset: 400; } to { stroke-dashoffset: 0; } }';
+      css += '@keyframes paeSigDrawO { from { stroke-dashoffset: 300; } to { stroke-dashoffset: 0; } }';
+      css += '@keyframes paeSigDrawR { from { stroke-dashoffset: 250; } to { stroke-dashoffset: 0; } }';
+      css += '@keyframes paeSigDrawA { from { stroke-dashoffset: 300; } to { stroke-dashoffset: 0; } }';
+      css += '@keyframes paeSigDrawN { from { stroke-dashoffset: 300; } to { stroke-dashoffset: 0; } }';
+      st.textContent = css;
+      document.head.appendChild(st);
+    }
+    
     // === Build signature HTML ===
     function buildSignatureHTML() {
-      // v8.0: v7.9.1 positions baked in (viewBox 0 0 280 100, ltr, y=70).
       return '<div class="pae-sig-container">' +
         '<div class="pae-sig-label">Created by</div>' +
-        '<svg class="pae-sig-svg" viewBox="0 0 280 100" style="direction:ltr">' +
-          '<text id="paeSigM" class="pae-sig-letter" x="10"  y="70" font-family="Georgia, Times New Roman, serif" font-size="70" font-weight="700">M</text>' +
-          '<text id="paeSigO" class="pae-sig-letter" x="70"  y="70" font-family="Georgia, Times New Roman, serif" font-size="70" font-weight="700">o</text>' +
-          '<text id="paeSigR" class="pae-sig-letter" x="115" y="70" font-family="Georgia, Times New Roman, serif" font-size="70" font-weight="700">r</text>' +
-          '<text id="paeSigA" class="pae-sig-letter" x="148" y="70" font-family="Georgia, Times New Roman, serif" font-size="70" font-weight="700">a</text>' +
-          '<text id="paeSigN" class="pae-sig-letter" x="192" y="70" font-family="Georgia, Times New Roman, serif" font-size="70" font-weight="700">n</text>' +
+        '<svg class="pae-sig-svg" viewBox="0 0 340 110">' +
+          '<text id="paeSigM" class="pae-sig-letter" x="15" y="80" font-family="Georgia, Times New Roman, serif" font-size="70" font-weight="700">M</text>' +
+          '<text id="paeSigO" class="pae-sig-letter" x="82" y="80" font-family="Georgia, Times New Roman, serif" font-size="70" font-weight="700">o</text>' +
+          '<text id="paeSigR" class="pae-sig-letter" x="130" y="80" font-family="Georgia, Times New Roman, serif" font-size="70" font-weight="700">r</text>' +
+          '<text id="paeSigA" class="pae-sig-letter" x="170" y="80" font-family="Georgia, Times New Roman, serif" font-size="70" font-weight="700">a</text>' +
+          '<text id="paeSigN" class="pae-sig-letter" x="223" y="80" font-family="Georgia, Times New Roman, serif" font-size="70" font-weight="700">n</text>' +
         '</svg>' +
       '</div>';
     }
@@ -4231,15 +3353,110 @@ body.light-mode .pae-section-header,
       obs.observe(document.body, { childList: true, subtree: true, characterData: true });
     }
     
-    function _bootV79() {
+    function boot() {
+      injectSignatureStyles();
       watchGuideModal();
       _log('v7.9 ready');
     }
+    
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', boot);
+    } else {
+      boot();
+    }
+  })();
+</script>
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // Layer: v7.6 (help button + guide modal + categories rename) — kept intact
-  // ═══════════════════════════════════════════════════════════════════════
-// TASK 1: Rename 'סגנונות' -> 'קטגוריות'
+<script data-pae-removed="true" type="text/plain">/*! REMOVED v7.8 */
+  (function() {
+    if (window.__paeV78Installed) { return; }
+    window.__paeV78Installed = true;
+    var _log = function(m) { try { console.log('[pae-v78]', m); } catch(e){} };
+    
+    function injectStyles() {
+      if (document.getElementById('__pae_v78_styles')) return;
+      var st = document.createElement('style');
+      st.id = '__pae_v78_styles';
+      var css = '';
+      // FIX v7.8: Desktop layout overhaul — convert .app from grid to flex column
+      // Root cause: .left-col had position:sticky + fixed max-height,
+      // causing content (expanded categories + tag panel) to overflow VISUALLY
+      // into the hdrDisplay row sibling below. Flex column with position:static
+      // + height:auto on cols makes siblings respect each other's real height.
+      css += '@media (min-width: 768px) {';
+      css += '  .app {';
+      css += '    display: flex !important;';
+      css += '    flex-direction: column !important;';
+      css += '    max-width: 900px !important;';
+      css += '    margin: 0 auto !important;';
+      css += '  }';
+      css += '  .app > .left-col, .app > .right-col {';
+      css += '    position: static !important;';
+      css += '    height: auto !important;';
+      css += '    max-height: none !important;';
+      css += '    width: 100% !important;';
+      css += '    max-width: 100% !important;';
+      css += '    overflow: visible !important;';
+      css += '  }';
+      css += '  .app > .left-col { order: 1 !important; }';
+      css += '  .app > #paeHdrDisplay { order: 2 !important; }';
+      css += '  .app > .format-row { order: 3 !important; }';
+      css += '  .app > .random-divider { order: 4 !important; }';
+      css += '  .app > .right-col { order: 5 !important; }';
+      css += '}';
+      st.textContent = css;
+      document.head.appendChild(st);
+      _log('v7.8 desktop flex-column layout applied');
+    }
+    
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', injectStyles);
+    } else {
+      injectStyles();
+    }
+  })();
+</script>
+
+<script data-pae-removed="true" type="text/plain">/*! REMOVED v7.7 */
+  (function() {
+    if (window.__paeV77Installed) { return; }
+    window.__paeV77Installed = true;
+    var _log = function(m) { try { console.log('[pae-v77]', m); } catch(e){} };
+    
+    function injectStyles() {
+      if (document.getElementById('__pae_v77_styles')) return;
+      var st = document.createElement('style');
+      st.id = '__pae_v77_styles';
+      var css = '';
+      // FIX 1: Remove horizontal scroll from .left-col and .right-col
+      css += '.app > .left-col, .app > .right-col { overflow-x: hidden !important; }';
+      // FIX 2: Add spacing above #paeHdrDisplay and .format-row (separation from categories)
+      css += '.app > #paeHdrDisplay { margin-top: 20px !important; margin-bottom: 6px !important; }';
+      css += '.app > .format-row { margin-bottom: 16px !important; }';
+      // FIX 3: Center format-row buttons
+      css += '.app > .format-row { justify-content: center !important; display: flex !important; flex-wrap: wrap !important; gap: 8px !important; }';
+      // FIX 4: Safety — ensure headers themselves do not cause overflow
+      css += '.pae-section-header { max-width: 100%; overflow: hidden; }';
+      st.textContent = css;
+      document.head.appendChild(st);
+      _log('v7.7 styles injected');
+    }
+    
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', injectStyles);
+    } else {
+      injectStyles();
+    }
+  })();
+</script>
+
+<script data-pae-removed="true" type="text/plain">/*! REMOVED v7.6 */
+  (function() {
+    if (window.__paeV76Installed) { return; }
+    window.__paeV76Installed = true;
+    var _log = function(m) { try { console.log('[pae-v76]', m); } catch(e){} };
+    
+    // TASK 1: Rename 'סגנונות' -> 'קטגוריות'
     function renameStylesHeader() {
       var hdr = document.getElementById('paeHdrStyles');
       if (!hdr) return false;
@@ -4276,20 +3493,16 @@ body.light-mode .pae-section-header,
     var GUIDE_SLIDES = {
       he: [
         { emoji: '\ud83c\udfa8', title: '\u05d1\u05e8\u05d5\u05db\u05d9\u05dd \u05d4\u05d1\u05d0\u05d9\u05dd \u05dc-Palette!', subtitle: '\u05d4\u05de\u05e7\u05d5\u05dd \u05e9\u05d1\u05d5 \u05e8\u05e2\u05d9\u05d5\u05e0\u05d5\u05ea \u05d4\u05d5\u05e4\u05db\u05d9\u05dd \u05dc\u05ea\u05de\u05d5\u05e0\u05d5\u05ea \u05de\u05d0\u05d9\u05d9\u05d3 AI', body: '\u05d9\u05e6\u05e8\u05ea\u05d9 \u05d0\u05ea \u05d4\u05db\u05dc\u05d9 \u05d4\u05d6\u05d4 \u05db\u05d3\u05d9 \u05e9\u05db\u05dc \u05d0\u05d7\u05d3 \u05d9\u05d5\u05db\u05dc \u05dc\u05db\u05ea\u05d5\u05d1 \u05d4\u05d5\u05e8\u05d0\u05d5\u05ea \u05de\u05e7\u05e6\u05d5\u05e2\u05d9\u05d5\u05ea \u05dc-AI \u05d1\u05e2\u05d1\u05e8\u05d9\u05ea \u05e4\u05e9\u05d5\u05d8\u05d4. \u05d1\u05dc\u05d9 \u05de\u05d5\u05e0\u05d7\u05d9\u05dd \u05de\u05e1\u05d5\u05d1\u05db\u05d9\u05dd. \u05e4\u05e9\u05d5\u05d8, \u05de\u05d4\u05d9\u05e8, \u05d5\u05e7\u05e6\u05ea \u05db\u05d9\u05e3 \ud83d\ude09' },
-        { emoji: '\u2728', title: '\u05e2\u05d1\u05e8\u05d9\u05ea \u05e4\u05e9\u05d5\u05d8\u05d4 \u2192 \u05ea\u05d5\u05e6\u05d0\u05d5\u05ea \u05de\u05e7\u05e6\u05d5\u05e2\u05d9\u05d5\u05ea', subtitle: '\u05de\u05d4 \u05d4\u05d0\u05e4\u05dc\u05d9\u05e7\u05e6\u05d9\u05d4 \u05e2\u05d5\u05e9\u05d4 \u05d1\u05e4\u05d5\u05e2\u05dc?', body: 'מחוללי התמונות (Nano Banana, ChatGPT, Midjourney, Stable Diffusion) דורשים פרומפטים מדויקים באנגלית עם מונחים מקצועיים. האפליקציה מכירה את המילים והטריקים שבאמת עובדים — ומתרגמת את הרעיון שלך לפורמט הנכון לכל מודל.' },
+        { emoji: '\u2728', title: '\u05e2\u05d1\u05e8\u05d9\u05ea \u05e4\u05e9\u05d5\u05d8\u05d4 \u2192 \u05ea\u05d5\u05e6\u05d0\u05d5\u05ea \u05de\u05e7\u05e6\u05d5\u05e2\u05d9\u05d5\u05ea', subtitle: '\u05de\u05d4 \u05d4\u05d0\u05e4\u05dc\u05d9\u05e7\u05e6\u05d9\u05d4 \u05e2\u05d5\u05e9\u05d4 \u05d1\u05e4\u05d5\u05e2\u05dc?', body: '\u05de\u05d7\u05d5\u05dc\u05dc\u05d9 \u05d4\u05ea\u05de\u05d5\u05e0\u05d5\u05ea (Midjourney, Nano Banana) \u05d3\u05d5\u05e8\u05e9\u05d9\u05dd \u05e4\u05e8\u05d5\u05de\u05e4\u05d8\u05d9\u05dd \u05de\u05d3\u05d5\u05d9\u05e7\u05d9\u05dd \u05d1\u05d0\u05e0\u05d2\u05dc\u05d9\u05ea \u05e2\u05dd \u05de\u05d5\u05e0\u05d7\u05d9\u05dd \u05de\u05e7\u05e6\u05d5\u05e2\u05d9\u05d9\u05dd. \u05d4\u05d0\u05e4\u05dc\u05d9\u05e7\u05e6\u05d9\u05d4 \u05de\u05db\u05d9\u05e8\u05d4 \u05d0\u05ea \u05d4\u05de\u05d9\u05dc\u05d9\u05dd \u05d5\u05d4\u05d8\u05e8\u05d9\u05e7\u05d9\u05dd \u05e9\u05d1\u05d0\u05de\u05ea \u05e2\u05d5\u05d1\u05d3\u05d9\u05dd \u2014 \u05d5\u05de\u05ea\u05e8\u05d2\u05de\u05ea \u05d0\u05ea \u05d4\u05e8\u05e2\u05d9\u05d5\u05df \u05e9\u05dc\u05da \u05dc\u05e4\u05e8\u05d5\u05de\u05e4\u05d8 \u05de\u05e7\u05e6\u05d5\u05e2\u05d9 \u05d1\u05d0\u05e0\u05d2\u05dc\u05d9\u05ea.' },
         { emoji: '\ud83d\udcdd', title: '3 \u05e6\u05e2\u05d3\u05d9\u05dd \u05e4\u05e9\u05d5\u05d8\u05d9\u05dd', subtitle: '\u05d6\u05d4 \u05d1\u05d0\u05de\u05ea \u05d4\u05db\u05dc', isSteps: true },
-        { emoji: '\ud83c\udfa8', title: '\u05d0\u05d9\u05da \u05d9\u05d5\u05e6\u05e8\u05d9\u05dd \u05de\u05d4\u05e8?', subtitle: '\u05e7\u05d9\u05e6\u05d5\u05e8\u05d9 \u05d3\u05e8\u05da \u05dc\u05ea\u05d5\u05e6\u05d0\u05d4 \u05de\u05d4\u05d9\u05e8\u05d4', isFeatures: 'create' },
-        { emoji: '\u270d\ufe0f', title: '\u05d9\u05e6\u05d5\u05d0 \u05d7\u05db\u05dd \u05dc-AI', subtitle: '\u05ea\u05d5\u05e6\u05d0\u05d5\u05ea \u05de\u05d5\u05e9\u05dc\u05de\u05d5\u05ea \u05dc\u05db\u05dc \u05de\u05d5\u05d3\u05dc', isFeatures: 'export' },
-        { emoji: '\ud83d\udcda', title: '\u05e9\u05d5\u05de\u05e8 \u05d4\u05db\u05dc \u05d1\u05e9\u05d1\u05d9\u05dc\u05da', subtitle: '\u05d4\u05d9\u05e1\u05d8\u05d5\u05e8\u05d9\u05d4 \u05d5\u05e9\u05d9\u05ea\u05d5\u05e3', isFeatures: 'manage' },
+        { emoji: '\ud83e\uddea', title: '\u05db\u05de\u05d4 \u05d3\u05d1\u05e8\u05d9\u05dd \u05e9\u05db\u05d3\u05d0\u05d9 \u05dc\u05d4\u05db\u05d9\u05e8', subtitle: '\u05e9\u05d5\u05d5\u05d4 \u05dc\u05d3\u05e2\u05ea \u05e9\u05d9\u05e9', isFeatures: true },
         { emoji: '\ud83d\ude80', title: '\u05d9\u05d0\u05dc\u05dc\u05d4, \u05d1\u05d5\u05d0 \u05e0\u05ea\u05d7\u05d9\u05dc!', subtitle: '', body: '\u05dc\u05d0 \u05e6\u05e8\u05d9\u05da \u05dc\u05d4\u05d9\u05e8\u05e9\u05dd. \u05d4\u05db\u05dc \u05d7\u05d9\u05e0\u05dd. \u05d2\u05dd \u05d1\u05e2\u05d1\u05e8\u05d9\u05ea.<br><br>\u05e8\u05d5\u05e6\u05d4 \u05dc\u05e8\u05d0\u05d5\u05ea \u05d0\u05ea \u05d4\u05de\u05d3\u05e8\u05d9\u05da \u05e9\u05d5\u05d1? \u05d9\u05e9 \u05db\u05e4\u05ea\u05d5\u05e8 <b>?</b> \u05d1\u05e8\u05d0\u05e9 \u05d4\u05e2\u05de\u05d5\u05d3 \u05e9\u05d9\u05d7\u05d6\u05d9\u05e8 \u05d0\u05d5\u05ea\u05da \u05dc\u05db\u05d0\u05df \u05d1\u05db\u05dc \u05e8\u05d2\u05e2.' }
       ],
       en: [
         { emoji: '\ud83c\udfa8', title: 'Welcome to Palette!', subtitle: 'Where ideas become stunning AI images', body: 'I built this so anyone can write pro-level AI prompts in plain words. No jargon. Just fun and fast \ud83d\ude09' },
-        { emoji: '\u2728', title: 'Simple words \u2192 pro results', subtitle: 'What does the app actually do?', body: 'AI image generators (Nano Banana, ChatGPT, Midjourney, Stable Diffusion) need precise prompts in English with professional terms. The app knows the keywords and tricks that really work — and translates your idea into the right format for each model.' },
+        { emoji: '\u2728', title: 'Simple words \u2192 pro results', subtitle: 'What does the app actually do?', body: 'AI image generators (Midjourney, Nano Banana) need precise prompts in English with professional terms. The app knows the keywords and tricks that really work \u2014 and it translates your idea into a professional English prompt.' },
         { emoji: '\ud83d\udcdd', title: '3 simple steps', subtitle: "That's really all", isSteps: true },
-        { emoji: '\ud83c\udfa8', title: 'Create faster', subtitle: 'Shortcuts to instant results', isFeatures: 'create' },
-        { emoji: '\u270d\ufe0f', title: 'Smart AI export', subtitle: 'Perfect output for every model', isFeatures: 'export' },
-        { emoji: '\ud83d\udcda', title: 'We save it all for you', subtitle: 'History & sharing', isFeatures: 'manage' },
+        { emoji: '\ud83e\uddea', title: 'A few cool things to know', subtitle: 'Worth knowing these exist', isFeatures: true },
         { emoji: '\ud83d\ude80', title: "Alright, let's go!", subtitle: '', body: 'No registration. Free. Hebrew too.<br><br>Want to see this guide again? Click the <b>?</b> button at the top anytime.' }
       ]
     };
@@ -4298,44 +3511,28 @@ body.light-mode .pae-section-header,
       he: [
         { num: '1\ufe0f\u20e3', title: '\u05d1\u05d7\u05e8\u05d5 \u05e1\u05d2\u05e0\u05d5\u05df', desc: '\u05e6\u05d9\u05d5\u05e8? \u05de\u05e6\u05d9\u05d0\u05d5\u05ea\u05d9? \u05d0\u05e0\u05d9\u05de\u05e6\u05d9\u05d4?' },
         { num: '2\ufe0f\u20e3', title: '\u05db\u05ea\u05d1\u05d5 \u05e8\u05e2\u05d9\u05d5\u05df', desc: '\u05dc\u05de\u05e9\u05dc: "\u05d7\u05ea\u05d5\u05dc \u05e7\u05d8\u05df \u05e9\u05d5\u05ea\u05d4 \u05e7\u05e4\u05d4"' },
-        { num: '3\ufe0f\u20e3', title: 'בחר/י מודל AI', desc: '🍌 Nano / 💬 ChatGPT / 🎨 MJ / 🌱 SD — לחץ/י על כפתור ההעתקה המתאים' }
+        { num: '3\ufe0f\u20e3', title: '\u05dc\u05d7\u05e6\u05d5 "\u05e6\u05d5\u05e8"', desc: '\u05d5\u05d4\u05e2\u05ea\u05d9\u05e7\u05d5 \u05d0\u05ea \u05d4\u05ea\u05d5\u05e6\u05d0\u05d4' }
       ],
       en: [
         { num: '1\ufe0f\u20e3', title: 'Pick a style', desc: 'Drawing? Realistic? Animation?' },
         { num: '2\ufe0f\u20e3', title: 'Type an idea', desc: 'e.g., "a small cat drinking coffee"' },
-        { num: '3\ufe0f\u20e3', title: 'Pick your AI model', desc: '🍌 Nano / 💬 ChatGPT / 🎨 MJ / 🌱 SD — tap the matching copy button' }
+        { num: '3\ufe0f\u20e3', title: 'Hit "Generate"', desc: 'And copy the result' }
       ]
     };
     
     var GUIDE_FEATURES = {
-      he: {
-        create: [
-          { emoji: '🎁', title: 'כפתור הפתעה', desc: 'רעיון רנדומלי + סגנון ויראלי אוטומטי' },
-          { emoji: '✨', title: 'מצב ילדים', desc: 'תמונות בטוחות + סגנונות מתאימים לילדים' }
-        ],
-        export: [
-          { emoji: '🎨', title: '4 מודלי AI', desc: 'פורמט מותאם ל-Nano Banana, ChatGPT, Midjourney ו-SD' },
-          { emoji: '🔤', title: 'טקסט עברי בתמונה', desc: '"טקסט לשילוב" — הכי טוב ב-ChatGPT / gpt-image-2' }
-        ],
-        manage: [
-          { emoji: '📚', title: 'היסטוריה', desc: 'כל הפרומפטים שיצרת נשמרים אוטומטית' },
-          { emoji: '📤', title: 'שיתוף חכם', desc: 'שליחה לחברים עם הסבר על האפליקציה וקישור' }
-        ]
-      },
-      en: {
-        create: [
-          { emoji: '🎁', title: 'Surprise button', desc: 'Random idea + automatic viral style' },
-          { emoji: '✨', title: 'Kids mode', desc: 'Safe tags + matching viral styles for kids' }
-        ],
-        export: [
-          { emoji: '🎨', title: '4 AI models', desc: 'Tailored formats for Nano Banana, ChatGPT, MJ and SD' },
-          { emoji: '🔤', title: 'Hebrew text in image', desc: '"Embed text" field — best in ChatGPT / gpt-image-2' }
-        ],
-        manage: [
-          { emoji: '📚', title: 'History', desc: 'Every prompt you create is auto-saved' },
-          { emoji: '📤', title: 'Smart share', desc: 'Send to friends with app info and link' }
-        ]
-      }
+      he: [
+        { emoji: '\u2728', title: '\u05de\u05e6\u05d1 \u05d9\u05dc\u05d3\u05d9\u05dd', desc: '\u05dc\u05d9\u05e6\u05d9\u05e8\u05ea \u05ea\u05de\u05d5\u05e0\u05d5\u05ea \u05d1\u05d8\u05d5\u05d7\u05d5\u05ea' },
+        { emoji: '\ud83c\udfb2', title: '\u05d4\u05e4\u05ea\u05d9\u05e2\u05d5 \u05d0\u05d5\u05ea\u05d9', desc: '\u05dc\u05e8\u05e2\u05d9\u05d5\u05e0\u05d5\u05ea \u05e1\u05e4\u05d5\u05e0\u05d8\u05e0\u05d9\u05d9\u05dd' },
+        { emoji: '\ud83d\udcda', title: '\u05d4\u05d9\u05e1\u05d8\u05d5\u05e8\u05d9\u05d4', desc: '\u05db\u05dc \u05d4\u05e4\u05e8\u05d5\u05de\u05e4\u05d8\u05d9\u05dd \u05d4\u05e7\u05d5\u05d3\u05de\u05d9\u05dd' },
+        { emoji: '\ud83d\udce4', title: '\u05e9\u05d9\u05ea\u05d5\u05e3 \u05d7\u05db\u05dd', desc: '\u05e9\u05dc\u05d9\u05d7\u05ea \u05d4\u05e4\u05e8\u05d5\u05de\u05e4\u05d8 \u05dc\u05d7\u05d1\u05e8\u05d9\u05dd \u05d9\u05d7\u05d3 \u05e2\u05dd \u05d4\u05e1\u05d1\u05e8 \u05e2\u05dc \u05d4\u05d0\u05e4\u05dc\u05d9\u05e7\u05e6\u05d9\u05d4 \u05d5\u05e7\u05d9\u05e9\u05d5\u05e8' }
+      ],
+      en: [
+        { emoji: '\u2728', title: 'Kids mode', desc: 'Safe images for children' },
+        { emoji: '\ud83c\udfb2', title: 'Surprise me', desc: 'For spontaneous ideas' },
+        { emoji: '\ud83d\udcda', title: 'History', desc: 'All your past prompts' },
+        { emoji: '\ud83d\udce4', title: 'Smart share', desc: 'Share your prompt with friends, including app info and link' }
+      ]
     };
     
     var GUIDE_T = {
@@ -4405,9 +3602,7 @@ body.light-mode .pae-section-header,
       if(slide.isSteps){
         bodyHTML='<div class="pae-guide-step-list">'+GUIDE_STEPS[lang].map(function(s){return '<div><span class="num">'+s.num+'</span><div><div class="title">'+s.title+'</div><div class="desc">'+s.desc+'</div></div></div>';}).join('')+'</div>';
       }else if(slide.isFeatures){
-        var featGroup=(typeof slide.isFeatures==='string')?slide.isFeatures:'create';
-        var featList=(GUIDE_FEATURES[lang]&&GUIDE_FEATURES[lang][featGroup])||[];
-        bodyHTML='<div class="pae-guide-feat-list pae-guide-feat-compact">'+featList.map(function(f){return '<div class="pae-guide-feat-item"><span class="pae-guide-feat-emoji">'+f.emoji+'</span><div class="pae-guide-feat-text"><b>'+f.title+'</b><span>'+f.desc+'</span></div></div>';}).join('')+'</div>';
+        bodyHTML='<div class="pae-guide-feat-list">'+GUIDE_FEATURES[lang].map(function(f){return '<div>'+f.emoji+' <b>'+f.title+'</b> \u2014 '+f.desc+'</div>';}).join('')+'</div>';
       }else{bodyHTML=slide.body;}
       var leftBtnHTML=guideSlide===0?'<button class="pae-guide-btn-text" onclick="__paeCloseGuide()">'+GUIDE_T.skip[lang]+'</button>':'<button class="pae-guide-btn-secondary" onclick="__paeGoSlide('+(guideSlide-1)+')">'+GUIDE_T.back[lang]+'</button>';
       var rightBtnHTML=guideSlide===total-1?'<button class="pae-guide-btn-primary" onclick="__paeCloseGuide()">'+GUIDE_T.start[lang]+'</button>':'<button class="pae-guide-btn-primary" onclick="__paeGoSlide('+(guideSlide+1)+')">'+GUIDE_T.next[lang]+'</button>';
@@ -4446,7 +3641,7 @@ body.light-mode .pae-section-header,
     });
     
     var attempts=0;
-    function _bootV76(){
+    function tryBoot(){
       attempts++;
       injectGuideStyles();
       var renamed=renameStylesHeader();
@@ -4454,11 +3649,18 @@ body.light-mode .pae-section-header,
       if((!renamed||!btnAdded)&&attempts<33){setTimeout(tryBoot,300);}
       else{observeLangForCategories();_log('v7.6 ready attempt='+attempts);if(attempts<6)setTimeout(tryBoot,500);}
     }
+    
+    if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',tryBoot);}else{tryBoot();}
+  })();
+</script>
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // Layer: v7.5 (move textInput header below toolbar)
-  // ═══════════════════════════════════════════════════════════════════════
-function moveTextInputHeader() {
+<script data-pae-removed="true" type="text/plain">/*! REMOVED v7.5 */
+  (function() {
+    if (window.__paeV75Installed) { return; }
+    window.__paeV75Installed = true;
+    var _log = function(m) { try { console.log('[pae-v75]', m); } catch(e){} };
+    
+    function moveTextInputHeader() {
       var hdr = document.getElementById('paeHdrTextInput');
       var taWrap = document.querySelector('.textarea-wrap');
       var tbToolbar = document.querySelector('.tb-toolbar');
@@ -4481,7 +3683,7 @@ function moveTextInputHeader() {
     }
     
     var attempts = 0;
-    function _bootV75() {
+    function tryMove() {
       attempts++;
       var ok = moveTextInputHeader();
       if (!ok && attempts < 33) {
@@ -4492,11 +3694,47 @@ function moveTextInputHeader() {
         if (attempts < 6) setTimeout(tryMove, 500);
       }
     }
+    
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', tryMove);
+    } else {
+      tryMove();
+    }
+  })();
+</script>
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // Layer: v7.4 (universal layout fix — DOM reorder; CSS moved)
-  // ═══════════════════════════════════════════════════════════════════════
-
+<script data-pae-removed="true" type="text/plain">/*! REMOVED v7.4 */
+  (function() {
+    if (window.__paeV74Installed) { return; }
+    window.__paeV74Installed = true;
+    
+    var _log = function(m) { try { console.log('[pae-v74]', m); } catch(e){} };
+    
+    function injectStyles() {
+      if (document.getElementById('__pae_v74_styles')) return;
+      var st = document.createElement('style');
+      st.id = '__pae_v74_styles';
+      st.textContent = 
+        '.app > #paeHdrDisplay,' +
+        '.app > .format-row,' +
+        '.app > .random-divider {' +
+        '  order: 2 !important;' +
+        '}' +
+        '@media (min-width: 768px) {' +
+        '  .app > #paeHdrDisplay,' +
+        '  .app > .format-row,' +
+        '  .app > .random-divider {' +
+        '    grid-column: 1 / -1 !important;' +
+        '  }' +
+        '}' +
+        '.pae-section-header {' +
+        '  width: 100%;' +
+        '  box-sizing: border-box;' +
+        '}';
+      document.head.appendChild(st);
+      _log('v7.4 styles');
+    }
+    
     function reorderDOM() {
       var app = document.querySelector('.app');
       if (!app) return false;
@@ -4519,8 +3757,9 @@ function moveTextInputHeader() {
     }
     
     var attempts = 0;
-    function _bootV74() {
+    function tryFix() {
       attempts++;
+      injectStyles();
       var ok = reorderDOM();
       if (!ok && attempts < 33) {
         setTimeout(tryFix, 300);
@@ -4529,13 +3768,26 @@ function moveTextInputHeader() {
         if (attempts < 6) setTimeout(tryFix, 500);
       }
     }
+    
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', tryFix);
+    } else {
+      tryFix();
+    }
+  })();
+</script>
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // Layer: v7.2 (section headers — DOM insert; CSS moved)
-  // ═══════════════════════════════════════════════════════════════════════
-// Translations
+<script data-pae-removed="true" type="text/plain">
+  /*! REMOVED v7.2 */
+  (function() {
+    if (window.__paeV72Installed) { return; }
+    window.__paeV72Installed = true;
+    
+    var _log = function(msg) { try { console.log('[pae-v72]', msg); } catch(e){} };
+    
+    // Translations
     var T = {
-      styles: { he: 'קטגוריות', en: 'Categories' },
+      styles: { he: 'סגנונות', en: 'Styles' },
       display: { he: 'סוגי תצוגה', en: 'Display types' },
       textInput: { he: 'הכנס/י כאן את הטקסט שלך בשביל התמונה', en: 'Enter the text for your image here' }
     };
@@ -4543,6 +3795,46 @@ function moveTextInputHeader() {
     function getLang() {
       return document.documentElement.getAttribute('lang') === 'en' ? 'en' : 'he';
     }
+    
+    // ========= Style injection for section headers =========
+    function injectStyles() {
+      if (document.getElementById('__pae_v72_styles')) return;
+      var st = document.createElement('style');
+      st.id = '__pae_v72_styles';
+      st.textContent = [
+        '.pae-section-header {',
+        '  display: flex;',
+        '  align-items: center;',
+        '  gap: 8px;',
+        '  font-size: 13px;',
+        '  font-weight: 600;',
+        '  letter-spacing: 0.3px;',
+        '  color: var(--muted, #a0a0b8);',
+        '  text-transform: uppercase;',
+        '  margin: 14px 4px 8px;',
+        '  padding-bottom: 6px;',
+        '  border-bottom: 1px solid rgba(255, 255, 255, 0.06);',
+        '  opacity: 0.85;',
+        '}',
+        '.pae-section-header .pae-section-icon {',
+        '  font-size: 15px;',
+        '  opacity: 0.9;',
+        '}',
+        '/* Light mode */',
+        'body.light-mode .pae-section-header,',
+        '[data-theme="light"] .pae-section-header {',
+        '  border-bottom-color: rgba(0, 0, 0, 0.08);',
+        '  color: rgba(0, 0, 0, 0.55);',
+        '}',
+        '/* First header in container — reduce top margin */',
+        '.right-col > .pae-section-header:first-child,',
+        '.left-col > .pae-section-header:first-child {',
+        '  margin-top: 2px;',
+        '}'
+      ].join('\n');
+      document.head.appendChild(st);
+    }
+    
     // ========= Header creator =========
     function makeHeader(id, iconEmoji, keyName) {
       var el = document.createElement('div');
@@ -4616,16 +3908,39 @@ function moveTextInputHeader() {
       obs.observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
     }
     
-    function _bootV72() {
+    function boot() {
+      injectStyles();
       insertHeaders();
       observeLangChanges();
       _log('v7.2 installed (section headers)');
     }
+    
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', boot);
+    } else {
+      boot();
+    }
+  })();
+</script>
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // Layer: v7.1 (share winner — force override; removeThemeDivider dropped)
-  // ═══════════════════════════════════════════════════════════════════════
-
+<script data-pae-removed="true" type="text/plain">
+  /*! REMOVED v7.1 */
+  (function() {
+    if (window.__paeV71Installed) { return; }
+    window.__paeV71Installed = true;
+    
+    var _log = function(msg) { try { console.log('[pae-v71]', msg); } catch(e){} };
+    
+    // FIX 1: Remove theme button divider
+    function removeThemeDivider() {
+      if (document.getElementById('__pae_v71_styles')) return;
+      var st = document.createElement('style');
+      st.id = '__pae_v71_styles';
+      st.textContent = '#themeToggleBtn::before { display: none !important; content: none !important; }';
+      document.head.appendChild(st);
+      _log('theme divider removed');
+    }
+    
     // Clean share message builder (no asterisks, no dividers)
     function buildCleanShare(promptText, lang) {
       if (lang === 'en') {
@@ -4776,15 +4091,251 @@ function moveTextInputHeader() {
       setTimeout(function() { toast.remove(); }, 2500);
     }
     
-    function _bootV71() {
+    function boot() {
+      removeThemeDivider();
       forceOverrideShare();
       _log('v7.1 boot complete (divider removed + share override scheduled)');
     }
+    
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', boot);
+    } else {
+      boot();
+    }
+  })();
+</script>
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // Layer: v6.2 (PayBox desktop + Lang auto-reload)
-  // ═══════════════════════════════════════════════════════════════════════
-var FLAGS = { paybox: false, langReload: false };
+<script data-pae-removed="true" type="text/plain">
+  /*! REMOVED v7.0 */
+  (function() {
+    if (window.__paeV70Installed) { return; }
+    window.__paeV70Installed = true;
+    
+    var _log = function(msg) { try { console.log('[pae-v7]', msg); } catch(e){} };
+    
+    // =============================================
+    // FIX 1: Header toggle spacing
+    // =============================================
+    function installToggleSpacing() {
+      if (document.getElementById('__pae_v70_styles')) return;
+      var st = document.createElement('style');
+      st.id = '__pae_v70_styles';
+      st.textContent = [
+        '/* v7.0: visual separation between lang toggle and theme toggle */',
+        '#themeToggleBtn {',
+        '  margin-inline-start: 14px !important;',
+        '  position: relative;',
+        '}',
+        '#themeToggleBtn::before {',
+        '  content: "";',
+        '  position: absolute;',
+        '  inset-inline-start: -8px;',
+        '  top: 20%;',
+        '  bottom: 20%;',
+        '  width: 1px;',
+        '  background: rgba(255, 255, 255, 0.12);',
+        '  pointer-events: none;',
+        '}',
+        'body.light-mode #themeToggleBtn::before,',
+        '[data-theme="light"] #themeToggleBtn::before {',
+        '  background: rgba(0, 0, 0, 0.15);',
+        '}'
+      ].join('\n');
+      document.head.appendChild(st);
+      _log('toggle spacing installed');
+    }
+    
+    // =============================================
+    // FIX 2: Share-with-context (Nano Banana first, with headers)
+    // =============================================
+    function buildShareMessage(promptText, lang) {
+      var isEN = lang === 'en';
+      var DIVIDER = '━━━━━━━━━━━━━━━━━';
+      
+      if (isEN) {
+        return [
+          DIVIDER,
+          '🎨 *I created a prompt with Palette AI*',
+          DIVIDER,
+          '',
+          '*📖 What is Palette AI?*',
+          '',
+          'A free Hebrew app that helps build professional prompts for AI image generators (like Nano Banana, Midjourney, or ChatGPT).',
+          '',
+          '*✨ How does it work?*',
+          '',
+          'You write in plain Hebrew like "a cat drinking coffee",',
+          'and the app converts it into a professional English prompt',
+          'with all the keywords and styles that actually work.',
+          '',
+          DIVIDER,
+          '*👇 My prompt:*',
+          DIVIDER,
+          '',
+          promptText,
+          '',
+          DIVIDER,
+          '*💡 Want to try?*',
+          DIVIDER,
+          '',
+          '1. Open the link',
+          '2. Write an idea + pick a style',
+          '3. Copy the result to your AI tool',
+          '',
+          '🔗 https://t1ptip.github.io/palette-ai',
+          '_(no signup, works on mobile too)_'
+        ].join('\n');
+      } else {
+        return [
+          DIVIDER,
+          '🎨 *יצרתי פרומפט עם Palette AI*',
+          DIVIDER,
+          '',
+          '*📖 מה זה Palette AI?*',
+          '',
+          'אפליקציה חינמית בעברית שעוזרת לבנות פרומפטים מקצועיים למחוללי תמונות AI (כמו Nano Banana, Midjourney או ChatGPT).',
+          '',
+          '*✨ איך זה עובד?*',
+          '',
+          'כותבים בעברית פשוטה "חתול שותה קפה",',
+          'והאפליקציה מתרגמת לפרומפט מקצועי באנגלית',
+          'עם כל הטריקים והסגנונות שבאמת עובדים.',
+          '',
+          DIVIDER,
+          '*👇 הפרומפט שיצרתי:*',
+          DIVIDER,
+          '',
+          promptText,
+          '',
+          DIVIDER,
+          '*💡 רוצים לנסות?*',
+          DIVIDER,
+          '',
+          '1. פותחים את הקישור',
+          '2. כותבים רעיון + בוחרים סגנון',
+          '3. מעתיקים את התוצאה לכלי ה-AI',
+          '',
+          '🔗 https://t1ptip.github.io/palette-ai',
+          '_(לא צריך להירשם, עובד גם בנייד)_'
+        ].join('\n');
+      }
+    }
+    
+    function installShareContext() {
+      if (typeof window.sharePrompt !== 'function') {
+        setTimeout(installShareContext, 500);
+        return;
+      }
+      if (window.__paeV70_shareWrapped) return;
+      window.__paeV70_shareWrapped = true;
+      
+      window.sharePrompt = function() {
+        try {
+          var finalEl = document.getElementById('finalPrompt');
+          var promptText = finalEl ? finalEl.textContent.trim() : '';
+          
+          if (!promptText || promptText.length < 5) {
+            // Empty prompt — fall back to showing a warning
+            var lang = document.documentElement.getAttribute('lang') || 'he';
+            var emptyMsg = lang === 'en' ? 'Nothing to share yet! Generate a prompt first.' : 'אין מה לשתף עדין! צרו פרומפט קודם.';
+            try { alert(emptyMsg); } catch(e){}
+            return;
+          }
+          
+          var currentLang = document.documentElement.getAttribute('lang') === 'en' ? 'en' : 'he';
+          var message = buildShareMessage(promptText, currentLang);
+          
+          // Use Web Share API if available, else fallback to copy+notify
+          if (navigator.share) {
+            navigator.share({
+              title: 'Palette AI',
+              text: message
+            }).catch(function(err) {
+              // User cancelled or error — fallback to copy
+              _log('share API failed: ' + err.message);
+              fallbackCopy(message, currentLang);
+            });
+          } else {
+            fallbackCopy(message, currentLang);
+          }
+        } catch(e) {
+          _log('sharePrompt error: ' + e.message);
+        }
+      };
+      _log('sharePrompt wrapped with context (Nano Banana first)');
+    }
+    
+    function fallbackCopy(message, lang) {
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(message).then(function() {
+            showShareToast(lang);
+          }).catch(function() {
+            legacyFallback(message, lang);
+          });
+        } else {
+          legacyFallback(message, lang);
+        }
+      } catch(e) {
+        legacyFallback(message, lang);
+      }
+    }
+    
+    function legacyFallback(message, lang) {
+      try {
+        var ta = document.createElement('textarea');
+        ta.value = message;
+        ta.style.cssText = 'position:fixed;left:-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch(e){}
+        document.body.removeChild(ta);
+        showShareToast(lang);
+      } catch(e) {
+        _log('legacyFallback error: ' + e.message);
+      }
+    }
+    
+    function showShareToast(lang) {
+      var msg = lang === 'en' ? '✓ Copied! Ready to share' : '✓ הועתק! מוכן לשיתוף';
+      var existing = document.getElementById('__v70_share_toast');
+      if (existing) existing.remove();
+      var toast = document.createElement('div');
+      toast.id = '__v70_share_toast';
+      toast.setAttribute('role', 'status');
+      toast.setAttribute('aria-live', 'polite');
+      toast.textContent = msg;
+      toast.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#10b981;color:#fff;padding:12px 24px;border-radius:24px;font-size:14px;font-weight:600;z-index:100000;box-shadow:0 4px 20px rgba(16,185,129,0.4);font-family:inherit';
+      document.body.appendChild(toast);
+      setTimeout(function() { toast.remove(); }, 2500);
+    }
+    
+    // =============================================
+    // BOOT
+    // =============================================
+    function boot() {
+      installToggleSpacing();
+      installShareContext();
+      _log('v7.0 installed (toggle spacing + share with context)');
+    }
+    
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', boot);
+    } else {
+      boot();
+    }
+  })();
+</script>
+
+<script data-pae-removed="true" type="text/plain">
+  /*! REMOVED v6.2 */
+  (function() {
+    if (window.__paeV62Installed) { return; }
+    window.__paeV62Installed = true;
+    
+    var FLAGS = { paybox: false, langReload: false };
+    var _log = function(msg) { try { console.log('[pae-v62]', msg); } catch(e){} };
+    
     function isDesktop() {
       var ua = navigator.userAgent || '';
       var isIOS = /iPhone|iPad|iPod/i.test(ua);
@@ -4872,24 +4423,10 @@ var FLAGS = { paybox: false, langReload: false };
       box.appendChild(header);
       
       var qrSize = 220;
-      // v8.8 refactor: QR URL constants extracted for clarity + easier maintenance
-      var qrPrimaryUrl  = 'https://quickchart.io/qr?text=' + encodeURIComponent(payboxUrl) + '&size=' + qrSize + '&margin=2&dark=1a1a2e&light=ffffff';
-      var qrFallbackUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=' + qrSize + 'x' + qrSize + '&data=' + encodeURIComponent(payboxUrl) + '&bgcolor=ffffff&color=1a1a2e&margin=10';
       var qrImg = document.createElement('img');
-      qrImg.src = qrPrimaryUrl;
+      qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=' + qrSize + 'x' + qrSize + '&data=' + encodeURIComponent(payboxUrl) + '&bgcolor=ffffff&color=1a1a2e&margin=10';
       qrImg.alt = 'QR code for PayBox';
       qrImg.style.cssText = 'display:block;width:' + qrSize + 'px;height:' + qrSize + 'px;margin:10px auto 18px;background:#fff;border-radius:12px;padding:8px;box-shadow:0 4px 20px rgba(0,0,0,0.3)';
-      // v8.7: quickchart primary -> qrserver fallback -> graceful hide
-      qrImg.onerror = function() {
-        qrImg.onerror = function() {
-          qrImg.style.display = 'none';
-          var note = document.createElement('div');
-          note.textContent = '\u26a0\ufe0f QR \u05dc\u05d0 \u05d6\u05de\u05d9\u05df \u2014 \u05d4\u05e9\u05ea\u05de\u05e9/\u05d9 \u05d1\u05db\u05e4\u05ea\u05d5\u05e8\u05d9\u05dd \u05dc\u05de\u05d8\u05d4';
-          note.style.cssText = 'text-align:center;padding:20px;color:#fff;opacity:0.75;font-size:13px;direction:rtl';
-          if (qrImg.parentNode) qrImg.parentNode.insertBefore(note, qrImg);
-        };
-        qrImg.src = qrFallbackUrl;
-      };
       box.appendChild(qrImg);
       
       var btnRow = document.createElement('div');
@@ -4994,231 +4531,22 @@ var FLAGS = { paybox: false, langReload: false };
       document.body.appendChild(toast);
     }
     
-    function _bootV62() {
+    function boot() {
       installPayBoxDesktopFix();
       installLangAutoReload();
       _log('v6.2 hot patch installed (PayBox desktop + Lang auto-reload)');
     }
-
-    // ─── Layer: v10.0 (Unified Chip Design Language) ────────────────────
-    function _bootV10() {
-      if (document.getElementById('pae-v10-chip-css')) {
-        _log('v10.0 already installed');
-        return;
-      }
-      var VIRAL_EMOJI = {
-        ghibli:      '\uD83C\uDFA8', pixar3d:     '\uD83E\uDDF8',
-        animeaction: '\u26A1',         indiecomic:  '\uD83D\uDCA5',
-        pixelart:    '\uD83C\uDFAE', retro35mm:   '\uD83D\uDCFD',
-        cinematic:   '\uD83C\uDFAC', cuteanimal:  '\uD83D\uDC3E',
-        claymation:  '\uD83C\uDFFA', filmnoir:    '\uD83C\uDFA9',
-        dystopian:   '\uD83C\uDF0C', vintage:     '\uD83D\uDCFB',
-        magazine:    '\uD83D\uDCF0'
-      };
-      var css = [
-        '.cat-pill, .viral-chip {',
-        '  display: inline-flex !important; flex-direction: row !important;',
-        '  align-items: center !important; justify-content: center !important;',
-        '  gap: 6px !important; padding: 7px 13px !important;',
-        '  min-height: 36px !important; background: var(--surface2) !important;',
-        '  border: 1px solid var(--border) !important; border-radius: 99px !important;',
-        '  color: var(--text) !important; font-family: inherit !important;',
-        '  font-size: 12.5px !important; font-weight: 500 !important;',
-        '  cursor: pointer !important; transition: all 0.15s ease !important;',
-        '  white-space: nowrap !important; line-height: 1.2 !important;',
-        '  text-align: center !important; user-select: none !important;',
-        '  position: relative !important; box-shadow: none !important;',
-        '}',
-        '.cat-pill .cat-emoji, .chip-emoji {',
-        '  font-size: 15px !important; line-height: 1 !important;',
-        '  flex-shrink: 0 !important; display: inline !important; margin: 0 !important;',
-        '}',
-        '.cat-pill .cat-name {',
-        '  font-size: 12.5px !important; color: inherit !important;',
-        '  font-weight: 500 !important; line-height: 1.2 !important;',
-        '  word-break: normal !important; hyphens: none !important;',
-        '}',
-        '.cat-pill:hover, .viral-chip:hover {',
-        '  border-color: var(--a4) !important; transform: translateY(-1px) !important;',
-        '}',
-        '.cat-pill.active, .viral-chip.viral-chip-active {',
-        '  background: var(--a3) !important; border-color: var(--accent) !important;',
-        '  color: #fff !important; box-shadow: 0 0 8px var(--a2) !important;',
-        '}',
-        '.cat-pill.active .cat-name { color: #fff !important; }',
-        '.cat-pill.search-match {',
-        '  border-color: rgba(0,229,204,0.45) !important;',
-        '  background: rgba(0,229,204,0.07) !important;',
-        '}',
-        '.cat-pill.search-match .cat-name { color: var(--teal) !important; }',
-        '.cat-badge {',
-        '  position: static !important; top: auto !important; left: auto !important;',
-        '  background: var(--accent) !important; color: #fff !important;',
-        '  font-size: 10px !important; font-weight: 700 !important;',
-        '  border-radius: 99px !important; padding: 1px 6px !important;',
-        '  margin-inline-start: 3px !important; min-width: 16px !important;',
-        '  display: none !important; line-height: 1.3 !important;',
-        '}',
-        '.cat-badge.on { display: inline-block !important; }',
-        '.cat-grid {',
-        '  display: flex !important; flex-wrap: wrap !important;',
-        '  gap: 6px !important; grid-template-columns: none !important;',
-        '  align-items: center !important;',
-        '}',
-        '.viral-chips-strip {',
-        '  background: transparent !important; border: none !important;',
-        '  padding: 6px 0 4px !important; margin: 4px 0 !important;',
-        '  gap: 6px !important;',
-        '}',
-        '.viral-chip-active {',
-        '  background: linear-gradient(135deg, #d4af37, #f5cf4f) !important;',
-        '  color: #1a1a2e !important; border-color: #d4af37 !important;',
-        '  box-shadow: 0 0 16px rgba(212,175,55,0.45) !important;',
-        '  font-weight: 700 !important;',
-        '}',
-        '.tag-list {',
-        '  display: flex !important; flex-wrap: wrap !important;',
-        '  gap: 6px !important; grid-template-columns: none !important;',
-        '  padding: 12px !important; align-items: center !important;',
-        '}',
-        '.tag-btn {',
-        '  display: inline-flex !important; flex-direction: row !important;',
-        '  align-items: center !important; justify-content: center !important;',
-        '  gap: 4px !important; padding: 7px 13px !important;',
-        '  min-height: 36px !important; background: var(--surface2) !important;',
-        '  border: 1px solid var(--border) !important; border-radius: 99px !important;',
-        '  color: var(--text) !important; font-size: 12.5px !important;',
-        '  font-weight: 500 !important; white-space: nowrap !important;',
-        '  line-height: 1.2 !important; text-align: center !important;',
-        '  box-shadow: none !important;',
-        '}',
-        '.tag-btn-sub { display: none !important; }',
-        '.tag-btn:hover {',
-        '  border-color: var(--a4) !important; transform: translateY(-1px) !important;',
-        '}',
-        '.tag-btn.active {',
-        '  background: var(--a3) !important; border-color: var(--accent) !important;',
-        '  color: #fff !important; box-shadow: 0 0 8px var(--a2) !important;',
-        '}',
-        '[data-theme="light"] .cat-pill,',
-        '[data-theme="light"] .viral-chip,',
-        '[data-theme="light"] .tag-btn { background: var(--surface2) !important; color: var(--text) !important; }',
-        '[data-theme="light"] .cat-pill.active,',
-        '[data-theme="light"] .viral-chip.viral-chip-active,',
-        '[data-theme="light"] .tag-btn.active { background: var(--accent) !important; color: #fff !important; }',
-        '@media (max-width: 480px) {',
-        '  .cat-pill, .viral-chip, .tag-btn { font-size: 12px !important; padding: 6px 11px !important; min-height: 34px !important; }',
-        '  .cat-pill .cat-emoji, .chip-emoji { font-size: 14px !important; }',
-        '}',
-        '/* v10.1+v10.3: hide viral random dice button + viral strip label */',
-        '#viralRandomBtn, .viral-random-btn { display: none !important; }',
-        '.viral-chip-prompt { display: none !important; }',
-        '/* v11.1: subject-input-block styling when moved into .left-col */',
-        '.subject-input-block {',
-        '  margin: 8px 0 12px 0;',
-        '  padding: 0;',
-        '}',
-        '.subject-input-block .tb-toolbar {',
-        '  display: flex; gap: 8px; margin-bottom: 8px;',
-        '  justify-content: flex-start;',
-        '}',
-        '.subject-input-block .textarea-wrap {',
-        '  position: relative;',
-        '  margin-bottom: 12px;',
-        '}',
-        '.subject-input-block #userInput {',
-        '  width: 100%;',
-        '  box-sizing: border-box;',
-        '}',
-        '@media (max-width: 480px) {',
-        '  /* v11.4: subject-heading mobile rules removed with the element */',
-        '}'
-      ].join('\n');
-      var styleEl = document.createElement('style');
-      styleEl.id = 'pae-v10-chip-css';
-      styleEl.textContent = css;
-      document.head.appendChild(styleEl);
-
-      function addViralEmojis() {
-        var chips = document.querySelectorAll('.viral-chip[data-style-id]');
-        chips.forEach(function(chip) {
-          if (chip.dataset.v10emojified === '1') return;
-          var sid = chip.dataset.styleId;
-          var emoji = VIRAL_EMOJI[sid];
-          if (!emoji) return;
-          var origText = chip.textContent.trim();
-          if (origText.charCodeAt(0) > 0x2000) return;
-          chip.textContent = '';
-          var emojiSpan = document.createElement('span');
-          emojiSpan.className = 'chip-emoji';
-          emojiSpan.textContent = emoji;
-          emojiSpan.setAttribute('aria-hidden', 'true');
-          chip.appendChild(emojiSpan);
-          chip.appendChild(document.createTextNode(' ' + origText));
-          chip.dataset.v10emojified = '1';
-        });
-      }
-      addViralEmojis();
-      var strip = document.getElementById('viralChipsStrip');
-      if (strip) {
-        var obs = new MutationObserver(function() { addViralEmojis(); });
-        obs.observe(strip, { childList: true });
-      }
-      _log('v10.0 unified chip design installed');
+    
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', boot);
+    } else {
+      boot();
     }
-
-  // ═══════════════════════════════════════════════════════════════════════
-  // Master boot — runs each layer's installer in the original load order.
-  // ═══════════════════════════════════════════════════════════════════════
-  function masterBoot() {
-    safeCall(_bootV6,  'v6  base');
-    safeCall(_bootV79, 'v7.9 signature');
-    safeCall(_bootV76, 'v7.6 guide modal');
-    safeCall(_bootV75, 'v7.5 textInput header');
-    safeCall(_bootV74, 'v7.4 layout fix');
-    safeCall(_bootV72, 'v7.2 section headers');
-    safeCall(_bootV71, 'v7.1 share override');
-    safeCall(_bootV62, 'v6.2 PayBox + lang reload');
-    safeCall(_bootV10, 'v10.0 unified chip design');
-    console.log(SIGNAL);
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', masterBoot, { once: true });
-  } else {
-    Promise.resolve().then(masterBoot);
-  }
-})();
+  })();
 </script>
 
-<style id="pae-v11-3-guide-compact">
-/* v11.3: compact feature list (used inside guide modal) */
-.pae-guide-feat-list.pae-guide-feat-compact {
-  display: flex; flex-direction: column; gap: 10px;
-  padding: 4px 0;
-}
-.pae-guide-feat-item {
-  display: flex; align-items: flex-start; gap: 10px;
-  padding: 8px 10px;
-  border-radius: 10px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.06);
-}
-.pae-guide-feat-emoji { font-size: 20px; line-height: 1.2; flex-shrink: 0; }
-.pae-guide-feat-text { display: flex; flex-direction: column; gap: 2px; font-size: 13px; line-height: 1.35; }
-.pae-guide-feat-text b { font-weight: 600; font-size: 13.5px; }
-.pae-guide-feat-text span { opacity: 0.82; font-size: 12.5px; }
-[data-theme="light"] .pae-guide-feat-item {
-  background: rgba(0,0,0,0.03); border-color: rgba(0,0,0,0.08);
-}
-@media (max-width: 480px) {
-  .pae-guide-feat-item { padding: 7px 9px; gap: 8px; }
-  .pae-guide-feat-emoji { font-size: 18px; }
-  .pae-guide-feat-text { font-size: 12.5px; }
-  .pae-guide-feat-text b { font-size: 13px; }
-  .pae-guide-feat-text span { font-size: 12px; }
-}
-</style>
+<!-- Video Mode Module -->
+<script src="pae-video-module.js" defer></script>
 
-</body>
-</html>
+
+
