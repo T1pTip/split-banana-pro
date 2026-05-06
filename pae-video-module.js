@@ -624,14 +624,73 @@
     toast(getLang() === 'en' ? '✅ Copied to clipboard' : '✅ הועתק ללוח');
   }
 
+  function showVideoClearModal() {
+    var lang = getLang();
+    var T_CLR = {
+      he: { title: 'מה לנקות?', all: 'הכל', text: 'טקסט בלבד', tags: 'תגיות בלבד', prompt: 'נקה/י פרומפט', cancel: 'ביטול' },
+      en: { title: 'What to clear?', all: 'Everything', text: 'Text only', tags: 'Tags only', prompt: 'Clear Prompt', cancel: 'Cancel' }
+    };
+    var t = T_CLR[lang];
+    var existing = document.getElementById('vidClearModal');
+    if (existing) existing.remove();
+    var modal = document.createElement('div');
+    modal.id = 'vidClearModal';
+    modal.className = 'cm-overlay';
+    modal.innerHTML = '<div class="cm-box clr-box" dir="' + (lang === 'he' ? 'rtl' : 'ltr') + '">' +
+      '<div class="cm-title">' + t.title + '</div><div class="clr-btns">' +
+      '<button class="clr-btn clr-all" id="vidClrAll">' + t.all + '</button>' +
+      '<button class="clr-btn" id="vidClrText">' + t.text + '</button>' +
+      '<button class="clr-btn" id="vidClrTags">' + t.tags + '</button>' +
+      '<button class="clr-btn" id="vidClrPrompt">' + t.prompt + '</button>' +
+      '<button class="clr-btn clr-cancel" id="vidClrCancel">' + t.cancel + '</button>' +
+      '</div></div>';
+    document.body.appendChild(modal);
+
+    function _resetPromptDisplay() {
+      state.lastVideoPrompt = '';
+      var fp = document.getElementById('vidFinalPrompt');
+      var cc = document.getElementById('vidCharCount');
+      if (fp) { fp.textContent = tr('promptEmpty'); fp.classList.add('empty'); }
+      if (cc) cc.textContent = '0 ' + tr('chars');
+    }
+
+    document.getElementById('vidClrAll').onclick = function() {
+      modal.remove();
+      var input = document.getElementById('vidInput');
+      if (input) input.value = '';
+      state.selectedPills = {};
+      document.querySelectorAll('.vid-pill.active').forEach(function(p) { p.classList.remove('active'); });
+      setDuration('5');
+      _resetPromptDisplay();
+      toast(lang === 'en' ? 'Cleared' : 'נוקה');
+    };
+    document.getElementById('vidClrText').onclick = function() {
+      modal.remove();
+      var input = document.getElementById('vidInput');
+      if (input) input.value = '';
+      if (Object.keys(state.selectedPills).length > 0) rebuildPrompt();
+      else _resetPromptDisplay();
+    };
+    document.getElementById('vidClrTags').onclick = function() {
+      modal.remove();
+      state.selectedPills = {};
+      document.querySelectorAll('.vid-pill.active').forEach(function(p) { p.classList.remove('active'); });
+      setDuration('5');
+      var input = document.getElementById('vidInput');
+      var raw = (input && input.value || '').trim();
+      if (raw) rebuildPrompt();
+      else _resetPromptDisplay();
+    };
+    document.getElementById('vidClrPrompt').onclick = function() {
+      modal.remove();
+      _resetPromptDisplay();
+    };
+    document.getElementById('vidClrCancel').onclick = function() { modal.remove(); };
+    modal.addEventListener('click', function(e) { if (e.target === modal) modal.remove(); });
+  }
+
   function clearVideo() {
-    var input = document.getElementById('vidInput');
-    if (input) input.value = '';
-    state.selectedPills = {};
-    document.querySelectorAll('.vid-pill.active').forEach(function(p) { p.classList.remove('active'); });
-    setDuration('5');
-    rebuildPrompt();
-    toast(getLang() === 'en' ? 'Cleared' : 'נוקה');
+    showVideoClearModal();
   }
 
   function openPayBox() {

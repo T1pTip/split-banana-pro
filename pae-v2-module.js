@@ -381,7 +381,14 @@
     var tip = lang === 'en' ? 'Guide' : GUIDE_T.tooltip.he;
     btn.setAttribute('aria-label', tip);
     btn.setAttribute('title', tip);
-    btn.onclick = openGuide;
+    btn.onclick = function() {
+      // Contextual: open video guide in video mode, image guide otherwise
+      if (document.body.classList.contains('vid-mode') && typeof window.openVideoGuide === 'function') {
+        window.openVideoGuide();
+      } else {
+        openGuide();
+      }
+    };
     if (headerTitle.nextSibling) headerTitle.parentNode.insertBefore(btn, headerTitle.nextSibling);
     else headerTitle.parentNode.appendChild(btn);
     return true;
@@ -450,6 +457,28 @@
   }
 
   // ============================================================
+  // SUPPRESS LEGACY v6.0 LANG RELOAD TOAST
+  // The inline v6.0 patch in index.html adds a `.pae-lang-toast`
+  // banner on every lang switch (with a Reload button). The new v2
+  // module makes lang switching seamless, so we silently remove
+  // any such toast as soon as it is added to the DOM.
+  // ============================================================
+  function suppressLangToast() {
+    if (window.__paeLangToastSuppressed) return;
+    window.__paeLangToastSuppressed = true;
+    new MutationObserver(function(muts) {
+      muts.forEach(function(m) {
+        m.addedNodes.forEach(function(n) {
+          if (n.nodeType !== 1) return;
+          if (n.classList && n.classList.contains('pae-lang-toast')) {
+            n.remove();
+          }
+        });
+      });
+    }).observe(document.body, { childList: true });
+  }
+
+  // ============================================================
   // BOOT
   // ============================================================
   var attempts = 0;
@@ -460,6 +489,7 @@
     moveResultToBottom();
     addHelpButton();
     wrapShare();
+    suppressLangToast();
     if (attempts < 10) setTimeout(boot, 400);
     else observeLang();
     if (attempts === 1) _log('v2 booted (attempt 1)');
